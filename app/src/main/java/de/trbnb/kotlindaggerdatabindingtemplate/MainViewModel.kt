@@ -20,7 +20,7 @@ class MainViewModel : BaseObservable(){
         }
 
     init {
-        inject()
+        App.instance.component.inject(this)
 
         api.loadData {
             text = it.joinToString(separator = "\n")

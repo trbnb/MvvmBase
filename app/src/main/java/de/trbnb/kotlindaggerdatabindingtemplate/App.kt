@@ -10,28 +10,18 @@ class App : Application(){
     override fun onCreate() {
         super.onCreate()
 
-        app = this
+        instance = this
 
-        component = object : Component {
-            override fun inject() {
-
-            }
-        }
-                /*DaggerComponent
+        component = DaggerComponent     // Unsolved reference
                 .builder()
                 .netModule(NetModule())
-                .build()*/
+                .build()
     }
 
     companion object {
 
-        lateinit var app: App
+        lateinit var instance: App
             private set
-
-        val component: Component
-            get() = app.component
     }
 
 }
-
-fun inject() = App.component.inject()

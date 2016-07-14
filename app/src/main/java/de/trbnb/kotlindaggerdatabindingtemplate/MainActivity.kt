@@ -7,8 +7,13 @@ import de.trbnb.kotlindaggerdatabindingtemplate.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
+    private val binding by lazy {
+        DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
+
+        binding.vm = MainViewModel()
     }
 }
