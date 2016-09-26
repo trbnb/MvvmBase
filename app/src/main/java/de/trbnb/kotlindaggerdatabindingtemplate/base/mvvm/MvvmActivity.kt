@@ -11,7 +11,7 @@ import javax.inject.Provider
 
 private const val LOADER_ID = 0
 
-abstract class MvvmActivity<VM : ViewModel<*>> : AppCompatActivity(), MvvmView, LoaderManager.LoaderCallbacks<VM> {
+abstract class MvvmActivity<VM : ViewModel<V>, V : MvvmView> : AppCompatActivity(), MvvmView, LoaderManager.LoaderCallbacks<VM> {
 
     protected lateinit var viewModel: VM
 
@@ -25,9 +25,14 @@ abstract class MvvmActivity<VM : ViewModel<*>> : AppCompatActivity(), MvvmView, 
         initLoader()
     }
 
-    abstract fun injectDependencies(graph: AppComponent)
+    protected abstract val view: V
 
-    abstract fun onViewModelLoaded(viewModel: VM)
+    protected abstract fun injectDependencies(graph: AppComponent)
+
+    protected open fun onViewModelLoaded(viewModel: VM){
+        this.viewModel = viewModel
+        viewModel.view = view
+    }
 
     private fun initLoader(){
         supportLoaderManager.initLoader(LOADER_ID, null, this)
@@ -38,11 +43,10 @@ abstract class MvvmActivity<VM : ViewModel<*>> : AppCompatActivity(), MvvmView, 
     }
 
     override fun onLoadFinished(loader: Loader<VM>, data: VM) {
-        viewModel = data
         onViewModelLoaded(data)
     }
 
     override fun onLoaderReset(loader: Loader<VM>?) {
-        viewModel.onDestroy()
+
     }
 }
