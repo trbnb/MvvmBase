@@ -3,14 +3,14 @@
     <data>
         <variable
             name="vm"
-            type="de.trbnb.kotlindaggerdatabindingtemplate.MainViewModel"/>
+            type="de.trbnb.kotlindaggerdatabindingtemplate.app.main.MainViewModel"/>
     </data>
     
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="de.trbnb.kotlindaggerdatabindingtemplate.MainActivity">
+        tools:context="de.trbnb.kotlindaggerdatabindingtemplate.app.main.MainActivity">
     
         <TextView
             android:layout_width="match_parent"
