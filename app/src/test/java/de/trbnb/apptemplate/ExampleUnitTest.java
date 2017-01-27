@@ -1,4 +1,4 @@
-package de.trbnb.kotlindaggerdatabindingtemplate;
+package de.trbnb.apptemplate;
 
 import org.junit.Test;
 

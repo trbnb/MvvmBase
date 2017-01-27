@@ -1,11 +1,11 @@
-package de.trbnb.kotlindaggerdatabindingtemplate.app.main
+package de.trbnb.apptemplate.main
 
 import android.databinding.DataBindingUtil
 import android.os.Bundle
-import de.trbnb.kotlindaggerdatabindingtemplate.R
-import de.trbnb.kotlindaggerdatabindingtemplate.app.app.AppComponent
-import de.trbnb.kotlindaggerdatabindingtemplate.base.mvvm.MvvmActivity
-import de.trbnb.kotlindaggerdatabindingtemplate.databinding.ActivityMainBinding
+import de.trbnb.apptemplate.R
+import de.trbnb.apptemplate.app.AppComponent
+import de.trbnb.base.mvvm.MvvmActivity
+import de.trbnb.apptemplate.databinding.ActivityMainBinding
 
 class MainActivity : MvvmActivity<MainViewModel, MainActivity>() {
 

@@ -1,8 +1,8 @@
-package de.trbnb.kotlindaggerdatabindingtemplate.app.main
+package de.trbnb.apptemplate.main
 
 import dagger.Module
 import dagger.Provides
-import de.trbnb.kotlindaggerdatabindingtemplate.base.dagger.ActivityScope
+import de.trbnb.base.dagger.ActivityScope
 
 @Module
 class MainModule() {

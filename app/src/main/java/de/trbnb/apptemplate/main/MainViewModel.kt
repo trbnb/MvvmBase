@@ -1,11 +1,11 @@
-package de.trbnb.kotlindaggerdatabindingtemplate.app.main
+package de.trbnb.apptemplate.main
 
 import android.content.Context
 import android.databinding.Bindable
-import de.trbnb.kotlindaggerdatabindingtemplate.BR
-import de.trbnb.kotlindaggerdatabindingtemplate.R
-import de.trbnb.kotlindaggerdatabindingtemplate.app.app.App
-import de.trbnb.kotlindaggerdatabindingtemplate.base.mvvm.BaseViewModel
+import de.trbnb.apptemplate.BR
+import de.trbnb.apptemplate.R
+import de.trbnb.apptemplate.app.App
+import de.trbnb.base.mvvm.BaseViewModel
 import javax.inject.Inject
 
 class MainViewModel : BaseViewModel<MainActivity>(){

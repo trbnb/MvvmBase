@@ -1,4 +1,4 @@
-package de.trbnb.kotlindaggerdatabindingtemplate;
+package de.trbnb.apptemplate;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

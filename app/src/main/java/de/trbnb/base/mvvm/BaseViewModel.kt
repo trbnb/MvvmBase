@@ -1,4 +1,4 @@
-package de.trbnb.kotlindaggerdatabindingtemplate.base.mvvm
+package de.trbnb.base.mvvm
 
 import android.databinding.BaseObservable
 

@@ -1,11 +1,11 @@
-package de.trbnb.kotlindaggerdatabindingtemplate.base.mvvm
+package de.trbnb.base.mvvm
 
 import android.os.Bundle
 import android.support.v4.app.LoaderManager
 import android.support.v4.content.Loader
 import android.support.v7.app.AppCompatActivity
-import de.trbnb.kotlindaggerdatabindingtemplate.app.app.App
-import de.trbnb.kotlindaggerdatabindingtemplate.app.app.AppComponent
+import de.trbnb.apptemplate.app.App
+import de.trbnb.apptemplate.app.AppComponent
 import javax.inject.Inject
 import javax.inject.Provider
 

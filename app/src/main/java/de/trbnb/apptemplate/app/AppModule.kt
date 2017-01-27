@@ -1,9 +1,9 @@
-package de.trbnb.kotlindaggerdatabindingtemplate.app.app
+package de.trbnb.apptemplate.app
 
 import android.content.Context
 import dagger.Module
 import dagger.Provides
-import de.trbnb.kotlindaggerdatabindingtemplate.app.app.App
+import de.trbnb.apptemplate.app.App
 import javax.inject.Singleton
 
 @Module

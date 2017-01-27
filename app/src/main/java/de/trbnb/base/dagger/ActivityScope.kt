@@ -1,4 +1,4 @@
-package de.trbnb.kotlindaggerdatabindingtemplate.base.dagger
+package de.trbnb.base.dagger
 
 import javax.inject.Scope
 

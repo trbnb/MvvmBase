@@ -1,8 +1,8 @@
-package de.trbnb.kotlindaggerdatabindingtemplate.base.mvvm
+package de.trbnb.base.mvvm
 
 import android.content.Context
 import android.support.v4.content.Loader
-import de.trbnb.kotlindaggerdatabindingtemplate.base.dagger.ActivityScope
+import de.trbnb.base.dagger.ActivityScope
 import javax.inject.Inject
 import javax.inject.Provider
 

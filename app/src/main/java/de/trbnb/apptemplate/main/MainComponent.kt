@@ -1,7 +1,7 @@
-package de.trbnb.kotlindaggerdatabindingtemplate.app.main
+package de.trbnb.apptemplate.main
 
 import dagger.Subcomponent
-import de.trbnb.kotlindaggerdatabindingtemplate.base.dagger.ActivityScope
+import de.trbnb.base.dagger.ActivityScope
 
 @ActivityScope
 @Subcomponent(modules = arrayOf(
