@@ -1,6 +1,8 @@
 package de.trbnb.base.mvvm
 
-interface ViewModel {
+import android.databinding.Observable
+
+interface ViewModel : Observable{
     fun onDestroy()
     fun onViewFinishing()
 }

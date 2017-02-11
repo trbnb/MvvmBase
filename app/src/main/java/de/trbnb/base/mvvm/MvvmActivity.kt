@@ -1,5 +1,6 @@
 package de.trbnb.base.mvvm
 
+import android.databinding.Observable
 import android.databinding.ViewDataBinding
 import android.os.Bundle
 import android.support.v4.app.LoaderManager
@@ -17,18 +18,29 @@ abstract class MvvmActivity<VM : ViewModel> : AppCompatActivity(), LoaderManager
         set(value) {
             if(field === value) return
 
+            field?.removeOnPropertyChangedCallback(viewModelObserver)
+
             field = value
             val bindingWasSuccessful = binding.setVariable(viewModelBindingId, value)
 
             if(!bindingWasSuccessful){
                 throw RuntimeException("Unable to set the ViewModel for the variable $viewModelBindingId.")
             }
+
+            value?.addOnPropertyChangedCallback(viewModelObserver)
         }
 
     private val viewModelBindingId: Int
         get() = BR.vm
 
     abstract val viewModelProvider: Provider<VM>
+
+    private val viewModelObserver = object : Observable.OnPropertyChangedCallback(){
+        @Suppress("UNCHECKED_CAST")
+        override fun onPropertyChanged(sender: Observable, fieldId: Int) {
+            onViewModelPropertyChanged(sender as VM, fieldId)
+        }
+    }
 
     @Suppress("UNCHECKED_CAST")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,6 +52,7 @@ abstract class MvvmActivity<VM : ViewModel> : AppCompatActivity(), LoaderManager
 
     protected abstract fun initBinding(): ViewDataBinding
 
+    // region Loader
     private fun initLoader(){
         supportLoaderManager.initLoader(LOADER_ID, null, this)
     }
@@ -55,9 +68,16 @@ abstract class MvvmActivity<VM : ViewModel> : AppCompatActivity(), LoaderManager
     override final fun onLoaderReset(loader: Loader<VM>?) {
         // nothing to do here
     }
+    //endregion
+
+    protected open fun onViewModelPropertyChanged(viewModel: VM, fieldId: Int){
+
+    }
 
     override fun onDestroy() {
         super.onDestroy()
+
+        viewModel?.removeOnPropertyChangedCallback(viewModelObserver)
 
         if(isFinishing){
             viewModel?.onViewFinishing()
