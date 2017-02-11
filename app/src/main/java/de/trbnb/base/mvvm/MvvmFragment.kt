@@ -9,7 +9,7 @@ import de.trbnb.apptemplate.app.AppComponent
 import javax.inject.Inject
 import javax.inject.Provider
 
-abstract class MvvmFragment<VM : ViewModel<*>> : Fragment(), MvvmView, LoaderManager.LoaderCallbacks<VM> {
+abstract class MvvmFragment<VM : ViewModel> : Fragment(), LoaderManager.LoaderCallbacks<VM> {
 
     protected lateinit var viewModel: VM
 

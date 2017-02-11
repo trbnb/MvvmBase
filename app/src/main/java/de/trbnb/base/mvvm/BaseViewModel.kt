@@ -2,11 +2,13 @@ package de.trbnb.base.mvvm
 
 import android.databinding.BaseObservable
 
-abstract class BaseViewModel<V : MvvmView> : BaseObservable(), ViewModel<V> {
-
-    override var view: V? = null
+abstract class BaseViewModel : BaseObservable(), ViewModel {
 
     override fun onDestroy() {
+
+    }
+
+    override fun onViewFinishing() {
 
     }
 

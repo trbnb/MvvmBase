@@ -8,7 +8,7 @@ import de.trbnb.apptemplate.app.App
 import de.trbnb.base.mvvm.BaseViewModel
 import javax.inject.Inject
 
-class MainViewModel : BaseViewModel<MainActivity>(){
+class MainViewModel : BaseViewModel(){
 
     @Inject
     lateinit var context: Context

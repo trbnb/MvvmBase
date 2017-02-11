@@ -1,9 +1,6 @@
 package de.trbnb.base.mvvm
 
-interface ViewModel<V : MvvmView> {
-
-    var view: V?
-
+interface ViewModel {
     fun onDestroy()
-
+    fun onViewFinishing()
 }
