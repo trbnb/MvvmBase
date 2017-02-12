@@ -27,7 +27,10 @@ abstract class MvvmActivity<VM : ViewModel> : AppCompatActivity(), LoaderManager
                 throw RuntimeException("Unable to set the ViewModel for the variable $viewModelBindingId.")
             }
 
-            value?.addOnPropertyChangedCallback(viewModelObserver)
+            value?.let {
+                onViewModelLoaded(it)
+                it.addOnPropertyChangedCallback(viewModelObserver)
+            }
         }
 
     private val viewModelBindingId: Int
@@ -71,6 +74,10 @@ abstract class MvvmActivity<VM : ViewModel> : AppCompatActivity(), LoaderManager
         // nothing to do here
     }
     //endregion
+
+    protected open fun onViewModelLoaded(viewModel: VM){
+
+    }
 
     protected open fun onViewModelPropertyChanged(viewModel: VM, fieldId: Int){
 
