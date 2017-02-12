@@ -5,7 +5,7 @@ import android.databinding.Bindable
 import de.trbnb.apptemplate.BR
 import de.trbnb.apptemplate.R
 import de.trbnb.apptemplate.app.App
-import de.trbnb.base.mvvm.BaseViewModel
+import de.trbnb.mvvmbase.BaseViewModel
 import javax.inject.Inject
 
 class MainViewModel : BaseViewModel(){

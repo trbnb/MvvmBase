@@ -1,20 +1,16 @@
-package de.trbnb.base.mvvm
+package de.trbnb.mvvmbase
 
 import android.databinding.Observable
 import android.databinding.ViewDataBinding
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v4.app.LoaderManager
 import android.support.v4.content.Loader
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import de.trbnb.apptemplate.BR
+import android.support.v7.app.AppCompatActivity
 import javax.inject.Provider
 
-abstract class MvvmFragment<VM : ViewModel> : Fragment(), LoaderManager.LoaderCallbacks<VM> {
+private const val LOADER_ID = 0
 
-    protected abstract val loaderID: Int
+abstract class MvvmActivity<VM : ViewModel> : AppCompatActivity(), LoaderManager.LoaderCallbacks<VM> {
 
     protected lateinit var binding: ViewDataBinding
     protected var viewModel: VM? = null
@@ -45,30 +41,30 @@ abstract class MvvmFragment<VM : ViewModel> : Fragment(), LoaderManager.LoaderCa
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = initBinding(inflater, container)
+    @Suppress("UNCHECKED_CAST")
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = initBinding()
 
         initLoader()
-
-        return binding.root
     }
 
-    protected abstract fun initBinding(inflater: LayoutInflater, container: ViewGroup?): ViewDataBinding
+    protected abstract fun initBinding(): ViewDataBinding
 
-    //region Loader
+    // region Loader
     private fun initLoader(){
-        activity.supportLoaderManager.initLoader(loaderID, null, this)
+        supportLoaderManager.initLoader(LOADER_ID, null, this)
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle?): Loader<VM> {
-        return ViewModelLoader(context, viewModelProvider)
+    override final fun onCreateLoader(id: Int, args: Bundle?): Loader<VM> {
+        return ViewModelLoader(this, viewModelProvider)
     }
 
-    override fun onLoadFinished(loader: Loader<VM>, data: VM) {
-        viewModel = data
+    override final fun onLoadFinished(loader: Loader<VM>, data: VM) {
+        this.viewModel = data
     }
 
-    override fun onLoaderReset(loader: Loader<VM>?) {
+    override final fun onLoaderReset(loader: Loader<VM>?) {
         // nothing to do here
     }
     //endregion
@@ -82,7 +78,7 @@ abstract class MvvmFragment<VM : ViewModel> : Fragment(), LoaderManager.LoaderCa
 
         viewModel?.removeOnPropertyChangedCallback(viewModelObserver)
 
-        if(activity.isFinishing){
+        if(isFinishing){
             viewModel?.onViewFinishing()
         }
     }

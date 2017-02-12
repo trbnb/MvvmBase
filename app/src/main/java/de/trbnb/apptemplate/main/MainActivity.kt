@@ -3,7 +3,7 @@ package de.trbnb.apptemplate.main
 import android.databinding.DataBindingUtil
 import android.databinding.ViewDataBinding
 import de.trbnb.apptemplate.R
-import de.trbnb.base.mvvm.MvvmActivity
+import de.trbnb.mvvmbase.MvvmActivity
 import javax.inject.Provider
 
 class MainActivity : MvvmActivity<MainViewModel>() {

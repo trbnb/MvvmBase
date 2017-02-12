@@ -1,4 +1,4 @@
-package de.trbnb.base.mvvm
+package de.trbnb.mvvmbase
 
 import android.databinding.BaseObservable
 
