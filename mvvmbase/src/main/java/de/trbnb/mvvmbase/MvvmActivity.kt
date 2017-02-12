@@ -1,5 +1,6 @@
 package de.trbnb.mvvmbase
 
+import android.databinding.DataBindingUtil
 import android.databinding.Observable
 import android.databinding.ViewDataBinding
 import android.os.Bundle
@@ -32,6 +33,8 @@ abstract class MvvmActivity<VM : ViewModel> : AppCompatActivity(), LoaderManager
     private val viewModelBindingId: Int
         get() = BR.vm
 
+    protected abstract val layoutId: Int
+
     abstract val viewModelProvider: Provider<VM>
 
     private val viewModelObserver = object : Observable.OnPropertyChangedCallback(){
@@ -49,7 +52,7 @@ abstract class MvvmActivity<VM : ViewModel> : AppCompatActivity(), LoaderManager
         initLoader()
     }
 
-    protected abstract fun initBinding(): ViewDataBinding
+    private fun initBinding(): ViewDataBinding = DataBindingUtil.setContentView(this, layoutId)
 
     // region Loader
     private fun initLoader(){
