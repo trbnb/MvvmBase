@@ -62,6 +62,7 @@ dependencies {
 
     // Data Binding
     kapt 'com.android.databinding:compiler:2.2.3'
+    compile 'com.github.trbnb:DatabindingCommands:849085e'
 }
 
 kapt{
@@ -70,4 +71,5 @@ kapt{
 
 repositories {
     mavenCentral()
+    maven { url 'https://jitpack.io' }
 }
