@@ -5,8 +5,10 @@ import android.databinding.Bindable
 import de.trbnb.apptemplate.BR
 import de.trbnb.apptemplate.R
 import de.trbnb.apptemplate.app.App
+import de.trbnb.apptemplate.second.SecondActivity
 import de.trbnb.databindingcommands.command.SimpleCommand
 import de.trbnb.mvvmbase.BaseViewModel
+import org.jetbrains.anko.startActivity
 import javax.inject.Inject
 
 class MainViewModel : BaseViewModel(){
@@ -32,6 +34,10 @@ class MainViewModel : BaseViewModel(){
 
     val showDialogCommand = SimpleCommand { showDialog = true }
     val showSnackbarCommand = SimpleCommand { showSnackbar = true }
+
+    val showFragmentExampleCommand = SimpleCommand {
+        context.startActivity<SecondActivity>()
+    }
 
     init {
         App.appComponent.inject(this)
