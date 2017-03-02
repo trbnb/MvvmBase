@@ -6,6 +6,7 @@ import de.trbnb.apptemplate.BR
 import de.trbnb.apptemplate.R
 import de.trbnb.apptemplate.app.App
 import de.trbnb.apptemplate.second.SecondActivity
+import de.trbnb.databindingcommands.command.RuleCommand
 import de.trbnb.databindingcommands.command.SimpleCommand
 import de.trbnb.mvvmbase.BaseViewModel
 import org.jetbrains.anko.startActivity
@@ -30,10 +31,11 @@ class MainViewModel : BaseViewModel(){
         set(value) {
             field = value
             notifyPropertyChanged(BR.showSnackbar)
+            showSnackbarCommand.onEnabledChanged()
         }
 
     val showDialogCommand = SimpleCommand { showDialog = true }
-    val showSnackbarCommand = SimpleCommand { showSnackbar = true }
+    val showSnackbarCommand = RuleCommand({ showSnackbar = true }, { !showSnackbar })
 
     val showFragmentExampleCommand = SimpleCommand {
         context.startActivity<SecondActivity>()
