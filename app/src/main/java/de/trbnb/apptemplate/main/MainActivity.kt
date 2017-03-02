@@ -17,7 +17,7 @@ class MainActivity : MvvmActivity<MainViewModel>() {
         get() = R.layout.activity_main
 
     override val viewModelProvider: Provider<MainViewModel>
-        get() = Provider { MainViewModel() }
+        get() = Provider(::MainViewModel)
 
     override fun onViewModelLoaded(viewModel: MainViewModel) {
         super.onViewModelLoaded(viewModel)
@@ -61,7 +61,7 @@ class MainActivity : MvvmActivity<MainViewModel>() {
                     // again after rotation.
                     viewModel?.showDialog = false
                 }
-                .setPositiveButton(android.R.string.ok) { d, i ->
+                .setPositiveButton(android.R.string.ok) { d, _ ->
                     // We cancel the Dialog here because the user got rid of it.
                     d.cancel()
                 }

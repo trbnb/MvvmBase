@@ -13,6 +13,6 @@ class SecondFragment : MvvmFragment<SecondViewModel>(){
         get() = R.layout.fragment_second
 
     override val viewModelProvider: Provider<SecondViewModel>
-        get() = Provider { SecondViewModel() }
+        get() = Provider(::SecondViewModel)
 
 }
