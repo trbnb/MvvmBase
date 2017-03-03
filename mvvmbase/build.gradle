@@ -29,8 +29,8 @@ android {
     }
 }
 
-def supportLibVersion = "25.1.1"
-def daggerVersion = "2.8"
+def supportLibVersion = "25.2.0"
+def daggerVersion = "2.9"
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -53,7 +53,7 @@ dependencies {
     provided 'javax.annotation:jsr250-api:1.0'
 
     // Data Binding
-    kapt 'com.android.databinding:compiler:2.2.3'
+    kapt 'com.android.databinding:compiler:2.3.0'
 }
 
 kapt{
