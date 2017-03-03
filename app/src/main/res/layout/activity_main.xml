@@ -35,5 +35,11 @@
             android:text="Show Snackbar"
             android:clickCommand="@{vm.showSnackbarCommand}"/>
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Show Fragment example"
+            android:clickCommand="@{vm.showFragmentExampleCommand}"/>
+
     </LinearLayout>
 </layout>
