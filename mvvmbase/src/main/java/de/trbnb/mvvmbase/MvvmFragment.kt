@@ -12,9 +12,11 @@ import android.view.View
 import android.view.ViewGroup
 import javax.inject.Provider
 
+private const val LOADER_ID_KEY = "de.trbnb.mvvmbase:loader_id"
+
 abstract class MvvmFragment<VM : ViewModel> : Fragment(), LoaderManager.LoaderCallbacks<VM> {
 
-    protected abstract val loaderID: Int
+    private var loaderID: Int = LoaderIdGenerator.NO_ID
 
     protected lateinit var binding: ViewDataBinding
     protected var viewModel: VM? = null
@@ -48,6 +50,23 @@ abstract class MvvmFragment<VM : ViewModel> : Fragment(), LoaderManager.LoaderCa
         override fun onPropertyChanged(sender: Observable, fieldId: Int) {
             onViewModelPropertyChanged(sender as VM, fieldId)
         }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val savedLoaderId = savedInstanceState?.getInt(LOADER_ID_KEY, LoaderIdGenerator.NO_ID) ?: loaderID
+
+        loaderID = when (savedLoaderId) {
+            LoaderIdGenerator.NO_ID -> LoaderIdGenerator.generate()
+            else                    -> savedLoaderId
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        outState.putInt(LOADER_ID_KEY, loaderID)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {

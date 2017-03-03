@@ -6,9 +6,6 @@ import javax.inject.Provider
 
 class SecondFragment : MvvmFragment<SecondViewModel>(){
 
-    override val loaderID: Int
-        get() = 42
-
     override val layoutId: Int
         get() = R.layout.fragment_second
 
