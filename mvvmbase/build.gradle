@@ -30,7 +30,7 @@ android {
 }
 
 def supportLibVersion = "25.2.0"
-def daggerVersion = "2.8"
+def daggerVersion = "2.9"
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
