@@ -30,7 +30,6 @@ android {
 }
 
 def supportLibVersion = "25.2.0"
-def daggerVersion = "2.9"
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -47,10 +46,8 @@ dependencies {
     // Kotlin
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
-    // Dagger 2
-    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
-    compile "com.google.dagger:dagger:$daggerVersion"
-    provided 'javax.annotation:jsr250-api:1.0'
+    // Java inject API for dependency injection
+    compile 'javax.inject:javax.inject:1'
 
     // Data Binding
     kapt 'com.android.databinding:compiler:2.3.0'
