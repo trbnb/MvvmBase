@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 25
@@ -33,9 +34,9 @@ android {
     }
 }
 
-def supportLibVersion = "25.2.0"
+def supportLibVersion = "25.3.0"
 def daggerVersion = "2.9"
-def ankoVersion = "0.9"
+def ankoVersion = "0.9.1"
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -63,10 +64,6 @@ dependencies {
     // Data Binding
     kapt 'com.android.databinding:compiler:2.3.0'
     compile 'com.github.trbnb:DatabindingCommands:849085e'
-}
-
-kapt{
-    generateStubs = true
 }
 
 repositories {
