@@ -200,6 +200,16 @@ abstract class MvvmFragment<VM : ViewModel> : Fragment(), LoaderManager.LoaderCa
     protected open fun onViewModelPropertyChanged(viewModel: VM, fieldId: Int) { }
 
     /**
+     * If the Fragment is re-attached we have to set the view model again as binding parameter to
+     * redo the bindings, otherwise data might not be visible.
+     */
+    override fun onResume() {
+        super.onResume()
+
+        binding.setVariable(BR.vm, viewModel)
+    }
+
+    /**
      * Called by the lifecycle.
      * Removes the view model callback.
      * If the hosting Activity is finishing the view model is notified.
