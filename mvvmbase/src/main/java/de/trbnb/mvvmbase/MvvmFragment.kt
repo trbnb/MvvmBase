@@ -43,8 +43,12 @@ abstract class MvvmFragment<VM : ViewModel> : Fragment(), LoaderManager.LoaderCa
      * The [ViewDataBinding] implementation for a specific layout.
      * Will only be set in [onCreateView].
      */
-    protected lateinit var binding: ViewDataBinding
-        private set
+    protected var binding: ViewDataBinding? = null
+        private set(value) {
+            field = value
+
+            value?.setVariable(BR.vm, viewModel)
+        }
 
     /**
      * The [ViewModel] that is used for data binding.
@@ -56,9 +60,10 @@ abstract class MvvmFragment<VM : ViewModel> : Fragment(), LoaderManager.LoaderCa
             field?.removeOnPropertyChangedCallback(viewModelObserver)
 
             field = value
-            val bindingWasSuccessful = binding.setVariable(viewModelBindingId, value)
+            val bindingWasSuccessful = binding?.setVariable(viewModelBindingId, value)
+            val bindingFailed = bindingWasSuccessful?.not() ?: false
 
-            if(!bindingWasSuccessful){
+            if(bindingFailed){
                 throw RuntimeException("Unable to set the ViewModel for the variable $viewModelBindingId.")
             }
 
@@ -128,7 +133,7 @@ abstract class MvvmFragment<VM : ViewModel> : Fragment(), LoaderManager.LoaderCa
      * Creates the [ViewDataBinding] and initializes the [ViewModelLoader].
      */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = initBinding(inflater, container)
+        val binding = this.binding ?: initBinding(inflater, container)
 
         initLoader()
 
@@ -136,12 +141,14 @@ abstract class MvvmFragment<VM : ViewModel> : Fragment(), LoaderManager.LoaderCa
     }
 
     /**
-     * Creates the [ViewDataBinding].
+     * Creates a new [ViewDataBinding].
      *
      * @return The new [ViewDataBinding] instance that fits this Fragment.
      */
     private fun initBinding(inflater: LayoutInflater, container: ViewGroup?): ViewDataBinding {
-        return DataBindingUtil.inflate(inflater, layoutId, container, false)
+        val newBinding = DataBindingUtil.inflate<ViewDataBinding>(inflater, layoutId, container, false)
+        this.binding = newBinding
+        return newBinding
     }
 
     //region Loader
@@ -198,16 +205,6 @@ abstract class MvvmFragment<VM : ViewModel> : Fragment(), LoaderManager.LoaderCa
      * @param[fieldId] The ID of the field in the BR file that indicates which property in the view model has changed.
      */
     protected open fun onViewModelPropertyChanged(viewModel: VM, fieldId: Int) { }
-
-    /**
-     * If the Fragment is re-attached we have to set the view model again as binding parameter to
-     * redo the bindings, otherwise data might not be visible.
-     */
-    override fun onResume() {
-        super.onResume()
-
-        binding.setVariable(BR.vm, viewModel)
-    }
 
     /**
      * Called by the lifecycle.
