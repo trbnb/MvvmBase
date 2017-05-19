@@ -14,7 +14,7 @@ import javax.inject.Provider
  * Since the IDs for Loaders are Activity-specific there is no need to generate one dynamically.
  * A constant value is sufficient.
  */
-private const val LOADER_ID = 0
+private const val LOADER_ID = LoaderIdGenerator.ACTIVITY_ID
 
 /**
  * Base class for Activities that serve as view within an MVVM structure.
