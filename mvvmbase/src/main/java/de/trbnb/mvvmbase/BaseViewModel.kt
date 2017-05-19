@@ -5,16 +5,12 @@ import android.databinding.BaseObservable
 /**
  * Simple base implementation of the [ViewModel] interface based on [BaseObservable].
  *
- * The functions [onDestroy] and [onViewFinishing] are no-op so not every class that is extending
- * this one has to override them.
+ * The function [onDestroy] is no-op so not every class that is extending this one has to override
+ * it.
  */
 abstract class BaseViewModel : BaseObservable(), ViewModel {
 
     override fun onDestroy() {
-
-    }
-
-    override fun onViewFinishing() {
 
     }
 

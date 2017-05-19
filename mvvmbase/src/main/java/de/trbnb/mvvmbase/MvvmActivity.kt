@@ -61,8 +61,8 @@ abstract class MvvmActivity<VM : ViewModel> : AppCompatActivity(), LoaderManager
         }
 
     /**
-     * The [BR] value that is used as parameter for the view model in the binding.
-     * Is always [BR.vm].
+     * The [de.trbnb.mvvmbase.BR] value that is used as parameter for the view model in the binding.
+     * Is always [de.trbnb.mvvmbase.BR.vm].
      */
     private val viewModelBindingId: Int
         get() = BR.vm
@@ -172,9 +172,5 @@ abstract class MvvmActivity<VM : ViewModel> : AppCompatActivity(), LoaderManager
         super.onDestroy()
 
         viewModel?.removeOnPropertyChangedCallback(viewModelObserver)
-
-        if(isFinishing){
-            viewModel?.onViewFinishing()
-        }
     }
 }

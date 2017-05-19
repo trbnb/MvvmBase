@@ -22,12 +22,4 @@ interface ViewModel : Observable {
      * Implementations should use this method to deregister from callbacks, etc.
      */
     fun onDestroy()
-
-    /**
-     * Is called when the bound view is finishing. This means that that view will no longer be
-     * visible.
-     *
-     * This usually happens when users go back within the apps navigation.
-     */
-    fun onViewFinishing()
 }
