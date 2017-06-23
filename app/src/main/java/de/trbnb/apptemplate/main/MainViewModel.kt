@@ -34,10 +34,10 @@ class MainViewModel : BaseViewModel(){
             showSnackbarCommand.onEnabledChanged()
         }
 
-    val showDialogCommand = SimpleCommand { showDialog = true }
-    val showSnackbarCommand = RuleCommand({ showSnackbar = true }, { !showSnackbar })
-    val showFragmentExampleCommand = SimpleCommand {
-        context.startActivity<SecondActivity>()
+    val showDialogCommand = SimpleCommand<Context, Unit> { showDialog = true }
+    val showSnackbarCommand = RuleCommand<Context, Unit>({ showSnackbar = true }, { !showSnackbar })
+    val showFragmentExampleCommand = SimpleCommand<Context, Unit> {
+        it.startActivity<SecondActivity>()
     }
 
     init {

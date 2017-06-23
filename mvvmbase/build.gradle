@@ -4,7 +4,7 @@ apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion "25.0.3"
 
     defaultConfig {
         minSdkVersion 9
@@ -50,10 +50,8 @@ dependencies {
     // Java inject API for dependency injection
     compile 'javax.inject:javax.inject:1'
 
-    compile 'com.github.trbnb:DatabindingCommands:ae6dde1'
-
     // Data Binding
-    kapt 'com.android.databinding:compiler:2.3.0'
+    kapt 'com.android.databinding:compiler:2.3.3'
 }
 
 repositories {
