@@ -5,10 +5,10 @@ import android.app.Dialog
 import android.support.design.widget.Snackbar
 import de.trbnb.apptemplate.BR
 import de.trbnb.apptemplate.R
-import de.trbnb.mvvmbase.MvvmActivity
+import de.trbnb.mvvmbase.MvvmActvity
 import javax.inject.Provider
 
-class MainActivity : MvvmActivity<MainViewModel>() {
+class MainActivity : MvvmActvity<MainViewModel>() {
 
     private var dialog: Dialog? = null
     private var snackbar: Snackbar? = null

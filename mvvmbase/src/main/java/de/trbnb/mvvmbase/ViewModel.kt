@@ -5,7 +5,7 @@ import android.databinding.Observable
 /**
  * Base interface that defines basic functionality for all view models.
  *
- * View models are bound to either an [MvvmActivity] or an [MvvmFragment] and saved throughout the
+ * View models are bound to either an [MvvmBindingActivity] or an [MvvmBindingFragment] and saved throughout the
  * lifecycle of these by the Loader mechanism.
  * @see [ViewModelLoader]
  *

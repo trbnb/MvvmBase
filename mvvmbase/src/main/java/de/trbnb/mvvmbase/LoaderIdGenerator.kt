@@ -1,7 +1,7 @@
 package de.trbnb.mvvmbase
 
 /**
- * Singleton that is used to generate loader IDs for [MvvmFragment]s.
+ * Singleton that is used to generate loader IDs for [MvvmBindingFragment]s.
  *
  * A new ID can be generated and will be returned by [generate].
  * The range of possible IDs is the range of [Int] minus one. A single value of the [Int] range is
