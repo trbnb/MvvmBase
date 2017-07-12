@@ -7,4 +7,4 @@ import android.databinding.ViewDataBinding
  *
  * @param[VM] The type of the specific [ViewModel] implementation for this Activity.
  */
-abstract class MvvmActvity<VM : ViewModel> : MvvmBindingActivity<VM, ViewDataBinding>()
+abstract class MvvmActivity<VM : ViewModel> : MvvmBindingActivity<VM, ViewDataBinding>()
