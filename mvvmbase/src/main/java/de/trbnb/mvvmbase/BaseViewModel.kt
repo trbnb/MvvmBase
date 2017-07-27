@@ -10,6 +10,14 @@ import android.databinding.BaseObservable
  */
 abstract class BaseViewModel : BaseObservable(), ViewModel {
 
+    override fun onBind() {
+
+    }
+
+    override fun onUnbind() {
+
+    }
+
     override fun onDestroy() {
 
     }

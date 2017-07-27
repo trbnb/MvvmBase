@@ -46,18 +46,21 @@ abstract class MvvmBindingActivity<VM : ViewModel, B : ViewDataBinding> : AppCom
         set(value) {
             if(field === value) return
 
+            field?.onUnbind()
             field?.removeOnPropertyChangedCallback(viewModelObserver)
 
             field = value
-            val bindingWasSuccessful = binding.setVariable(viewModelBindingId, value)
 
-            if(!bindingWasSuccessful){
-                throw RuntimeException("Unable to set the ViewModel for the variable $viewModelBindingId.")
-            }
+            if(value != null) {
+                val bindingWasSuccessful = binding.setVariable(viewModelBindingId, value)
 
-            value?.let {
-                onViewModelLoaded(it)
-                it.addOnPropertyChangedCallback(viewModelObserver)
+                if (!bindingWasSuccessful) {
+                    throw RuntimeException("Unable to set the ViewModel for the variable $viewModelBindingId.")
+                }
+
+                onViewModelLoaded(value)
+                value.addOnPropertyChangedCallback(viewModelObserver)
+                value.onBind()
             }
         }
 
@@ -172,6 +175,6 @@ abstract class MvvmBindingActivity<VM : ViewModel, B : ViewDataBinding> : AppCom
     override fun onDestroy() {
         super.onDestroy()
 
-        viewModel?.removeOnPropertyChangedCallback(viewModelObserver)
+        viewModel = null
     }
 }

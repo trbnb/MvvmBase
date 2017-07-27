@@ -34,16 +34,29 @@ class MainViewModel : BaseViewModel(){
             showSnackbarCommand.onEnabledChanged()
         }
 
-    val showDialogCommand = SimpleCommand<Context, Unit> { showDialog = true }
-    val showSnackbarCommand = RuleCommand<Context, Unit>({ showSnackbar = true }, { !showSnackbar })
-    val showFragmentExampleCommand = SimpleCommand<Context, Unit> {
-        it.startActivity<SecondActivity>()
+    val showDialogCommand = SimpleCommand<Context, Unit> {
+        showDialog = true
+    }
+
+    val showSnackbarCommand = RuleCommand<Context, Unit>(
+            action = { showSnackbar = true },
+            enabledRule = { !showSnackbar }
+    )
+
+    val showFragmentExampleCommand = SimpleCommand { context: Context ->
+        context.startActivity<SecondActivity>()
     }
 
     init {
         App.appComponent.inject(this)
 
         text = context.getString(R.string.example_text)
+    }
+
+    override fun onUnbind() {
+        showDialogCommand.clearEnabledListeners()
+        showSnackbarCommand.clearEnabledListeners()
+        showFragmentExampleCommand.clearEnabledListeners()
     }
 
 }

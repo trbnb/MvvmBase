@@ -58,19 +58,22 @@ abstract class MvvmBindingFragment<VM : ViewModel, B : ViewDataBinding> : Fragme
         set(value) {
             if(field === value) return
 
+            field?.onUnbind()
             field?.removeOnPropertyChangedCallback(viewModelObserver)
 
             field = value
-            val bindingWasSuccessful = binding?.setVariable(viewModelBindingId, value)
-            val bindingFailed = bindingWasSuccessful?.not() ?: false
 
-            if(bindingFailed){
-                throw RuntimeException("Unable to set the ViewModel for the variable $viewModelBindingId.")
-            }
+            if(value != null) {
+                val bindingWasSuccessful = binding?.setVariable(viewModelBindingId, value)
+                val bindingFailed = bindingWasSuccessful?.not() ?: false
 
-            value?.let {
-                onViewModelLoaded(it)
-                it.addOnPropertyChangedCallback(viewModelObserver)
+                if (bindingFailed) {
+                    throw RuntimeException("Unable to set the ViewModel for the variable $viewModelBindingId.")
+                }
+
+                onViewModelLoaded(value)
+                value.addOnPropertyChangedCallback(viewModelObserver)
+                value.onBind()
             }
         }
 
@@ -114,7 +117,7 @@ abstract class MvvmBindingFragment<VM : ViewModel, B : ViewDataBinding> : Fragme
 
         loaderID = when (savedLoaderId) {
             LoaderIdGenerator.ACTIVITY_ID -> LoaderIdGenerator.generate()
-            else                    -> savedLoaderId
+            else -> savedLoaderId
         }
     }
 
@@ -215,6 +218,6 @@ abstract class MvvmBindingFragment<VM : ViewModel, B : ViewDataBinding> : Fragme
     override fun onDestroy() {
         super.onDestroy()
 
-        viewModel?.removeOnPropertyChangedCallback(viewModelObserver)
+        viewModel = null
     }
 }

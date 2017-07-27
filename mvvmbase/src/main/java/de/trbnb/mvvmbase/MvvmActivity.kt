@@ -3,8 +3,8 @@ package de.trbnb.mvvmbase
 import android.databinding.ViewDataBinding
 
 /**
- * Base class for Activities that don't need to specify the specific [ViewDataBinding] implementation.
+ * Typealias for Activities that don't need to specify the specific [ViewDataBinding] implementation.
  *
  * @param[VM] The type of the specific [ViewModel] implementation for this Activity.
  */
-abstract class MvvmActivity<VM : ViewModel> : MvvmBindingActivity<VM, ViewDataBinding>()
+typealias MvvmActivity<VM> = MvvmBindingActivity<VM, ViewDataBinding>
