@@ -9,30 +9,26 @@ import de.trbnb.apptemplate.second.SecondActivity
 import de.trbnb.databindingcommands.command.RuleCommand
 import de.trbnb.databindingcommands.command.SimpleCommand
 import de.trbnb.mvvmbase.BaseViewModel
+import de.trbnb.mvvmbase.afterSet
+import de.trbnb.mvvmbase.bindable
 import org.jetbrains.anko.startActivity
 import javax.inject.Inject
 
-class MainViewModel : BaseViewModel(){
+class MainViewModel : BaseViewModel() {
 
     @Inject
     lateinit var context: Context
 
     val text: String
 
-    var showDialog: Boolean = false
-        @Bindable get
-        set(value) {
-            field = value
-            notifyPropertyChanged(BR.showDialog)
-        }
+    @get:Bindable
+    var showDialog by bindable(BR.showDialog, false)
 
-    var showSnackbar: Boolean = false
-        @Bindable get
-        set(value) {
-            field = value
-            notifyPropertyChanged(BR.showSnackbar)
-            showSnackbarCommand.onEnabledChanged()
-        }
+    @get:Bindable
+    var showSnackbar: Boolean by bindable(BR.showSnackbar, false)
+            .afterSet {
+                showSnackbarCommand.onEnabledChanged()
+            }
 
     val showDialogCommand = SimpleCommand<Context, Unit> {
         showDialog = true
