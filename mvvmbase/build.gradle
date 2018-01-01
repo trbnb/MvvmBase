@@ -3,12 +3,11 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "26.0.1"
+    compileSdkVersion 27
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 26
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
 
@@ -30,7 +29,7 @@ android {
     }
 }
 
-def supportLibVersion = "26.0.0"
+def supportLibVersion = "27.0.2"
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -51,7 +50,7 @@ dependencies {
     compile 'javax.inject:javax.inject:1'
 
     // Data Binding
-    kapt 'com.android.databinding:compiler:2.3.3'
+    kapt 'com.android.databinding:compiler:3.0.1'
 }
 
 repositories {

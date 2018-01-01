@@ -3,13 +3,12 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "26.0.1"
+    compileSdkVersion 27
 
     defaultConfig {
         applicationId "de.trbnb.apptemplate"
         minSdkVersion 21
-        targetSdkVersion 26
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
     }
@@ -34,9 +33,9 @@ android {
     }
 }
 
-def supportLibVersion = "26.0.0"
-def daggerVersion = "2.11"
-def ankoVersion = "0.10.1"
+def supportLibVersion = "27.0.2"
+def daggerVersion = "2.14.1"
+def ankoVersion = "0.10.4"
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -63,7 +62,7 @@ dependencies {
 
     // Data Binding
     compile 'com.github.trbnb:DatabindingCommands:fcc18966a9'
-    kapt 'com.android.databinding:compiler:2.3.3'
+    kapt 'com.android.databinding:compiler:3.0.1'
 }
 
 repositories {
