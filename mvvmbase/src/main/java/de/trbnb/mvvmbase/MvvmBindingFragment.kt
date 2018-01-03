@@ -160,7 +160,7 @@ abstract class MvvmBindingFragment<VM : ViewModel, B : ViewDataBinding> : Fragme
      * Initializes the Loader mechanism.
      */
     private fun initLoader(){
-        activity.supportLoaderManager.initLoader(loaderID, null, this)
+        activity?.supportLoaderManager?.initLoader(loaderID, null, this)
     }
 
     /**
@@ -172,6 +172,7 @@ abstract class MvvmBindingFragment<VM : ViewModel, B : ViewDataBinding> : Fragme
      * @return A new [ViewModelLoader] instance.
      */
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<VM> {
+        val context = this.context ?: throw UnsupportedOperationException("Context is null. Unable to create ViewModelLoader.")
         return ViewModelLoader(context, viewModelProvider)
     }
 

@@ -12,7 +12,7 @@ class SecondViewModel : BaseViewModel() {
     val text = "This is a fragment!"
 
     @get:Bindable
-    var progress by bindable(BR.progress)
+    var progress by bindable(BR.progress, 0)
             .distinct()
             .validate { _, new -> Math.min(new, 100) }
 
