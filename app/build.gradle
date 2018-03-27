@@ -37,8 +37,8 @@ def daggerVersion = "2.14.1"
 def ankoVersion = "0.10.4"
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    testImplementation 'junit:junit:4.12'
 
     implementation project(":mvvmbase")
 
@@ -57,11 +57,10 @@ dependencies {
     // Dagger 2
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
     implementation "com.google.dagger:dagger:$daggerVersion"
-    provided 'javax.annotation:jsr250-api:1.0'
+    compileOnly 'javax.annotation:jsr250-api:1.0'
 
     // Data Binding
     implementation 'com.github.trbnb:DatabindingCommands:fcc18966a9'
-    kapt 'com.android.databinding:compiler:3.0.1'
 }
 
 repositories {

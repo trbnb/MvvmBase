@@ -44,6 +44,7 @@ abstract class MvvmBindingFragment<VM : ViewModel, B : ViewDataBinding> : Fragme
      * The [ViewDataBinding] implementation for a specific layout.
      * Will only be set in [onCreateView].
      */
+    @Suppress("MemberVisibilityCanBePrivate")
     protected var binding: B? = null
         private set(value) {
             field = value
@@ -54,8 +55,9 @@ abstract class MvvmBindingFragment<VM : ViewModel, B : ViewDataBinding> : Fragme
     /**
      * The [ViewModel] that is used for data binding.
      */
+    @Suppress("MemberVisibilityCanBePrivate")
     protected var viewModel: VM? = null
-        set(value) {
+        private set(value) {
             if(field === value) return
 
             field?.onUnbind()
@@ -193,7 +195,7 @@ abstract class MvvmBindingFragment<VM : ViewModel, B : ViewDataBinding> : Fragme
      *
      * @param[loader] The Loader that is reset.
      */
-    override fun onLoaderReset(loader: Loader<VM>?) { }
+    override fun onLoaderReset(loader: Loader<VM>) { }
     //endregion
 
     /**

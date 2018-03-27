@@ -36,6 +36,7 @@ abstract class MvvmBindingActivity<VM : ViewModel, B : ViewDataBinding> : AppCom
      * The [ViewDataBinding] implementation for a specific layout.
      * Will only be set in [onCreate].
      */
+    @Suppress("MemberVisibilityCanBePrivate")
     protected lateinit var binding: B
         private set
 
@@ -128,7 +129,7 @@ abstract class MvvmBindingActivity<VM : ViewModel, B : ViewDataBinding> : AppCom
      *
      * @return A new [ViewModelLoader] instance.
      */
-    override final fun onCreateLoader(id: Int, args: Bundle?): Loader<VM> {
+    final override fun onCreateLoader(id: Int, args: Bundle?): Loader<VM> {
         return ViewModelLoader(this, viewModelProvider)
     }
 
@@ -139,7 +140,7 @@ abstract class MvvmBindingActivity<VM : ViewModel, B : ViewDataBinding> : AppCom
      * @param[loader] The [ViewModelLoader] that delivered the view model.
      * @param[data] The delivered [ViewModel] instance.
      */
-    override final fun onLoadFinished(loader: Loader<VM>, data: VM) {
+    final override fun onLoadFinished(loader: Loader<VM>, data: VM) {
         this.viewModel = data
     }
 
@@ -149,7 +150,7 @@ abstract class MvvmBindingActivity<VM : ViewModel, B : ViewDataBinding> : AppCom
      *
      * @param[loader] The Loader that is reset.
      */
-    override final fun onLoaderReset(loader: Loader<VM>?) { }
+    final override fun onLoaderReset(loader: Loader<VM>) { }
     //endregion
 
     /**
