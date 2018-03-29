@@ -1,6 +1,7 @@
 package de.trbnb.mvvmbase
 
 import android.databinding.BaseObservable
+import android.util.Log
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
@@ -13,9 +14,19 @@ import kotlin.reflect.KProperty
  * @param defaultValue Value that will be used at start.
  */
 class BindableProperty<R : BaseObservable, T>(
-        private val fieldId: Int,
+        private var fieldId: Int?,
         defaultValue: T
 ) : ReadWriteProperty<R, T> {
+
+    companion object {
+        private var brClass: Class<*>? = null
+
+        fun init(brClass: Class<*>) {
+            this.brClass = brClass
+        }
+
+        inline fun <reified BR> init() = init(BR::class.java)
+    }
 
     /**
      * Gets or sets the stored value.
@@ -56,18 +67,40 @@ class BindableProperty<R : BaseObservable, T>(
     override fun getValue(thisRef: R, property: KProperty<*>) = value
 
     override fun setValue(thisRef: R, property: KProperty<*>, value: T) {
+        if (fieldId == null) {
+            fieldId = resolveFieldId(property.name)
+        }
+
         if (distinct && this.value == value) {
             return
         }
 
         beforeSet?.invoke(thisRef, this.value, value)
         this.value = validate?.invoke(thisRef, this.value, value) ?: value
-        thisRef.notifyPropertyChanged(fieldId)
+        thisRef.notifyPropertyChanged(fieldId ?: BR._all)
         afterSet?.invoke(thisRef, value)
+    }
+
+    private fun resolveFieldId(propertyName: String): Int {
+        val brClass = brClass ?: return BR._all
+
+        val checkedPropertyName = when (propertyName.startsWith("is", ignoreCase = true)) {
+            false -> propertyName
+            true -> "${propertyName[2].toLowerCase()}${propertyName.substring(3)}"
+        }
+
+        Log.d("BindableProperty", "$checkedPropertyName dectected")
+
+        return try {
+            brClass.getField(checkedPropertyName).getInt(null)
+        } catch (e: NoSuchFieldException) {
+            Log.d("BindableProperty", "Automatic field ID detection failed for $propertyName. Defaulting to BR._all...")
+            BR._all
+        }
     }
 }
 
-fun <R : BaseObservable, T> R.bindable(fieldId: Int, defaultValue: T): BindableProperty<R, T> {
+fun <R : BaseObservable, T> R.bindable(defaultValue: T, fieldId: Int? = null): BindableProperty<R, T> {
     return BindableProperty(fieldId, defaultValue)
 }
 

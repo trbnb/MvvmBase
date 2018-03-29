@@ -24,7 +24,7 @@ class MainActivity : MvvmActivity<MainViewModel>() {
 
         // now that the view-model is loaded, we know whether or not we should know if we should
         // show the dialog and snackbar
-        arrayOf(BR.showDialog, BR.showSnackbar).forEach { onViewModelPropertyChanged(viewModel, it) }
+        arrayOf(BR.showingDialog, BR.showSnackbar).forEach { onViewModelPropertyChanged(viewModel, it) }
     }
 
     /**
@@ -32,7 +32,7 @@ class MainActivity : MvvmActivity<MainViewModel>() {
      */
     override fun onViewModelPropertyChanged(viewModel: MainViewModel, fieldId: Int) {
         when(fieldId){
-            BR.showDialog -> if(viewModel.showDialog) showDialog() else dismissDialog()
+            BR.showingDialog -> if(viewModel.isShowingDialog) showDialog() else dismissDialog()
             BR.showSnackbar -> if(viewModel.showSnackbar) showSnackbar() else dismissSnackbar()
         }
     }
@@ -59,7 +59,7 @@ class MainActivity : MvvmActivity<MainViewModel>() {
                     // Will only be called when the Dialog is canceled, not dismissed.
                     // This also changes the state in the view-model, so the dialog won't be shown
                     // again after rotation.
-                    viewModel?.showDialog = false
+                    viewModel?.isShowingDialog = false
                 }
                 .setPositiveButton(android.R.string.ok) { d, _ ->
                     // We cancel the Dialog here because the user got rid of it.

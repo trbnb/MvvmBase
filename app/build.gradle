@@ -60,7 +60,7 @@ dependencies {
     compileOnly 'javax.annotation:jsr250-api:1.0'
 
     // Data Binding
-    implementation 'com.github.trbnb:DatabindingCommands:fcc18966a9'
+    implementation 'com.github.trbnb:DatabindingCommands:0.3.2'
 }
 
 repositories {
