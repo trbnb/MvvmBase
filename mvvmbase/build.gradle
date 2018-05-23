@@ -20,7 +20,7 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 27
-        versionCode = projectVersionCode
+        versionCode = projectVersionCodeNr
         versionName = projectVersionName
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -67,34 +67,7 @@ repositories {
     google()
 }
 
-/*ext {
-    //For bintray and jcenter distribution
-    bintrayRepo = 'maven'
-    bintrayName = libArtifactId
-
-    publishedGroupId = 'de.trbnb.mvvmbase'
-    libraryName = 'MvvmBase'
-    artifact = libArtifactId //This artifact name should be the same with library module name
-
-    libraryDescription = libDescription
-
-    siteUrl = libUrl
-    gitUrl = libGit
-
-    libraryVersion = projectVersionName
-
-    developerId = dev_id
-    developerName = dev_name
-    developerEmail = dev_mail
-    organization = '' // if you push to organization's repository.
-    licenseName = 'The Apache Software License, Version 2.0'  //Example for license
-    licenseUrl = libLicenseUrl
-    allLicenses = ["Apache-2.0"]
-}*/
-
 apply plugin: 'com.github.dcendents.android-maven'
-
-//group = publishedGroupId // Maven Group ID for the artifact
 
 install {
     repositories.mavenInstaller {
