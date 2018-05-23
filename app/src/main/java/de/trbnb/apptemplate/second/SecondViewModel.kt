@@ -1,7 +1,6 @@
 package de.trbnb.apptemplate.second
 
 import android.databinding.Bindable
-import de.trbnb.apptemplate.BR
 import de.trbnb.mvvmbase.BaseViewModel
 import de.trbnb.mvvmbase.bindable
 import de.trbnb.mvvmbase.distinct
@@ -12,7 +11,7 @@ class SecondViewModel : BaseViewModel() {
     val text = "This is a fragment!"
 
     @get:Bindable
-    var progress by bindable(BR.progress, 0)
+    var progress by bindable( 0)
             .distinct()
             .validate { _, new -> Math.min(new, 100) }
 
