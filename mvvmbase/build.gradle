@@ -42,6 +42,7 @@ dependencies {
 
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    testImplementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
     // Java inject API for dependency injection
     implementation 'javax.inject:javax.inject:1'

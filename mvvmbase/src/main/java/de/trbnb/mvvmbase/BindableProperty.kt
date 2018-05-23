@@ -10,21 +10,30 @@ import kotlin.reflect.KProperty
  * The getter is not affected.
  *
  * @param T Type of the stored value.
- * @param fieldId Value of field ID inside BR.java.
+ * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  * @param defaultValue Value that will be used at start.
+ * @param isBoolean Indicates if this delegate property is for a property that has the type Boolean.
  */
-class BindableProperty<R : BaseObservable, T>(
+class BindableProperty<R : BaseObservable, T> (
         private var fieldId: Int?,
-        defaultValue: T
+        defaultValue: T,
+        internal val isBoolean: Boolean = defaultValue is Boolean
 ) : ReadWriteProperty<R, T> {
 
     companion object {
         private var brClass: Class<*>? = null
 
+        /**
+         * Initializes the automatic field ID detection by providing the class inside BR.java.
+         */
         fun init(brClass: Class<*>) {
             this.brClass = brClass
         }
 
+
+        /**
+         * Initializes the automatic field ID detection by providing the class inside BR.java.
+         */
         inline fun <reified BR> init() = init(BR::class.java)
     }
 
@@ -68,7 +77,7 @@ class BindableProperty<R : BaseObservable, T>(
 
     override fun setValue(thisRef: R, property: KProperty<*>, value: T) {
         if (fieldId == null) {
-            fieldId = resolveFieldId(property.name)
+            fieldId = resolveFieldId(property)
         }
 
         if (distinct && this.value == value) {
@@ -81,27 +90,42 @@ class BindableProperty<R : BaseObservable, T>(
         afterSet?.invoke(thisRef, value)
     }
 
-    private fun resolveFieldId(propertyName: String): Int {
+    /**
+     * Finds the field ID of the given property.
+     */
+    private fun resolveFieldId(property: KProperty<*>): Int {
         val brClass = brClass ?: return BR._all
 
-        val checkedPropertyName = when (propertyName.startsWith("is", ignoreCase = true)) {
-            false -> propertyName
-            true -> "${propertyName[2].toLowerCase()}${propertyName.substring(3)}"
-        }
+        val checkedPropertyName = property.brFieldName(isBoolean)
 
         Log.d("BindableProperty", "$checkedPropertyName dectected")
 
         return try {
             brClass.getField(checkedPropertyName).getInt(null)
         } catch (e: NoSuchFieldException) {
-            Log.d("BindableProperty", "Automatic field ID detection failed for $propertyName. Defaulting to BR._all...")
+            Log.d("BindableProperty", "Automatic field ID detection failed for ${property.name}. Defaulting to BR._all...")
             BR._all
         }
     }
 }
 
-fun <R : BaseObservable, T> R.bindable(defaultValue: T, fieldId: Int? = null): BindableProperty<R, T> {
-    return BindableProperty(fieldId, defaultValue)
+/**
+ * Creates a new BindableProperty instance.
+ *
+ * @param defaultValue Value of the property from the start.
+ * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
+ */
+inline fun <R : BaseObservable, reified T> R.bindable(defaultValue: T, fieldId: Int? = null): BindableProperty<R, T> {
+    return BindableProperty(fieldId, defaultValue, T::class == Boolean::class)
+}
+
+/**
+ * Creates a new BindableProperty instance with `null` as default value.
+ *
+ * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
+ */
+inline fun <R : BaseObservable, reified T> R.bindable(fieldId: Int? = null): BindableProperty<R, T?> {
+    return bindable(null, fieldId)
 }
 
 /**
