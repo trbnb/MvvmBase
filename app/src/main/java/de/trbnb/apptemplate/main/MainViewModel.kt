@@ -2,7 +2,6 @@ package de.trbnb.apptemplate.main
 
 import android.content.Context
 import android.databinding.Bindable
-import de.trbnb.apptemplate.BR
 import de.trbnb.apptemplate.R
 import de.trbnb.apptemplate.app.App
 import de.trbnb.apptemplate.second.SecondActivity
@@ -22,24 +21,24 @@ class MainViewModel : BaseViewModel() {
     val text: String
 
     @get:Bindable
-    var showDialog by bindable(BR.showDialog, false)
+    var isShowingDialog by bindable(false)
 
     @get:Bindable
-    var showSnackbar: Boolean by bindable(BR.showSnackbar, false)
+    var showSnackbar: Boolean by bindable( false)
             .afterSet {
                 showSnackbarCommand.onEnabledChanged()
             }
 
-    val showDialogCommand = SimpleCommand<Context, Unit> {
-        showDialog = true
+    val showDialogCommand = SimpleCommand {
+        isShowingDialog = true
     }
 
-    val showSnackbarCommand = RuleCommand<Context, Unit>(
+    val showSnackbarCommand = RuleCommand(
             action = { showSnackbar = true },
             enabledRule = { !showSnackbar }
     )
 
-    val showFragmentExampleCommand = SimpleCommand { context: Context ->
+    val showFragmentExampleCommand = SimpleCommand {
         context.startActivity<SecondActivity>()
     }
 

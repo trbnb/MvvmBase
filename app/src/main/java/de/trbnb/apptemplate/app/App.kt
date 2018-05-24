@@ -1,6 +1,8 @@
 package de.trbnb.apptemplate.app
 
 import android.app.Application
+import de.trbnb.apptemplate.BR
+import de.trbnb.mvvmbase.BindableProperty
 
 class App : Application(){
 
@@ -11,6 +13,8 @@ class App : Application(){
 
     override fun onCreate() {
         super.onCreate()
+
+        BindableProperty.init<BR>()
 
         appComponent = DaggerAppComponent
                 .builder()
