@@ -4,22 +4,23 @@ import android.databinding.BaseObservable
 
 /**
  * Simple base implementation of the [ViewModel] interface based on [BaseObservable].
- *
- * The function [onDestroy] is no-op so not every class that is extending this one has to override
- * it.
  */
 abstract class BaseViewModel : BaseObservable(), ViewModel {
 
-    override fun onBind() {
+    /**
+     * Is called when the view model is bound to an activity/layout.
+     */
+    override fun onBind() { }
 
-    }
+    /**
+     * Is called when the view model is no longer bound to an activity/layout.
+     */
+    override fun onUnbind() { }
 
-    override fun onUnbind() {
-
-    }
-
-    override fun onDestroy() {
-
-    }
+    /**
+     * Is called when this instance is about to be destroyed.
+     * Any references that could cause memory leaks should be cleared here.
+     */
+    override fun onDestroy() { }
 
 }

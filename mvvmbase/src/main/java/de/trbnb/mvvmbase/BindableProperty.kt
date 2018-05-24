@@ -87,7 +87,7 @@ class BindableProperty<R : BaseObservable, T> (
         beforeSet?.invoke(thisRef, this.value, value)
         this.value = validate?.invoke(thisRef, this.value, value) ?: value
         thisRef.notifyPropertyChanged(fieldId ?: BR._all)
-        afterSet?.invoke(thisRef, value)
+        afterSet?.invoke(thisRef, this.value)
     }
 
     /**
