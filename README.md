@@ -32,7 +32,7 @@ First we need a `BaseViewModel` implementation:
 class MainViewModel : BaseViewModel()
 ```
 
-Now this view model can be used by an `MvvmActivity`. For this a layout resource ID and a [`Provider<MainViewModel>`](https://docs.oracle.com/javaee/6/api/javax/inject/Provider.html) is needed.
+Now this view model can be used by an `MvvmActivity`. For this a layout resource ID and a [`Provider<MainViewModel>`](https://docs.oracle.com/javaee/6/api/javax/inject/Provider.html) is needed.
 
 ```kotlin
 class MainActivity : MvvmActivity<MainViewModel>() {
@@ -69,7 +69,7 @@ The layout resource ID tells the data binding tools which layout should be infla
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center">
+        android:gravity="center"/>
 
 </layout>
 ``` 
@@ -157,7 +157,7 @@ If a new value is about to be set it will check if the new value is equal to the
 * `beforeSet`  
 Will be called if a new value is about to be set. The old and the new value will be passed as parameters. Will not be invoked if `distinct` has an effect.
 
-* `validate`  
+* `validate`  
 Will be called if a new value is about to be set. The old and the new value will be passed as parameters and a return value that will then be set as actual value is expected. Will not be invoked if `distinct` has an effect.
 
 * `afterSet`  

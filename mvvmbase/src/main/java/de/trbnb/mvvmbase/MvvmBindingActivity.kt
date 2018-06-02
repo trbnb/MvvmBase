@@ -1,20 +1,14 @@
 package de.trbnb.mvvmbase
 
+import android.arch.lifecycle.ViewModelProvider
 import android.databinding.DataBindingUtil
 import android.databinding.Observable
 import android.databinding.ViewDataBinding
 import android.os.Bundle
-import android.support.v4.app.LoaderManager
-import android.support.v4.content.Loader
+import android.support.annotation.LayoutRes
 import android.support.v7.app.AppCompatActivity
+import java.lang.reflect.ParameterizedType
 import javax.inject.Provider
-
-/**
- * The ID that is used for the [ViewModelLoader].
- * Since the IDs for Loaders are Activity-specific there is no need to generate one dynamically.
- * A constant value is sufficient.
- */
-private const val LOADER_ID = LoaderIdGenerator.ACTIVITY_ID
 
 /**
  * Base class for Activities that serve as view within an MVVM structure.
@@ -22,15 +16,15 @@ private const val LOADER_ID = LoaderIdGenerator.ACTIVITY_ID
  * It automatically creates the binding and sets the view model as that bindings parameter.
  * Note that the parameter has to have to name "vm".
  *
- * The view model will be loaded by the [ViewModelLoader], thus making sure it survives the Activitys
- * lifecycle. If an Activity is created for the first time the Loader will instantiate the view model
- * via the [viewModelProvider]. This [Provider] can either be implemented manually or injected by
- * Dagger.
+ * The view model will be created by the Architecture Components, thus making sure it survives the
+ * Activitys lifecycle. If an Activity is created for the first time the Loader will instantiate
+ * the view model via the [viewModelProvider]. This [Provider] can either be implemented manually
+ * or injected by DI.
  *
  * @param[VM] The type of the specific [ViewModel] implementation for this Activity.
  * @param[B] The type of the specific [ViewDataBinding] implementation for this Activity.
  */
-abstract class MvvmBindingActivity<VM : ViewModel, B : ViewDataBinding> : AppCompatActivity(), LoaderManager.LoaderCallbacks<VM> {
+abstract class MvvmBindingActivity<VM : BaseViewModel, B : ViewDataBinding> : AppCompatActivity() {
 
     /**
      * The [ViewDataBinding] implementation for a specific layout.
@@ -76,13 +70,33 @@ abstract class MvvmBindingActivity<VM : ViewModel, B : ViewDataBinding> : AppCom
      * The layout resource ID for this Activity.
      * Is used in [onCreate] to create the [ViewDataBinding].
      */
+    @get:LayoutRes
     protected abstract val layoutId: Int
 
     /**
-     * The [Provider] implementation that is used by the [ViewModelLoader] if a new view model
-     * has to be instantiated. Can either be implemented manually or injected by Dagger.
+     * The [Provider] implementation that is used if a new view model has to be instantiated.
      */
     abstract val viewModelProvider: Provider<VM>
+
+    /**
+     * Gets the class of the view model that an implementation uses.
+     */
+    private val viewModelClass: Class<VM>
+        @Suppress("UNCHECKED_CAST")
+        get() {
+            val superClass = this::class.java.genericSuperclass as ParameterizedType
+            return superClass.actualTypeArguments[0] as Class<VM>
+        }
+
+    /**
+     * Creates a new view model via [viewModelProvider].
+     */
+    private val viewModelFactory = object : ViewModelProvider.Factory {
+        @Suppress("UNCHECKED_CAST")
+        override fun <T : android.arch.lifecycle.ViewModel> create(modelClass: Class<T>): T {
+            return viewModelProvider.get() as T
+        }
+    }
 
     /**
      * Callback implementation that delegates the parametes to [onViewModelPropertyChanged].
@@ -96,14 +110,13 @@ abstract class MvvmBindingActivity<VM : ViewModel, B : ViewDataBinding> : AppCom
 
     /**
      * Called by the lifecycle.
-     * Creates the [ViewDataBinding] and initializes the [ViewModelLoader].
+     * Creates the [ViewDataBinding] and loads the view model.
      */
     @Suppress("UNCHECKED_CAST")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = initBinding()
-
-        initLoader()
+        viewModel = ViewModelProvider(viewModelStore, viewModelFactory)[viewModelClass]
     }
 
     /**
@@ -113,48 +126,8 @@ abstract class MvvmBindingActivity<VM : ViewModel, B : ViewDataBinding> : AppCom
      */
     private fun initBinding(): B = DataBindingUtil.setContentView(this, layoutId)
 
-    // region Loader
     /**
-     * Initializes the Loader mechanism.
-     */
-    private fun initLoader(){
-        supportLoaderManager.initLoader(LOADER_ID, null, this)
-    }
-
-    /**
-     * Called by the Loader API when a new [ViewModelLoader] instance is needed.
-     *
-     * @param[id] The ID whose loader is to be created. Will be [LOADER_ID].
-     * @param[args] Any arguments supplied by the caller.
-     *
-     * @return A new [ViewModelLoader] instance.
-     */
-    final override fun onCreateLoader(id: Int, args: Bundle?): Loader<VM> {
-        return ViewModelLoader(this, viewModelProvider)
-    }
-
-    /**
-     * Called by the Loader API when the [ViewModelLoader] delivers a view model via [Loader.deliverResult].
-     * Sets the loaded [ViewModel] instance as [viewModel].
-     *
-     * @param[loader] The [ViewModelLoader] that delivered the view model.
-     * @param[data] The delivered [ViewModel] instance.
-     */
-    final override fun onLoadFinished(loader: Loader<VM>, data: VM) {
-        this.viewModel = data
-    }
-
-    /**
-     * Called by the Loader API when the [ViewModelLoader] will be reset.
-     * Nothing happens here because we handle this already in the ViewModelLoader implementation.
-     *
-     * @param[loader] The Loader that is reset.
-     */
-    final override fun onLoaderReset(loader: Loader<VM>) { }
-    //endregion
-
-    /**
-     * Called when the view model has been delivered by the [ViewModelLoader] and is set as [viewModel].
+     * Called when the view model is loaded and is set as [viewModel].
      *
      * @param[viewModel] The [ViewModel] instance that was loaded.
      */

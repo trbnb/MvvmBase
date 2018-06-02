@@ -42,6 +42,10 @@ class MainViewModel : BaseViewModel() {
         context.startActivity<SecondActivity>()
     }
 
+    val showMainActivityAgain = SimpleCommand {
+        context.startActivity<MainActivity>()
+    }
+
     init {
         App.appComponent.inject(this)
 
