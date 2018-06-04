@@ -1,4 +1,4 @@
-package de.trbnb.mvvmbase
+package de.trbnb.mvvmbase.bindableproperty
 
 import kotlin.reflect.KProperty
 

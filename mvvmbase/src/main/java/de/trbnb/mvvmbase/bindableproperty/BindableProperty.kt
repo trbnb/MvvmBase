@@ -1,7 +1,9 @@
-package de.trbnb.mvvmbase
+package de.trbnb.mvvmbase.bindableproperty
 
 import android.databinding.BaseObservable
 import android.util.Log
+import de.trbnb.mvvmbase.BR
+import de.trbnb.mvvmbase.BaseViewModel
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
@@ -21,7 +23,8 @@ class BindableProperty<R : BaseViewModel, T> (
 ) : ReadWriteProperty<R, T> {
 
     companion object {
-        private var brClass: Class<*>? = null
+        internal var brClass: Class<*>? = null
+            private set
 
         /**
          * Initializes the automatic field ID detection by providing the class inside BR.java.
