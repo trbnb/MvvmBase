@@ -2,7 +2,7 @@ package de.trbnb.apptemplate.app
 
 import android.app.Application
 import de.trbnb.apptemplate.BR
-import de.trbnb.mvvmbase.BindableProperty
+import de.trbnb.mvvmbase.bindableproperty.BindableProperty
 
 class App : Application(){
 

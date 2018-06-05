@@ -1,5 +1,8 @@
 package de.trbnb.mvvmbase
 
+import de.trbnb.mvvmbase.bindableproperty.BindableProperty
+import de.trbnb.mvvmbase.bindableproperty.bindable
+import de.trbnb.mvvmbase.bindableproperty.brFieldName
 import org.junit.Test
 import kotlin.reflect.KProperty0
 import kotlin.reflect.jvm.isAccessible

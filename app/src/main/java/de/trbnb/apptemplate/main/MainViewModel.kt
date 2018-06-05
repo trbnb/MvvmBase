@@ -8,8 +8,8 @@ import de.trbnb.apptemplate.second.SecondActivity
 import de.trbnb.databindingcommands.command.RuleCommand
 import de.trbnb.databindingcommands.command.SimpleCommand
 import de.trbnb.mvvmbase.BaseViewModel
-import de.trbnb.mvvmbase.afterSet
-import de.trbnb.mvvmbase.bindable
+import de.trbnb.mvvmbase.bindableproperty.afterSet
+import de.trbnb.mvvmbase.bindableproperty.bindable
 import org.jetbrains.anko.startActivity
 import javax.inject.Inject
 
