@@ -61,7 +61,7 @@ dependencies {
     implementation "android.arch.lifecycle:viewmodel:$lifecycle_version"
 
     // Java inject API for dependency injection
-    implementation 'javax.inject:javax.inject:1'
+    api 'javax.inject:javax.inject:1'
 }
 
 repositories {
