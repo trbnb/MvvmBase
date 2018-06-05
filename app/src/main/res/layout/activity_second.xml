@@ -1,8 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/second_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:layout="@layout/fragment_second"
-    android:name="de.trbnb.apptemplate.second.SecondFragment"/>
+    android:orientation="vertical">
+
+    <fragment
+        android:id="@+id/second_fragment_1"
+        android:name="de.trbnb.apptemplate.second.SecondFragment"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:layout_height="0dp"
+        tools:layout="@layout/fragment_second" />
+
+    <fragment
+        android:id="@+id/second_fragment_2"
+        android:name="de.trbnb.apptemplate.second.SecondFragment"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:layout_height="0dp"
+        tools:layout="@layout/fragment_second" />
+
+</LinearLayout>

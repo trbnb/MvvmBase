@@ -41,5 +41,12 @@
             android:text="Show Fragment example"
             android:clickCommand="@{vm.showFragmentExampleCommand}"/>
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Show this activity again!"
+            android:clickCommand="@{vm.showMainActivityAgain}"
+            style="@style/Widget.AppCompat.Button.Colored"/>
+
     </LinearLayout>
 </layout>
