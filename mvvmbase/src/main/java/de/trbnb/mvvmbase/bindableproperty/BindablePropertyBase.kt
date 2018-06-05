@@ -14,6 +14,7 @@ abstract class BindablePropertyBase {
      * If true and a value is about to be set that is equal to the old one the setter will do nothing.
      */
     internal var distinct: Boolean = false
+
     /**
      * Gets if this delegate property is for a property that has the type Boolean.
      */

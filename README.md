@@ -162,3 +162,18 @@ Will be called if a new value is about to be set. The old and the new value will
 
 * `afterSet`  
 Will be called after a new value is set. The new value will be passed as parameter.
+
+### Primitives
+
+There are also BindableProperties for primitive JVM types:
+
+| Type      | BindableProperty type         | Convenience function  | default Value
+|-----------|-------------------------------|-----------------------|:------------:
+| `Boolean` | `BindableBooleanProperty`     | `bindableBoolean()`   | `false`
+| `Byte`    | `BindableByteProperty`        | `bindableByte()`      | `0`
+| `Char`    | `BindableCharProperty`        | `bindableChar()`      | none
+| `Double`  | `BindableDoubleProperty`      | `bindableDouble()`    | `0.0`
+| `Float`   | `BindableFloatProperty`       | `bindableFloat()`     | `0.0`
+| `Int`     | `BindableIntProperty`         | `bindableInt()`       | `0`
+| `Long`    | `BindableLongProperty`        | `bindableLong()`      | `0`
+| `Short`   | `BindableShortProperty`       | `bindableShort()`     | `0`
