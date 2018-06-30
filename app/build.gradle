@@ -33,7 +33,6 @@ android {
     }
 }
 
-def daggerVersion = "2.14.1"
 def ankoVersion = "0.10.4"
 
 dependencies {
@@ -54,10 +53,8 @@ dependencies {
     implementation "org.jetbrains.anko:anko-support-v4:$ankoVersion" // In case you need support-v4 bindings
     implementation "org.jetbrains.anko:anko-appcompat-v7:$ankoVersion" // For appcompat-v7 bindings
 
-    // Dagger 2
-    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
-    implementation "com.google.dagger:dagger:$daggerVersion"
-    compileOnly 'javax.annotation:jsr250-api:1.0'
+    // Dependency Injection
+    implementation "org.koin:koin-android-architecture:0.9.3"
 
     // Data Binding
     implementation 'com.github.trbnb:DatabindingCommands:0.3.2'

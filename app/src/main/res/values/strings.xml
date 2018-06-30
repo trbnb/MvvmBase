@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">KotlinDaggerDatabindingTemplate</string>
+    <string name="app_name">KotlinKoinDatabindingTemplate</string>
 
-    <string name="example_text">Hello Databinding, Kotlin &amp; Dagger</string>
+    <string name="example_text">Hello Databinding, Kotlin &amp; Koin</string>
 </resources>

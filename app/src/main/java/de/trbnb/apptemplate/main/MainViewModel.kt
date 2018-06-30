@@ -3,7 +3,6 @@ package de.trbnb.apptemplate.main
 import android.content.Context
 import android.databinding.Bindable
 import de.trbnb.apptemplate.R
-import de.trbnb.apptemplate.app.App
 import de.trbnb.apptemplate.second.SecondActivity
 import de.trbnb.databindingcommands.command.RuleCommand
 import de.trbnb.databindingcommands.command.SimpleCommand
@@ -11,14 +10,13 @@ import de.trbnb.mvvmbase.BaseViewModel
 import de.trbnb.mvvmbase.bindableproperty.afterSet
 import de.trbnb.mvvmbase.bindableproperty.bindable
 import org.jetbrains.anko.startActivity
-import javax.inject.Inject
 
-class MainViewModel : BaseViewModel() {
+class MainViewModel(
+        // FIXME this leaks the context and prevents deviceless viewmodel tests
+        var context: Context
+) : BaseViewModel() {
 
-    @Inject
-    lateinit var context: Context
-
-    val text: String
+    val text: String = context.getString(R.string.example_text)
 
     @get:Bindable
     var isShowingDialog by bindable(false)
@@ -44,12 +42,6 @@ class MainViewModel : BaseViewModel() {
 
     val showMainActivityAgain = SimpleCommand {
         context.startActivity<MainActivity>()
-    }
-
-    init {
-        App.appComponent.inject(this)
-
-        text = context.getString(R.string.example_text)
     }
 
     override fun onUnbind() {

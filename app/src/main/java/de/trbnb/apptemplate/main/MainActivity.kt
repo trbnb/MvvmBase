@@ -6,6 +6,7 @@ import android.support.design.widget.Snackbar
 import de.trbnb.apptemplate.BR
 import de.trbnb.apptemplate.R
 import de.trbnb.mvvmbase.MvvmActivity
+import org.koin.android.architecture.ext.getViewModel
 import javax.inject.Provider
 
 class MainActivity : MvvmActivity<MainViewModel>() {
@@ -13,11 +14,8 @@ class MainActivity : MvvmActivity<MainViewModel>() {
     private var dialog: Dialog? = null
     private var snackbar: Snackbar? = null
 
-    override val layoutId: Int
-        get() = R.layout.activity_main
-
-    override val viewModelProvider: Provider<MainViewModel>
-        get() = Provider(::MainViewModel)
+    override val layoutId = R.layout.activity_main
+    override val viewModelProvider = Provider { getViewModel<MainViewModel>() }
 
     override fun onViewModelLoaded(viewModel: MainViewModel) {
         super.onViewModelLoaded(viewModel)
