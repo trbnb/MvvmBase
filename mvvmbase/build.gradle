@@ -59,9 +59,6 @@ dependencies {
     // Lifecycle architecture components
     def lifecycle_version = "1.1.1"
     implementation "android.arch.lifecycle:viewmodel:$lifecycle_version"
-
-    // Java inject API for dependency injection
-    api 'javax.inject:javax.inject:1'
 }
 
 repositories {
