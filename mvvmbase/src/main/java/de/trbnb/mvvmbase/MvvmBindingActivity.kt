@@ -7,7 +7,7 @@ import android.databinding.ViewDataBinding
 import android.os.Bundle
 import android.support.annotation.LayoutRes
 import android.support.v7.app.AppCompatActivity
-import java.lang.reflect.ParameterizedType
+import de.trbnb.mvvmbase.utils.findGenericSuperclass
 import javax.inject.Provider
 
 /**
@@ -84,7 +84,9 @@ abstract class MvvmBindingActivity<VM : BaseViewModel, B : ViewDataBinding> : Ap
     private val viewModelClass: Class<VM>
         @Suppress("UNCHECKED_CAST")
         get() {
-            val superClass = this::class.java.genericSuperclass as ParameterizedType
+            val superClass = findGenericSuperclass<MvvmBindingActivity<VM, B>>()
+                ?: throw IllegalStateException()
+
             return superClass.actualTypeArguments[0] as Class<VM>
         }
 
