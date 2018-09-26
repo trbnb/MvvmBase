@@ -1,11 +1,10 @@
 package de.trbnb.mvvmbase
 
-import android.databinding.BaseObservable
-import android.databinding.Bindable
-import android.databinding.Observable
-import android.databinding.PropertyChangeRegistry
-import android.arch.lifecycle.ViewModel as ArchitectureViewModel
-
+import androidx.databinding.BaseObservable
+import androidx.databinding.Bindable
+import androidx.databinding.Observable
+import androidx.databinding.PropertyChangeRegistry
+import androidx.lifecycle.ViewModel as ArchitectureViewModel
 /**
  * Simple base implementation of the [ViewModel] interface based on [BaseObservable].
  */

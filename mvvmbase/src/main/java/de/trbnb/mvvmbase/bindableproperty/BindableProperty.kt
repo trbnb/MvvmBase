@@ -1,7 +1,7 @@
 package de.trbnb.mvvmbase.bindableproperty
 
-import android.databinding.BaseObservable
 import android.util.Log
+import androidx.databinding.BaseObservable
 import de.trbnb.mvvmbase.BR
 import de.trbnb.mvvmbase.BaseViewModel
 import kotlin.properties.ReadWriteProperty

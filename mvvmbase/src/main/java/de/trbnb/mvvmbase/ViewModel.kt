@@ -1,6 +1,6 @@
 package de.trbnb.mvvmbase
 
-import android.databinding.Observable
+import androidx.databinding.Observable
 
 /**
  * Base interface that defines basic functionality for all view models.
@@ -9,8 +9,8 @@ import android.databinding.Observable
  * throughout the lifecycle of these by the Architecture Components.
  *
  * It extends the [Observable] interface provided by the Android data binding library. This means
- * that implementations have to handle [android.databinding.Observable.OnPropertyChangedCallback]s.
- * This is done the easiest way by extending [android.databinding.BaseObservable].
+ * that implementations have to handle [androidx.databinding.Observable.OnPropertyChangedCallback]s.
+ * This is done the easiest way by extending [androidx.databinding.BaseObservable].
  */
 interface ViewModel : Observable {
 
