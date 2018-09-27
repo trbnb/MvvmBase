@@ -4,7 +4,7 @@ import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 
 internal inline fun <reified T> Any.findGenericSuperclass(): ParameterizedType? {
-    val genericSuperClass = javaClass.genericSuperclass
+    val genericSuperClass = javaClass.genericSuperclass ?: return null
 
     if (genericSuperClass is ParameterizedType && genericSuperClass.rawType == T::class.java) {
         return genericSuperClass
