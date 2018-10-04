@@ -11,7 +11,7 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import java.lang.reflect.ParameterizedType
+import de.trbnb.mvvmbase.utils.findGenericSuperclass
 import javax.inject.Provider
 
 /**
@@ -74,7 +74,9 @@ abstract class MvvmBindingFragment<VM : BaseViewModel, B : ViewDataBinding> : Fr
     private val viewModelClass: Class<VM>
         @Suppress("UNCHECKED_CAST")
         get() {
-            val superClass = this::class.java.genericSuperclass as ParameterizedType
+            val superClass = findGenericSuperclass<MvvmBindingFragment<VM, B>>()
+                ?: throw IllegalStateException()
+
             return superClass.actualTypeArguments[0] as Class<VM>
         }
 
