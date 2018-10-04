@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import java.lang.reflect.ParameterizedType
+import javax.inject.Provider
 
 /**
  * Base class for Frgaments that serve as view within an MVVM structure.
@@ -21,7 +22,7 @@ import java.lang.reflect.ParameterizedType
  *
  * The view model will be kept in memory with the Architecture Components. If a Fragment is created
  * for the first time the view model will be instantiated via the [viewModelProvider].
- * This provider can either be implemented manually or injected with DI.
+ * This [Provider] can either be implemented manually or injected with DI.
  *
  * @param[VM] The type of the specific [ViewModel] implementation for this Fragment.
  * @param[B] The type of the specific [ViewDataBinding] implementation for this Fragment.
@@ -83,7 +84,7 @@ abstract class MvvmBindingFragment<VM : BaseViewModel, B : ViewDataBinding> : Fr
     private val viewModelFactory = object : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : android.arch.lifecycle.ViewModel> create(modelClass: Class<T>): T {
-            return viewModelProvider() as T
+            return viewModelProvider.get() as T
         }
     }
 
@@ -102,9 +103,9 @@ abstract class MvvmBindingFragment<VM : BaseViewModel, B : ViewDataBinding> : Fr
     protected abstract val layoutId: Int
 
     /**
-     * The provider that is used if a new view model has to be instantiated.
+     * The [Provider] implementation that is used if a new view model has to be instantiated.
      */
-    abstract val viewModelProvider: () -> VM
+    abstract val viewModelProvider: Provider<VM>
 
     /**
      * Callback implementation that delegates the parametes to [onViewModelPropertyChanged].

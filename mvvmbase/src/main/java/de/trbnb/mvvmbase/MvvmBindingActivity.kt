@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.support.annotation.LayoutRes
 import android.support.v7.app.AppCompatActivity
 import java.lang.reflect.ParameterizedType
+import javax.inject.Provider
 
 /**
  * Base class for Activities that serve as view within an MVVM structure.
@@ -17,7 +18,7 @@ import java.lang.reflect.ParameterizedType
  *
  * The view model will be created by the Architecture Components, thus making sure it survives the
  * Activitys lifecycle. If an Activity is created for the first time the Loader will instantiate
- * the view model via the [viewModelProvider]. This provider can either be implemented manually
+ * the view model via the [viewModelProvider]. This [Provider] can either be implemented manually
  * or injected by DI.
  *
  * @param[VM] The type of the specific [ViewModel] implementation for this Activity.
@@ -73,9 +74,9 @@ abstract class MvvmBindingActivity<VM : BaseViewModel, B : ViewDataBinding> : Ap
     protected abstract val layoutId: Int
 
     /**
-     * The provider that is used if a new view model has to be instantiated.
+     * The [Provider] implementation that is used if a new view model has to be instantiated.
      */
-    abstract val viewModelProvider: () -> VM
+    abstract val viewModelProvider: Provider<VM>
 
     /**
      * Gets the class of the view model that an implementation uses.
@@ -93,7 +94,7 @@ abstract class MvvmBindingActivity<VM : BaseViewModel, B : ViewDataBinding> : Ap
     private val viewModelFactory = object : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : android.arch.lifecycle.ViewModel> create(modelClass: Class<T>): T {
-            return viewModelProvider() as T
+            return viewModelProvider.get() as T
         }
     }
 
