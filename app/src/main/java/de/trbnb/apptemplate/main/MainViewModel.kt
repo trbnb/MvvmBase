@@ -7,7 +7,8 @@ import de.trbnb.apptemplate.app.App
 import de.trbnb.apptemplate.second.SecondActivity
 import de.trbnb.mvvmbase.BaseViewModel
 import de.trbnb.mvvmbase.bindableproperty.bindable
-import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.intentFor
+import org.jetbrains.anko.newTask
 import javax.inject.Inject
 
 class MainViewModel : BaseViewModel() {
@@ -32,11 +33,11 @@ class MainViewModel : BaseViewModel() {
     }
 
     fun showFragmentExample() {
-        context.startActivity<SecondActivity>()
+        context.startActivity(context.intentFor<SecondActivity>().newTask())
     }
 
     fun showMainActivityAgain() {
-        context.startActivity<MainActivity>()
+        context.startActivity(context.intentFor<MainActivity>().newTask())
     }
 
     init {
