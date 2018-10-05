@@ -1,8 +1,8 @@
 package de.trbnb.apptemplate.second
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import de.trbnb.apptemplate.R
 
 class SecondActivity : AppCompatActivity(){
