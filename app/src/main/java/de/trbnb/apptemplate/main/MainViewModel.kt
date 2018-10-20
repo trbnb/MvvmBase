@@ -1,16 +1,14 @@
 package de.trbnb.apptemplate.main
 
 import android.content.Context
-import android.databinding.Bindable
+import androidx.databinding.Bindable
 import de.trbnb.apptemplate.R
 import de.trbnb.apptemplate.app.App
 import de.trbnb.apptemplate.second.SecondActivity
-import de.trbnb.databindingcommands.command.RuleCommand
-import de.trbnb.databindingcommands.command.SimpleCommand
 import de.trbnb.mvvmbase.BaseViewModel
-import de.trbnb.mvvmbase.bindableproperty.afterSet
 import de.trbnb.mvvmbase.bindableproperty.bindable
-import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.intentFor
+import org.jetbrains.anko.newTask
 import javax.inject.Inject
 
 class MainViewModel : BaseViewModel() {
@@ -24,38 +22,26 @@ class MainViewModel : BaseViewModel() {
     var isShowingDialog by bindable(false)
 
     @get:Bindable
-    var showSnackbar: Boolean by bindable( false)
-            .afterSet {
-                showSnackbarCommand.onEnabledChanged()
-            }
+    var isShowingSnackbar: Boolean by bindable(false)
 
-    val showDialogCommand = SimpleCommand {
+    fun showDialog() {
         isShowingDialog = true
     }
 
-    val showSnackbarCommand = RuleCommand(
-            action = { showSnackbar = true },
-            enabledRule = { !showSnackbar }
-    )
-
-    val showFragmentExampleCommand = SimpleCommand {
-        context.startActivity<SecondActivity>()
+    fun showSnackbar() {
+        isShowingSnackbar = true
     }
 
-    val showMainActivityAgain = SimpleCommand {
-        context.startActivity<MainActivity>()
+    fun showFragmentExample() {
+        context.startActivity(context.intentFor<SecondActivity>().newTask())
+    }
+
+    fun showMainActivityAgain() {
+        context.startActivity(context.intentFor<MainActivity>().newTask())
     }
 
     init {
         App.appComponent.inject(this)
-
         text = context.getString(R.string.example_text)
     }
-
-    override fun onUnbind() {
-        showDialogCommand.clearEnabledListeners()
-        showSnackbarCommand.clearEnabledListeners()
-        showFragmentExampleCommand.clearEnabledListeners()
-    }
-
 }

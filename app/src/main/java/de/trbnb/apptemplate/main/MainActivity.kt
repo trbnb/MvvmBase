@@ -2,7 +2,7 @@ package de.trbnb.apptemplate.main
 
 import android.app.AlertDialog
 import android.app.Dialog
-import android.support.design.widget.Snackbar
+import com.google.android.material.snackbar.Snackbar
 import de.trbnb.apptemplate.BR
 import de.trbnb.apptemplate.R
 import de.trbnb.mvvmbase.MvvmActivity
@@ -24,16 +24,16 @@ class MainActivity : MvvmActivity<MainViewModel>() {
 
         // now that the view-model is loaded, we know whether or not we should know if we should
         // show the dialog and snackbar
-        arrayOf(BR.showingDialog, BR.showSnackbar).forEach { onViewModelPropertyChanged(viewModel, it) }
+        arrayOf(BR.showingDialog, BR.showingSnackbar).forEach { onViewModelPropertyChanged(viewModel, it) }
     }
 
     /**
      * will be called whenever the view-model calls notifyPropertyChanged
      */
     override fun onViewModelPropertyChanged(viewModel: MainViewModel, fieldId: Int) {
-        when(fieldId){
-            BR.showingDialog -> if(viewModel.isShowingDialog) showDialog() else dismissDialog()
-            BR.showSnackbar -> if(viewModel.showSnackbar) showSnackbar() else dismissSnackbar()
+        when (fieldId) {
+            BR.showingDialog -> if (viewModel.isShowingDialog) showDialog() else dismissDialog()
+            BR.showingSnackbar -> if (viewModel.isShowingSnackbar) showSnackbar() else dismissSnackbar()
         }
     }
 
@@ -91,11 +91,11 @@ class MainActivity : MvvmActivity<MainViewModel>() {
                         return
                     }
 
-                    viewModel?.showSnackbar = false
+                    viewModel?.isShowingSnackbar = false
                 }
             })
 
-            setAction("Hide") { viewModel?.showSnackbar = false }
+            setAction("Hide") { viewModel?.isShowingSnackbar = false }
 
             show()
         }
