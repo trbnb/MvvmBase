@@ -1,5 +1,6 @@
 package de.trbnb.mvvmbase
 
+import android.arch.lifecycle.LifecycleOwner
 import android.databinding.Observable
 
 /**
@@ -12,7 +13,7 @@ import android.databinding.Observable
  * that implementations have to handle [android.databinding.Observable.OnPropertyChangedCallback]s.
  * This is done the easiest way by extending [android.databinding.BaseObservable].
  */
-interface ViewModel : Observable {
+interface ViewModel : Observable, LifecycleOwner {
 
     /**
      * Is called when this ViewModel is bound to a View.
