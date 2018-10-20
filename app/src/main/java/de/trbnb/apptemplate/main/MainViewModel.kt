@@ -5,12 +5,13 @@ import android.databinding.Bindable
 import de.trbnb.apptemplate.R
 import de.trbnb.apptemplate.app.App
 import de.trbnb.apptemplate.second.SecondActivity
-import de.trbnb.databindingcommands.command.RuleCommand
-import de.trbnb.databindingcommands.command.SimpleCommand
 import de.trbnb.mvvmbase.BaseViewModel
 import de.trbnb.mvvmbase.bindableproperty.afterSet
 import de.trbnb.mvvmbase.bindableproperty.bindable
-import org.jetbrains.anko.startActivity
+import de.trbnb.mvvmbase.commands.RuleCommand
+import de.trbnb.mvvmbase.commands.SimpleCommand
+import org.jetbrains.anko.intentFor
+import org.jetbrains.anko.newTask
 import javax.inject.Inject
 
 class MainViewModel : BaseViewModel() {
@@ -39,11 +40,11 @@ class MainViewModel : BaseViewModel() {
     )
 
     val showFragmentExampleCommand = SimpleCommand {
-        context.startActivity<SecondActivity>()
+        context.startActivity(context.intentFor<SecondActivity>().newTask())
     }
 
     val showMainActivityAgain = SimpleCommand {
-        context.startActivity<MainActivity>()
+        context.startActivity(context.intentFor<MainActivity>().newTask())
     }
 
     init {
