@@ -1,20 +1,74 @@
 package de.trbnb.mvvmbase
 
+import android.annotation.SuppressLint
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import androidx.databinding.Observable
 import androidx.databinding.PropertyChangeRegistry
+import androidx.lifecycle.GenericLifecycleObserver
 import androidx.lifecycle.ViewModel as ArchitectureViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
 /**
  * Simple base implementation of the [ViewModel] interface based on [BaseObservable].
  */
-abstract class BaseViewModel : ArchitectureViewModel(), Observable, ViewModel {
+abstract class BaseViewModel : ArchitectureViewModel(), ViewModel {
 
     /**
      * Callback registry for [Observable].
      */
     @Transient
     private var callbacks = PropertyChangeRegistry()
+
+    /**
+     * Gets the custom lifecycle for ViewModels.
+     *
+     * Is either [Lifecycle.State.INITIALIZED] or [Lifecycle.State.DESTROYED].
+     */
+    private val lifecycle = object : Lifecycle() {
+        private val observers = mutableListOf<LifecycleObserver>()
+
+        /**
+         * Gets if the ViewModel is destroyed.
+         */
+        private var isDestroyed = false
+
+        override fun addObserver(observer: LifecycleObserver) {
+            observers += observer
+        }
+
+        override fun removeObserver(observer: LifecycleObserver) {
+            observers -= observer
+        }
+
+        override fun getCurrentState(): State = if (isDestroyed) State.INITIALIZED else State.DESTROYED
+
+        /**
+         * Registers that the ViewModel will be destroyed.
+         * This will trigger the [LifecycleObserver]s.
+         */
+        @SuppressLint("RestrictedApi")
+        fun setDestroyed() {
+            isDestroyed = true
+            val event = Event.ON_DESTROY
+
+            observers.forEach { observer ->
+                if (observer is GenericLifecycleObserver) {
+                    observer.onStateChanged(this@BaseViewModel, event)
+                }
+
+                // LifecycleObservers that are not a GenericLifecycleObserver will be triggered
+                // via reflection. See OnLifecycleEvent annotation.
+                observer.javaClass.declaredMethods.filter {
+                    it.annotations.any { annotation ->
+                        val annotationValue = (annotation as? OnLifecycleEvent)?.value ?: return@any false
+                        annotationValue == event || annotationValue == Event.ON_ANY
+                    }
+                }.forEach { it.invoke(observer) }
+            }
+        }
+    }
 
     /**
      * Adds a property changed callback to [callbacks].
@@ -68,6 +122,9 @@ abstract class BaseViewModel : ArchitectureViewModel(), Observable, ViewModel {
         super.onCleared()
 
         onDestroy()
+        lifecycle.setDestroyed()
     }
+
+    override fun getLifecycle() = lifecycle
 
 }

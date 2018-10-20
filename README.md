@@ -100,6 +100,8 @@ Will be called when the view model is no longer associated with any activity/lay
 * `onDestroy()`  
 Will be called when the instance is about to be destroyed. This should be used to clear references to avoid memory leaks.
 
+The ViewModel also implements LifecycleOwner which allows LiveData, rx.Observable, etc. to cancel listeners, subscriptions and others automatically.
+
 ## BindableProperty<T>
 
 As said before this is a delegate property which calls `notifyPropertyChanged` itself if its value has changed. It can also detect the field ID from the BR.java file automatically (specifying the field ID manually is also possible). So to use this feature first the property needs to know what `BR` class should be used. This should be done as early as possible, e.g. in the Applications `onCreate()`:
