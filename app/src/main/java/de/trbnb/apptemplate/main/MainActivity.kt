@@ -2,10 +2,15 @@ package de.trbnb.apptemplate.main
 
 import android.app.AlertDialog
 import android.app.Dialog
+import android.os.Bundle
 import android.support.design.widget.Snackbar
 import de.trbnb.apptemplate.BR
 import de.trbnb.apptemplate.R
+import de.trbnb.apptemplate.app.appComponent
 import de.trbnb.mvvmbase.MvvmActivity
+import de.trbnb.mvvmbase.events.Event
+import org.jetbrains.anko.toast
+import javax.inject.Inject
 import javax.inject.Provider
 
 class MainActivity : MvvmActivity<MainViewModel>() {
@@ -16,8 +21,13 @@ class MainActivity : MvvmActivity<MainViewModel>() {
     override val layoutId: Int
         get() = R.layout.activity_main
 
-    override val viewModelProvider: Provider<MainViewModel>
-        get() = Provider(::MainViewModel)
+    @Inject
+    override lateinit var viewModelProvider: Provider<MainViewModel>
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        appComponent.inject(this)
+        super.onCreate(savedInstanceState)
+    }
 
     override fun onViewModelLoaded(viewModel: MainViewModel) {
         super.onViewModelLoaded(viewModel)
@@ -59,7 +69,7 @@ class MainActivity : MvvmActivity<MainViewModel>() {
                     // Will only be called when the Dialog is canceled, not dismissed.
                     // This also changes the state in the view-model, so the dialog won't be shown
                     // again after rotation.
-                    viewModel?.isShowingDialog = false
+                    viewModel.isShowingDialog = false
                 }
                 .setPositiveButton(android.R.string.ok) { d, _ ->
                     // We cancel the Dialog here because the user got rid of it.
@@ -91,13 +101,23 @@ class MainActivity : MvvmActivity<MainViewModel>() {
                         return
                     }
 
-                    viewModel?.showSnackbar = false
+                    viewModel.showSnackbar = false
                 }
             })
 
-            setAction("Hide") { viewModel?.showSnackbar = false }
+            setAction("Hide") { viewModel.showSnackbar = false }
 
             show()
+        }
+    }
+
+    override fun onEvent(event: Event) {
+        super.onEvent(event)
+
+        event as? MainEvent ?: return
+
+        when (event) {
+            is MainEvent.ShowToast -> toast("Toast message!")
         }
     }
 

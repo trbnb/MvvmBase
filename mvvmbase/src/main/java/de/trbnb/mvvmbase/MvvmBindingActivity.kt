@@ -5,8 +5,11 @@ import android.databinding.DataBindingUtil
 import android.databinding.Observable
 import android.databinding.ViewDataBinding
 import android.os.Bundle
+import android.support.annotation.CallSuper
 import android.support.annotation.LayoutRes
 import android.support.v7.app.AppCompatActivity
+import de.trbnb.mvvmbase.events.Event
+import de.trbnb.mvvmbase.events.addListener
 import de.trbnb.mvvmbase.utils.findGenericSuperclass
 import javax.inject.Provider
 
@@ -37,27 +40,11 @@ abstract class MvvmBindingActivity<VM : BaseViewModel, B : ViewDataBinding> : Ap
     /**
      * The [ViewModel] that is used for data binding.
      */
-    protected var viewModel: VM? = null
-        set(value) {
-            if(field === value) return
-
-            field?.onUnbind()
-            field?.removeOnPropertyChangedCallback(viewModelObserver)
-
-            field = value
-
-            if(value != null) {
-                val bindingWasSuccessful = binding.setVariable(viewModelBindingId, value)
-
-                if (!bindingWasSuccessful) {
-                    throw RuntimeException("Unable to set the ViewModel for the variable $viewModelBindingId.")
-                }
-
-                onViewModelLoaded(value)
-                value.addOnPropertyChangedCallback(viewModelObserver)
-                value.onBind()
-            }
+    protected val viewModel: VM by lazy {
+        ViewModelProvider(viewModelStore, viewModelFactory)[viewModelClass].also { viewModel ->
+            onViewModelLoaded(viewModel)
         }
+    }
 
     /**
      * The [de.trbnb.mvvmbase.BR] value that is used as parameter for the view model in the binding.
@@ -84,9 +71,7 @@ abstract class MvvmBindingActivity<VM : BaseViewModel, B : ViewDataBinding> : Ap
     private val viewModelClass: Class<VM>
         @Suppress("UNCHECKED_CAST")
         get() {
-            val superClass = findGenericSuperclass<MvvmBindingActivity<VM, B>>()
-                ?: throw IllegalStateException()
-
+            val superClass = findGenericSuperclass<MvvmBindingActivity<VM, B>>() ?: throw IllegalStateException()
             return superClass.actualTypeArguments[0] as Class<VM>
         }
 
@@ -118,7 +103,6 @@ abstract class MvvmBindingActivity<VM : BaseViewModel, B : ViewDataBinding> : Ap
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = initBinding()
-        viewModel = ViewModelProvider(viewModelStore, viewModelFactory)[viewModelClass]
     }
 
     /**
@@ -126,14 +110,21 @@ abstract class MvvmBindingActivity<VM : BaseViewModel, B : ViewDataBinding> : Ap
      *
      * @return The new [ViewDataBinding] instance that fits this Activity.
      */
-    private fun initBinding(): B = DataBindingUtil.setContentView(this, layoutId)
+    private fun initBinding(): B = DataBindingUtil.setContentView<B>(this, layoutId).apply {
+        setVariable(viewModelBindingId, viewModel)
+    }
 
     /**
      * Called when the view model is loaded and is set as [viewModel].
      *
      * @param[viewModel] The [ViewModel] instance that was loaded.
      */
-    protected open fun onViewModelLoaded(viewModel: VM) { }
+    @CallSuper
+    protected open fun onViewModelLoaded(viewModel: VM) {
+        viewModel.addOnPropertyChangedCallback(viewModelObserver)
+        viewModel.onBind()
+        viewModel.eventChannel.addListener(this, ::onEvent)
+    }
 
     /**
      * Called when the view model notifies listeners that a property has changed.
@@ -144,13 +135,20 @@ abstract class MvvmBindingActivity<VM : BaseViewModel, B : ViewDataBinding> : Ap
     protected open fun onViewModelPropertyChanged(viewModel: VM, fieldId: Int) { }
 
     /**
+     * Is called when the ViewModel sends an [Event].
+     */
+    protected open fun onEvent(event: Event) { }
+
+    /**
      * Called by the lifecycle.
      * Removes the view model callback.
      * If the Activity is finishing the view model is notified.
      */
+    @CallSuper
     override fun onDestroy() {
         super.onDestroy()
 
-        viewModel = null
+        viewModel.onUnbind()
+        viewModel.removeOnPropertyChangedCallback(viewModelObserver)
     }
 }

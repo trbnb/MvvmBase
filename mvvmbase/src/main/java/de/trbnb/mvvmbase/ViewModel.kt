@@ -2,6 +2,7 @@ package de.trbnb.mvvmbase
 
 import android.arch.lifecycle.LifecycleOwner
 import android.databinding.Observable
+import de.trbnb.mvvmbase.events.EventChannel
 
 /**
  * Base interface that defines basic functionality for all view models.
@@ -16,6 +17,11 @@ import android.databinding.Observable
 interface ViewModel : Observable, LifecycleOwner {
 
     /**
+     * Object that can be used to send one-time or not-state information to the UI.
+     */
+    val eventChannel: EventChannel
+
+    /**
      * Is called when this ViewModel is bound to a View.
      */
     fun onBind()
@@ -26,7 +32,7 @@ interface ViewModel : Observable, LifecycleOwner {
     fun onUnbind()
 
     /**
-     * Is called when this instance is about to be removed from memory..
+     * Is called when this instance is about to be removed from memory.
      * This means that this object is no longer bound to a view and will never be. It is about to
      * be garbage collected.
      * Implementations should use this method to deregister from callbacks, etc.

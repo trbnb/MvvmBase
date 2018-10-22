@@ -8,6 +8,8 @@ import android.databinding.BaseObservable
 import android.databinding.Bindable
 import android.databinding.Observable
 import android.databinding.PropertyChangeRegistry
+import de.trbnb.mvvmbase.events.EventChannel
+import de.trbnb.mvvmbase.events.EventChannelImpl
 import android.arch.lifecycle.ViewModel as ArchitectureViewModel
 
 /**
@@ -20,6 +22,8 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel {
      */
     @Transient
     private var callbacks = PropertyChangeRegistry()
+
+    override val eventChannel: EventChannel = EventChannelImpl()
 
     /**
      * Gets the custom lifecycle for ViewModels.

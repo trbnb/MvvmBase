@@ -1,12 +1,12 @@
 package de.trbnb.apptemplate.app
 
 import dagger.Component
-import de.trbnb.apptemplate.main.MainViewModel
+import de.trbnb.apptemplate.main.MainActivity
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = arrayOf(AppModule::class))
+@Component(modules = [AppModule::class])
 interface AppComponent {
     // ViewModels
-    fun inject(mainViewModel: MainViewModel)
+    fun inject(mainActivity: MainActivity)
 }
