@@ -3,9 +3,10 @@ package de.trbnb.mvvmbase.commands
 /**
  * The basic contract for command implementations.
  *
+ * @param P The parameter type for invocation. An instance of this has to be used to call [invoke]. [Unit] may be used if no parameter is neccessary.
  * @param R The return type for invocation. An instance of this has to be returned from [invoke].
  */
-interface Command<out R> {
+interface Command<in P, out R> {
 
     /**
      * Determines whether this Command is enabled or not.
@@ -17,18 +18,18 @@ interface Command<out R> {
     /**
      * Invokes the Command.
      *
-     * @throws de.trbnb.databindingcommands.DisabledCommandInvocationException If [isEnabled] returns `false`.
+     * @throws de.trbnb.mvvmbase.commands.DisabledCommandInvocationException If [isEnabled] returns `false`.
      * @return A return type instance.
      */
-    operator fun invoke(): R
+    operator fun invoke(param: P): R
 
     /**
      * Invokes the Command only if [isEnabled] equals `true`.
      *
      * @return A return type instance if [isEnabled] equals `true` before invocation, otherwise `null`.
      */
-    fun invokeSafely(): R? {
-        return if (isEnabled) invoke() else null
+    fun invokeSafely(param: P): R? {
+        return if (isEnabled) invoke(param) else null
     }
 
     /**

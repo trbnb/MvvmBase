@@ -9,16 +9,16 @@ import java.lang.ref.WeakReference
  *
  * @param action The initial action that will be run when the Command is executed.
  */
-abstract class BaseCommandImpl<out R>(private val action: () -> R) : Command<R> {
+abstract class BaseCommandImpl<in P, out R>(private val action: (P) -> R) : Command<P, R> {
 
     private val listeners = mutableListOf<WeakReference<(Boolean) -> Unit>>()
 
-    final override fun invoke(): R {
+    final override fun invoke(param: P): R {
         if(!isEnabled){
             throw DisabledCommandInvocationException()
         }
 
-        return action()
+        return action(param)
     }
 
     /**

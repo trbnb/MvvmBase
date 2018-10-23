@@ -9,7 +9,7 @@ package de.trbnb.mvvmbase.commands
  * @param action The initial action that will be run when the Command is executed.
  * @param enabledRule The initial rule that determines if this Command is enabled.
  */
-open class RuleCommand<out R>(action: () -> R, private val enabledRule: () -> Boolean) : BaseCommandImpl<R>(action) {
+open class RuleCommand<in P, out R>(action: (P) -> R, private val enabledRule: () -> Boolean) : BaseCommandImpl<P, R>(action) {
 
     override var isEnabled: Boolean = enabledRule()
         protected set(value) {
@@ -25,4 +25,12 @@ open class RuleCommand<out R>(action: () -> R, private val enabledRule: () -> Bo
     fun onEnabledChanged() {
         isEnabled = enabledRule()
     }
+}
+
+/**
+ * Helper function to create a [RuleCommand] with [Unit] as parameter type, indicating that the command doesn't need a parameter.
+ */
+@Suppress("FunctionName")
+fun <R> RuleCommand(action: (Unit) -> R, enabledRule: () -> Boolean): RuleCommand<Unit, R> {
+    return RuleCommand<Unit, R>(action, enabledRule)
 }
