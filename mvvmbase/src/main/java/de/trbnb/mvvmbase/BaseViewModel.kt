@@ -23,7 +23,16 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel {
     @Transient
     private var callbacks = PropertyChangeRegistry()
 
-    override val eventChannel: EventChannel = EventChannelImpl()
+    /**
+     * [EventChannel] implementation that can be used to send non-state information to a view component.
+     */
+    override val eventChannel: EventChannel by lazy { EventChannelImpl(memorizeNotReceivedEvents) }
+
+    /**
+     * Gets if events that are raised when no listeners are registered are raised later when a listener is registered.
+     */
+    protected open val memorizeNotReceivedEvents: Boolean
+        get() = false
 
     /**
      * Gets the custom lifecycle for ViewModels.

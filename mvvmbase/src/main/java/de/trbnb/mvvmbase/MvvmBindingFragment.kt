@@ -185,8 +185,8 @@ abstract class MvvmBindingFragment<VM : BaseViewModel, B : ViewDataBinding> : Fr
         binding = null
     }
 
-    override fun onDetach() {
-        super.onDetach()
+    override fun onDestroy() {
+        super.onDestroy()
 
         viewModel = null
     }

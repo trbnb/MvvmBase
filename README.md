@@ -100,7 +100,7 @@ Will be called when the view model is no longer associated with any activity/lay
 * `onDestroy()`  
 Will be called when the instance is about to be destroyed. This should be used to clear references to avoid memory leaks.
 
-The ViewModel also implements LifecycleOwner which allows LiveData, rx.Observable, etc. to cancel listeners, subscriptions and others automatically.
+The ViewModel also implements LifecycleOwner which allows LiveData, rx.Observable, etc. to cancel listeners, subscriptions and others automatically. The only possible states are `State.INITIALIZED` and `State.DESTROYED`. The latter is set after `onDestroy` was called.
 
 ## BindableProperty<T>
 
@@ -179,3 +179,36 @@ There are also BindableProperties for primitive JVM types:
 | `Int`     | `BindableIntProperty`         | `bindableInt()`       | `0`
 | `Long`    | `BindableLongProperty`        | `bindableLong()`      | `0`
 | `Short`   | `BindableShortProperty`       | `bindableShort()`     | `0`
+
+## EventChannel
+
+Every `ViewModel` has an `EventChannel`. This can be used to transfer information to the view that are not state (e.g. showing a temporary error as toast).
+
+```kotlin
+sealed class MainEvent : Event {
+    object ShowToast(val text) : MainEvent()
+    object ShowSnackbar(val text) : MainEvent()
+}
+
+class MainViewModel : BaseViewModel() {
+    init {
+        eventChannel(MainEvent.ShowToast("Test"))
+    }
+}
+
+class MainActivity : MvvmBindingActivity<MainViewModel, ActivityMainBinding>() {
+    [...]
+    override fun onEvent(event: Event) {
+        super.onEvent(event)
+
+        event as? MainEvent ?: return
+        when (event) {
+            is MainEvent.ShowToast -> Toast.makeText(this, event.text, Toast.LENGTH_LONG).show()
+            is MainEvent.ShowSnackbar -> Snackbar.make(binding.root, event.text, Snackbar.LENGTH_SHORT).show()
+        }
+    }
+}
+```
+
+Because of the Activity/Fragment lifecycle it can happen that events are called when no listener is registered. By default these events are kept in memory until a listener is registered. That listener will then be called with all those events in the same order in which they were raised.  
+This behavior can be turned off in the `BaseViewModel` by overriding `memorizeNotReceivedEvents` to let it return `false`.

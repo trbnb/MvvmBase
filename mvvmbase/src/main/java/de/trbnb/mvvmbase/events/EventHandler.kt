@@ -3,42 +3,29 @@ package de.trbnb.mvvmbase.events
 import android.arch.lifecycle.GenericLifecycleObserver
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.LifecycleOwner
-import java.lang.ref.WeakReference
 
 typealias Listener<T> = (T) -> Unit
 
 /**
- * Simple callback holder.
+ * Definition for all implementations that can propagate events to callbacks/listeners.
+ *
+ * @param T Type of event.
  */
-class EventHandler<T> {
-    private val listeners = mutableListOf<WeakReference<Listener<T>>>()
-
+interface EventHandler<T> {
     /**
      * Invokes all listeners with given [param].
      */
-    operator fun invoke(param: T) {
-        cleanListenerReferences()
-        listeners.forEach { it.get()?.invoke(param) }
-    }
+    operator fun invoke(param: T)
 
     /**
      * Registers a new listener.
      */
-    fun addListener(listener: Listener<T>): Listener<T> {
-        listeners += WeakReference(listener)
-        return listener
-    }
+    fun addListener(listener: Listener<T>): Listener<T>
 
     /**
      * Removes a listener.
      */
-    fun removeListener(listener: Listener<T>) {
-        listeners.removeAll { it.get() == listener }
-    }
-
-    private fun cleanListenerReferences() {
-        listeners.removeAll { it.get() == null }
-    }
+    fun removeListener(listener: Listener<T>)
 
     /**
      * Registers a new listener.

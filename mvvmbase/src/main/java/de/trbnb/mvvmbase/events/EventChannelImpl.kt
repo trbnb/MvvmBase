@@ -2,9 +2,11 @@ package de.trbnb.mvvmbase.events
 
 /**
  * [EventChannel] implementation based on [EventHandler].
+ *
+ * @param memorizeNotReceivedEvents Defines if events that can't be received by listeners because none are registered are sent later when a listener is registered.
  */
-class EventChannelImpl : EventChannel {
-    private val eventHandler = EventHandler<Event>()
+class EventChannelImpl(memorizeNotReceivedEvents: Boolean = true) : EventChannel {
+    private val eventHandler = WeakReferencesEventHandler<Event>(memorizeNotReceivedEvents)
 
     override operator fun invoke(event: Event) {
         eventHandler(event)
