@@ -186,8 +186,8 @@ Every `ViewModel` has an `EventChannel`. This can be used to transfer informatio
 
 ```kotlin
 sealed class MainEvent : Event {
-    object ShowToast(val text) : MainEvent()
-    object ShowSnackbar(val text) : MainEvent()
+    class ShowToast(val text) : MainEvent()
+    class ShowSnackbar(val text) : MainEvent()
 }
 
 class MainViewModel : BaseViewModel() {
