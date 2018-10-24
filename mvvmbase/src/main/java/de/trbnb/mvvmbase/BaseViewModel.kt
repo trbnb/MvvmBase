@@ -6,7 +6,6 @@ import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.LifecycleObserver
 import android.arch.lifecycle.OnLifecycleEvent
 import android.databinding.BaseObservable
-import android.databinding.Bindable
 import android.databinding.Observable
 import android.databinding.PropertyChangeRegistry
 import android.support.annotation.CallSuper
@@ -94,35 +93,19 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel {
         }
     }
 
-    /**
-     * Adds a property changed callback to [callbacks].
-     */
-    override fun addOnPropertyChangedCallback(callback: Observable.OnPropertyChangedCallback) {
+    final override fun addOnPropertyChangedCallback(callback: Observable.OnPropertyChangedCallback) {
         callbacks.add(callback)
     }
 
-    /**
-     * Removes a property changed callback to [callbacks].
-     */
-    override fun removeOnPropertyChangedCallback(callback: Observable.OnPropertyChangedCallback) {
+    final override fun removeOnPropertyChangedCallback(callback: Observable.OnPropertyChangedCallback) {
         callbacks.remove(callback)
     }
 
-    /**
-     * Notifies listeners that all properties of this instance have changed.
-     */
-    fun notifyChange() {
+    final override fun notifyChange() {
         callbacks.notifyCallbacks(this, 0, null)
     }
 
-    /**
-     * Notifies listeners that a specific property has changed. The getter for the property
-     * that changes should be marked with [Bindable] to generate a field in
-     * `BR` to be used as `fieldId`.
-     *
-     * @param fieldId The generated BR id for the Bindable field.
-     */
-    fun notifyPropertyChanged(fieldId: Int) {
+    final override fun notifyPropertyChanged(fieldId: Int) {
         callbacks.notifyCallbacks(this, fieldId, null)
     }
 
