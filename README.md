@@ -186,8 +186,8 @@ Every `ViewModel` has an `EventChannel`. This can be used to transfer informatio
 
 ```kotlin
 sealed class MainEvent : Event {
-    class ShowToast(val text) : MainEvent()
-    class ShowSnackbar(val text) : MainEvent()
+    class ShowToast(val text: String) : MainEvent()
+    class ShowSnackbar(val text: String) : MainEvent()
 }
 
 class MainViewModel : BaseViewModel() {
@@ -201,8 +201,7 @@ class MainActivity : MvvmBindingActivity<MainViewModel, ActivityMainBinding>() {
     override fun onEvent(event: Event) {
         super.onEvent(event)
 
-        event as? MainEvent ?: return
-        when (event) {
+        when (event as? MainEvent ?: return) {
             is MainEvent.ShowToast -> Toast.makeText(this, event.text, Toast.LENGTH_LONG).show()
             is MainEvent.ShowSnackbar -> Snackbar.make(binding.root, event.text, Snackbar.LENGTH_SHORT).show()
         }

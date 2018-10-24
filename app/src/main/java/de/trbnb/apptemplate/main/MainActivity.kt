@@ -114,9 +114,7 @@ class MainActivity : MvvmActivity<MainViewModel>() {
     override fun onEvent(event: Event) {
         super.onEvent(event)
 
-        event as? MainEvent ?: return
-
-        when (event) {
+        when (event as? MainEvent ?: return) {
             is MainEvent.ShowToast -> toast("Toast message!")
         }
     }
