@@ -1,9 +1,9 @@
 package de.trbnb.apptemplate.main
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.databinding.Bindable
 import de.trbnb.apptemplate.R
-import de.trbnb.apptemplate.app.App
 import de.trbnb.apptemplate.second.SecondActivity
 import de.trbnb.mvvmbase.BaseViewModel
 import de.trbnb.mvvmbase.bindableproperty.afterSet
@@ -12,14 +12,13 @@ import de.trbnb.mvvmbase.commands.ruleCommand
 import de.trbnb.mvvmbase.commands.simpleCommand
 import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.newTask
+import de.trbnb.mvvmbase.events.Event
 import javax.inject.Inject
 
-class MainViewModel : BaseViewModel() {
+@SuppressLint("StaticFieldLeak")
+class MainViewModel @Inject constructor(private val context: Context) : BaseViewModel() {
 
-    @Inject
-    lateinit var context: Context
-
-    val text: String
+    val text: String = context.getString(R.string.example_text)
 
     @get:Bindable
     var isShowingDialog by bindableBoolean(false)
@@ -39,6 +38,10 @@ class MainViewModel : BaseViewModel() {
             enabledRule = { !showSnackbar }
     )
 
+    val showToastCommand = simpleCommand {
+        eventChannel(MainEvent.ShowToast)
+    }
+
     val showFragmentExampleCommand = simpleCommand {
         context.startActivity(context.intentFor<SecondActivity>().newTask())
     }
@@ -47,10 +50,8 @@ class MainViewModel : BaseViewModel() {
         context.startActivity(context.intentFor<MainActivity>().newTask())
     }
 
-    init {
-        App.appComponent.inject(this)
+}
 
-        text = context.getString(R.string.example_text)
-    }
-
+sealed class MainEvent : Event {
+    object ShowToast : MainEvent()
 }

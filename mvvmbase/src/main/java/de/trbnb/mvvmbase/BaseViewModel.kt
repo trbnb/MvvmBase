@@ -10,6 +10,8 @@ import android.databinding.Bindable
 import android.databinding.Observable
 import android.databinding.PropertyChangeRegistry
 import android.support.annotation.CallSuper
+import de.trbnb.mvvmbase.events.EventChannel
+import de.trbnb.mvvmbase.events.EventChannelImpl
 import android.arch.lifecycle.ViewModel as ArchitectureViewModel
 
 /**
@@ -22,6 +24,17 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel {
      */
     @Transient
     private var callbacks = PropertyChangeRegistry()
+
+    /**
+     * [EventChannel] implementation that can be used to send non-state information to a view component.
+     */
+    override val eventChannel: EventChannel by lazy { EventChannelImpl(memorizeNotReceivedEvents) }
+
+    /**
+     * Gets if events that are raised when no listeners are registered are raised later when a listener is registered.
+     */
+    protected open val memorizeNotReceivedEvents: Boolean
+        get() = false
 
     /**
      * Gets the custom lifecycle for ViewModels.
@@ -46,6 +59,8 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel {
                     ViewModelLifecycleState.DESTROYED -> Event.ON_DESTROY
                 }
 
+                // Copy the observers as some might unregister themselves and could cause a java.util.ConcurrentModificationException
+                val observers = List(observers.size) { observers[it] }
                 observers.forEach { observer ->
                     when (observer) {
                         is GenericLifecycleObserver -> observer.onStateChanged(this@BaseViewModel, event)

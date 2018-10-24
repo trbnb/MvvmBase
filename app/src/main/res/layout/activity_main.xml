@@ -38,6 +38,12 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="Toast example"
+            android:clickCommand="@{vm.showToastCommand}"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="Show Fragment example"
             android:clickCommand="@{vm.showFragmentExampleCommand}"/>
 
