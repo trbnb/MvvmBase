@@ -1,5 +1,7 @@
 package de.trbnb.mvvmbase.commands
 
+import de.trbnb.mvvmbase.ViewModel
+
 /**
  * A [Command] that determines if it is enabled via a predicate.
  * This predicate, or "rule", is set during initialization.
@@ -9,10 +11,15 @@ package de.trbnb.mvvmbase.commands
  * @param action The initial action that will be run when the Command is executed.
  * @param enabledRule The initial rule that determines if this Command is enabled.
  */
-open class RuleCommand<in P, out R>(action: (P) -> R, private val enabledRule: () -> Boolean) : BaseCommandImpl<P, R>(action) {
+class RuleCommand<in P, out R>
+@Deprecated("Use the ViewModel extension functions to create lifecycle-aware commands.", replaceWith = ReplaceWith("ruleCommand(action, enabledRule)"), level = DeprecationLevel.WARNING)
+constructor(
+    action: (P) -> R,
+    private val enabledRule: () -> Boolean
+) : BaseCommandImpl<P, R>(action) {
 
     override var isEnabled: Boolean = enabledRule()
-        protected set(value) {
+        private set(value) {
             if (field == value) return
 
             field = value
@@ -28,9 +35,24 @@ open class RuleCommand<in P, out R>(action: (P) -> R, private val enabledRule: (
 }
 
 /**
- * Helper function to create a [RuleCommand] with [Unit] as parameter type, indicating that the command doesn't need a parameter.
+ * Helper function to create a [RuleCommand] that clears all it's listeners automatically when
+ * [ViewModel.onUnbind] is called.
  */
-@Suppress("FunctionName")
-fun <R> RuleCommand(action: (Unit) -> R, enabledRule: () -> Boolean): RuleCommand<Unit, R> {
-    return RuleCommand<Unit, R>(action, enabledRule)
+@Suppress("DEPRECATION")
+@JvmName("parameterizedRuleCommand")
+fun <P, R> ViewModel.ruleCommand(action: (P) -> R, enabledRule: () -> Boolean): RuleCommand<P, R> {
+    return RuleCommand(action, enabledRule).apply {
+        observeLifecycle(lifecycle)
+    }
+}
+
+/**
+ * Helper function to create a parameter-less [RuleCommand] that clears all it's listeners automatically when
+ * [ViewModel.onUnbind] is called.
+ */
+@Suppress("DEPRECATION")
+fun <R> ViewModel.ruleCommand(action: (Unit) -> R, enabledRule: () -> Boolean): RuleCommand<Unit, R> {
+    return RuleCommand(action, enabledRule).apply {
+        observeLifecycle(lifecycle)
+    }
 }
