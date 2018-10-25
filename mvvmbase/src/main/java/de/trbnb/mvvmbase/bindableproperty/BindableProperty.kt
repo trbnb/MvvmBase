@@ -3,7 +3,7 @@ package de.trbnb.mvvmbase.bindableproperty
 import android.util.Log
 import androidx.databinding.BaseObservable
 import de.trbnb.mvvmbase.BR
-import de.trbnb.mvvmbase.BaseViewModel
+import de.trbnb.mvvmbase.ViewModel
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
@@ -16,7 +16,7 @@ import kotlin.reflect.KProperty
  * @param defaultValue Value that will be used at start.
  * @param isBoolean Indicates if this delegate property is for a property that has the type Boolean.
  */
-class BindableProperty<R : BaseViewModel, T> (
+class BindableProperty<R : ViewModel, T> (
         private var fieldId: Int?,
         defaultValue: T,
         internal val isBoolean: Boolean = defaultValue is Boolean
@@ -118,7 +118,7 @@ class BindableProperty<R : BaseViewModel, T> (
  * @param defaultValue Value of the property from the start.
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  */
-inline fun <R : BaseViewModel, reified T> R.bindable(defaultValue: T, fieldId: Int? = null): BindableProperty<R, T> {
+inline fun <R : ViewModel, reified T> R.bindable(defaultValue: T, fieldId: Int? = null): BindableProperty<R, T> {
     return BindableProperty(fieldId, defaultValue, T::class == Boolean::class)
 }
 
@@ -127,7 +127,7 @@ inline fun <R : BaseViewModel, reified T> R.bindable(defaultValue: T, fieldId: I
  *
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  */
-inline fun <R : BaseViewModel, reified T> R.bindable(fieldId: Int? = null): BindableProperty<R, T?> {
+inline fun <R : ViewModel, reified T> R.bindable(fieldId: Int? = null): BindableProperty<R, T?> {
     return bindable(null, fieldId)
 }
 
@@ -135,22 +135,22 @@ inline fun <R : BaseViewModel, reified T> R.bindable(fieldId: Int? = null): Bind
  * Sets [BindableProperty.distinct] of a [BindableProperty] instance to `true` and returns that
  * instance.
  */
-fun <R : BaseViewModel, T> BindableProperty<R, T>.distinct() = apply { distinct = true }
+fun <R : ViewModel, T> BindableProperty<R, T>.distinct() = apply { distinct = true }
 
 /**
  * Sets [BindableProperty.beforeSet] of a [BindableProperty] instance to a given function and
  * returns that instance.
  */
-fun <R : BaseViewModel, T> BindableProperty<R, T>.beforeSet(action: R.(T, T) -> Unit) = apply { beforeSet = action }
+fun <R : ViewModel, T> BindableProperty<R, T>.beforeSet(action: R.(T, T) -> Unit) = apply { beforeSet = action }
 
 /**
  * Sets [BindableProperty.validate] of a [BindableProperty] instance to a given function and
  * returns that instance.
  */
-fun <R : BaseViewModel, T> BindableProperty<R, T>.validate(action: R.(T, T) -> T) = apply { validate = action }
+fun <R : ViewModel, T> BindableProperty<R, T>.validate(action: R.(T, T) -> T) = apply { validate = action }
 
 /**
  * Sets [BindableProperty.afterSet] of a [BindableProperty] instance to a given function and
  * returns that instance.
  */
-fun <R : BaseViewModel, T> BindableProperty<R, T>.afterSet(action: R.(T) -> Unit) = apply { afterSet = action }
+fun <R : ViewModel, T> BindableProperty<R, T>.afterSet(action: R.(T) -> Unit) = apply { afterSet = action }

@@ -2,7 +2,7 @@ package de.trbnb.mvvmbase.bindableproperty
 
 import androidx.databinding.BaseObservable
 import de.trbnb.mvvmbase.BR
-import de.trbnb.mvvmbase.BaseViewModel
+import de.trbnb.mvvmbase.ViewModel
 import kotlin.reflect.KProperty
 
 /**
@@ -12,7 +12,7 @@ import kotlin.reflect.KProperty
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  * @param defaultValue Value that will be used at start.
  */
-class BindableFloatProperty<R : BaseViewModel> (
+class BindableFloatProperty<R : ViewModel> (
         private var fieldId: Int?,
         defaultValue: Float
 ) : BindablePropertyBase() {
@@ -74,7 +74,7 @@ class BindableFloatProperty<R : BaseViewModel> (
  * @param defaultValue Value of the property from the start.
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  */
-fun <R : BaseViewModel> R.bindableFloat(defaultValue: Float = 0f, fieldId: Int? = null): BindableFloatProperty<R> {
+fun <R : ViewModel> R.bindableFloat(defaultValue: Float = 0f, fieldId: Int? = null): BindableFloatProperty<R> {
     return BindableFloatProperty(fieldId, defaultValue)
 }
 
@@ -82,17 +82,17 @@ fun <R : BaseViewModel> R.bindableFloat(defaultValue: Float = 0f, fieldId: Int? 
  * Sets [BindableFloatProperty.beforeSet] of a [BindableFloatProperty] instance to a given function and
  * returns that instance.
  */
-fun <R : BaseViewModel> BindableFloatProperty<R>.beforeSet(action: R.(Float, Float) -> Unit) = apply { beforeSet = action }
+fun <R : ViewModel> BindableFloatProperty<R>.beforeSet(action: R.(Float, Float) -> Unit) = apply { beforeSet = action }
 
 /**
  * Sets [BindableFloatProperty.validate] of a [BindableFloatProperty] instance to a given function and
  * returns that instance.
  */
-fun <R : BaseViewModel> BindableFloatProperty<R>.validate(action: R.(Float, Float) -> Float) = apply { validate = action }
+fun <R : ViewModel> BindableFloatProperty<R>.validate(action: R.(Float, Float) -> Float) = apply { validate = action }
 
 /**
  * Sets [BindableFloatProperty.afterSet] of a [BindableFloatProperty] instance to a given function and
  * returns that instance.
  */
-fun <R : BaseViewModel> BindableFloatProperty<R>.afterSet(action: R.(Float) -> Unit) = apply { afterSet = action }
+fun <R : ViewModel> BindableFloatProperty<R>.afterSet(action: R.(Float) -> Unit) = apply { afterSet = action }
 

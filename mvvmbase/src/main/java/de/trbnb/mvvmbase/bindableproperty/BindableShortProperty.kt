@@ -2,7 +2,7 @@ package de.trbnb.mvvmbase.bindableproperty
 
 import androidx.databinding.BaseObservable
 import de.trbnb.mvvmbase.BR
-import de.trbnb.mvvmbase.BaseViewModel
+import de.trbnb.mvvmbase.ViewModel
 import kotlin.reflect.KProperty
 
 /**
@@ -12,7 +12,7 @@ import kotlin.reflect.KProperty
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  * @param defaultValue Value that will be used at start.
  */
-class BindableShortProperty<R : BaseViewModel> (
+class BindableShortProperty<R : ViewModel> (
         private var fieldId: Int?,
         defaultValue: Short
 ) : BindablePropertyBase() {
@@ -74,7 +74,7 @@ class BindableShortProperty<R : BaseViewModel> (
  * @param defaultValue Value of the property from the start.
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  */
-fun <R : BaseViewModel> R.bindableShort(defaultValue: Short = 0, fieldId: Int? = null): BindableShortProperty<R> {
+fun <R : ViewModel> R.bindableShort(defaultValue: Short = 0, fieldId: Int? = null): BindableShortProperty<R> {
     return BindableShortProperty(fieldId, defaultValue)
 }
 
@@ -82,17 +82,17 @@ fun <R : BaseViewModel> R.bindableShort(defaultValue: Short = 0, fieldId: Int? =
  * Sets [BindableShortProperty.beforeSet] of a [BindableShortProperty] instance to a given function and
  * returns that instance.
  */
-fun <R : BaseViewModel> BindableShortProperty<R>.beforeSet(action: R.(Short, Short) -> Unit) = apply { beforeSet = action }
+fun <R : ViewModel> BindableShortProperty<R>.beforeSet(action: R.(Short, Short) -> Unit) = apply { beforeSet = action }
 
 /**
  * Sets [BindableShortProperty.validate] of a [BindableShortProperty] instance to a given function and
  * returns that instance.
  */
-fun <R : BaseViewModel> BindableShortProperty<R>.validate(action: R.(Short, Short) -> Short) = apply { validate = action }
+fun <R : ViewModel> BindableShortProperty<R>.validate(action: R.(Short, Short) -> Short) = apply { validate = action }
 
 /**
  * Sets [BindableShortProperty.afterSet] of a [BindableShortProperty] instance to a given function and
  * returns that instance.
  */
-fun <R : BaseViewModel> BindableShortProperty<R>.afterSet(action: R.(Short) -> Unit) = apply { afterSet = action }
+fun <R : ViewModel> BindableShortProperty<R>.afterSet(action: R.(Short) -> Unit) = apply { afterSet = action }
 

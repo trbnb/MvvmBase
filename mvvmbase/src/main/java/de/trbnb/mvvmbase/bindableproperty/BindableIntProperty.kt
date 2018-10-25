@@ -2,7 +2,7 @@ package de.trbnb.mvvmbase.bindableproperty
 
 import androidx.databinding.BaseObservable
 import de.trbnb.mvvmbase.BR
-import de.trbnb.mvvmbase.BaseViewModel
+import de.trbnb.mvvmbase.ViewModel
 import kotlin.reflect.KProperty
 
 /**
@@ -12,7 +12,7 @@ import kotlin.reflect.KProperty
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  * @param defaultValue Value that will be used at start.
  */
-class BindableIntProperty<R : BaseViewModel> (
+class BindableIntProperty<R : ViewModel> (
         private var fieldId: Int?,
         defaultValue: Int
 ) : BindablePropertyBase() {
@@ -74,7 +74,7 @@ class BindableIntProperty<R : BaseViewModel> (
  * @param defaultValue Value of the property from the start.
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  */
-fun <R : BaseViewModel> R.bindableInt(defaultValue: Int = 0, fieldId: Int? = null): BindableIntProperty<R> {
+fun <R : ViewModel> R.bindableInt(defaultValue: Int = 0, fieldId: Int? = null): BindableIntProperty<R> {
     return BindableIntProperty(fieldId, defaultValue)
 }
 
@@ -82,16 +82,16 @@ fun <R : BaseViewModel> R.bindableInt(defaultValue: Int = 0, fieldId: Int? = nul
  * Sets [BindableIntProperty.beforeSet] of a [BindableIntProperty] instance to a given function and
  * returns that instance.
  */
-fun <R : BaseViewModel> BindableIntProperty<R>.beforeSet(action: R.(Int, Int) -> Unit) = apply { beforeSet = action }
+fun <R : ViewModel> BindableIntProperty<R>.beforeSet(action: R.(Int, Int) -> Unit) = apply { beforeSet = action }
 
 /**
  * Sets [BindableIntProperty.validate] of a [BindableIntProperty] instance to a given function and
  * returns that instance.
  */
-fun <R : BaseViewModel> BindableIntProperty<R>.validate(action: R.(Int, Int) -> Int) = apply { validate = action }
+fun <R : ViewModel> BindableIntProperty<R>.validate(action: R.(Int, Int) -> Int) = apply { validate = action }
 
 /**
  * Sets [BindableIntProperty.afterSet] of a [BindableIntProperty] instance to a given function and
  * returns that instance.
  */
-fun <R : BaseViewModel> BindableIntProperty<R>.afterSet(action: R.(Int) -> Unit) = apply { afterSet = action }
+fun <R : ViewModel> BindableIntProperty<R>.afterSet(action: R.(Int) -> Unit) = apply { afterSet = action }

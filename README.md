@@ -8,7 +8,7 @@ MvvmBase is available via JCenter. To use it put this in your `build.gradle`:
 ```gradle
 dependencies {
     [...]
-    implementation 'de.trbnb.mvvmbase:mvvmbase:1.0.0'
+    implementation 'de.trbnb.mvvmbase:mvvmbase:1.2.0'
 }
 ```
 
@@ -100,7 +100,15 @@ Will be called when the view model is no longer associated with any activity/lay
 * `onDestroy()`  
 Will be called when the instance is about to be destroyed. This should be used to clear references to avoid memory leaks.
 
+#### Lifecycle
+
 The ViewModel also implements LifecycleOwner which allows LiveData, rx.Observable, etc. to cancel listeners, subscriptions and others automatically.
+
+Its state is:
+- After initialization & being unbound: `Lifecycle.State.STARTED`.
+- After being bound: `Lifecycle.State.RESUMED`.
+- After being unbound: `Lifecycle.State.STARTED`.
+- After being destroyed: `Lifecycle.State.DESTROYED`.
 
 ## BindableProperty<T>
 
@@ -179,3 +187,99 @@ There are also BindableProperties for primitive JVM types:
 | `Int`     | `BindableIntProperty`         | `bindableInt()`       | `0`
 | `Long`    | `BindableLongProperty`        | `bindableLong()`      | `0`
 | `Short`   | `BindableShortProperty`       | `bindableShort()`     | `0`
+
+## EventChannel
+
+Every `ViewModel` has an `EventChannel`. This can be used to transfer information to the view that are not state (e.g. showing a temporary error as toast).
+
+```kotlin
+sealed class MainEvent : Event {
+    class ShowToast(val text: String) : MainEvent()
+    class ShowSnackbar(val text: String) : MainEvent()
+}
+
+class MainViewModel : BaseViewModel() {
+    init {
+        eventChannel(MainEvent.ShowToast("Test"))
+    }
+}
+
+class MainActivity : MvvmBindingActivity<MainViewModel, ActivityMainBinding>() {
+    [...]
+    override fun onEvent(event: Event) {
+        super.onEvent(event)
+
+        when (event as? MainEvent ?: return) {
+            is MainEvent.ShowToast -> Toast.makeText(this, event.text, Toast.LENGTH_LONG).show()
+            is MainEvent.ShowSnackbar -> Snackbar.make(binding.root, event.text, Snackbar.LENGTH_SHORT).show()
+        }
+    }
+}
+```
+
+Because of the Activity/Fragment lifecycle it can happen that events are called when no listener is registered. By default these events are kept in memory until a listener is registered. That listener will then be called with all those events in the same order in which they were raised.  
+This behavior can be turned off in the `BaseViewModel` by overriding `memorizeNotReceivedEvents` to let it return `false`.
+
+## Commands
+
+With Databinding it is possible to build Android apps with MVVM in a way that is similar to WPF. So it naturally makes sense to look at practices and patterns from that platform and see if they work in Android development.
+
+One of the basic features of WPF are [Commands](https://msdn.microsoft.com/en-us/library/ms752308(v=vs.110).aspx).
+This library includes an implementation of that pattern for Android.
+
+### Specificaiton
+
+Commands have two major functions.
+
+1. They can be invoked.
+2. They can be enabled. If it is not enabled but still invoked it will throw an Exception.
+
+Commands can also take a parameter and return a value. A parameter-less command should use `Unit` as parameter type.
+
+Commands are mainly used when a user has to interact with the UI and the ViewModel has to react to that. For that a Command is bound to a certain type of event of a UI element.
+
+### Examples
+
+The first step is to create a Command in your ViewModel. Since `Command` is only an interface you have to choose which implementation you want to use. This library includes two from the start (you can of course also write your own implementation):
+  - `SimpleCommand`  
+    The SimpleCommand lets you modify the enabled-state simply setting a boolean value. It also has an additional constructor that lets you define that initial enabled-state.
+  - `RuleCommand`  
+    The RuleCommands enabled-state is defined by a function returning a Boolean. That function is invoked during construction and whenever `onEnabledChanged` is called.
+
+Both commands let you pass a function in the constructor and come with a helper function to create a parameter-less instance without specifying `Unit` as parameter type.
+This function will then be invoked when the Command is invoked.
+
+#### Listener
+
+View components can register listeners on commands that are triggered when the enabled-state changes. These have to be cleared. This is best done in the `onUnbind` method of the ViewModel by calling `clearEnabledListeners` on the commands.  
+That's why both Command implementations come with ViewModel extension functions to create lifecycle-aware instances that call that function automatically.
+
+A sample use could look like this:
+
+```kotlin
+val buttonCommand = simpleCommand {
+    eventChannel(ShowToast("It just works!"))
+}
+```
+
+After the Command is present in your ViewModel you can now bind it to any View with the `android:clickCommand` attribute. Your code could then look like this:
+
+```xml
+<Button
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Sample Button"
+    android:clickCommand="@{vm.buttonCommand}"/>
+```
+
+A Command that is bound via this attribute will be executed on click events. The enabled-state of the Command is also bound to enabled-state of the View. At the moment there is only support for "onClick"-event.
+
+### Command bindings
+
+The library includes some BindingAdapters for DataBinding XML that are used regularly.
+
+- `android:clickCommand`  
+  Binds a Command that will be invoked when the View is clicked. The enabled-property of the view will also be bound to the enabled-property of the command. Needs a parameter-less command.
+
+- `android:longClickCommand`  
+  Binds a Command that will be invoked when the View triggers the OnLongClickListener. As the OnLongClickListener returns a Boolean the command can do the same, otherwise `true` will be returned from the listener. Needs a parameter-less command.

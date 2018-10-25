@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="vm"
             type="de.trbnb.apptemplate.main.MainViewModel" />
@@ -26,28 +25,33 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="@{() -> vm.showDialog()}"
+            android:clickCommand="@{vm.showDialogCommand}"
             android:text="Show Dialog" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:enabled="@{!vm.showingSnackbar}"
-            android:onClick="@{() -> vm.showSnackbar()}"
+            android:clickCommand="@{vm.showSnackbarCommand}"
             android:text="Show Snackbar" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="@{() -> vm.showFragmentExample()}"
+            android:text="Toast example"
+            android:clickCommand="@{vm.showToastCommand}"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickCommand="@{vm.showFragmentExampleCommand}"
             android:text="Show Fragment example" />
 
         <Button
-            style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="@{() -> vm.showMainActivityAgain()}"
-            android:text="Show this activity again!" />
+            android:clickCommand="@{vm.showMainActivityAgain}"
+            android:text="Show this activity again!"
+            style="@style/Widget.AppCompat.Button.Colored" />
 
     </LinearLayout>
 </layout>
