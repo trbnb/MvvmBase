@@ -188,6 +188,38 @@ There are also BindableProperties for primitive JVM types:
 | `Long`    | `BindableLongProperty`        | `bindableLong()`      | `0`
 | `Short`   | `BindableShortProperty`       | `bindableShort()`     | `0`
 
+## EventChannel
+
+Every `ViewModel` has an `EventChannel`. This can be used to transfer information to the view that are not state (e.g. showing a temporary error as toast).
+
+```kotlin
+sealed class MainEvent : Event {
+    class ShowToast(val text: String) : MainEvent()
+    class ShowSnackbar(val text: String) : MainEvent()
+}
+
+class MainViewModel : BaseViewModel() {
+    init {
+        eventChannel(MainEvent.ShowToast("Test"))
+    }
+}
+
+class MainActivity : MvvmBindingActivity<MainViewModel, ActivityMainBinding>() {
+    [...]
+    override fun onEvent(event: Event) {
+        super.onEvent(event)
+
+        when (event as? MainEvent ?: return) {
+            is MainEvent.ShowToast -> Toast.makeText(this, event.text, Toast.LENGTH_LONG).show()
+            is MainEvent.ShowSnackbar -> Snackbar.make(binding.root, event.text, Snackbar.LENGTH_SHORT).show()
+        }
+    }
+}
+```
+
+Because of the Activity/Fragment lifecycle it can happen that events are called when no listener is registered. By default these events are kept in memory until a listener is registered. That listener will then be called with all those events in the same order in which they were raised.  
+This behavior can be turned off in the `BaseViewModel` by overriding `memorizeNotReceivedEvents` to let it return `false`.
+
 ## Commands
 
 With Databinding it is possible to build Android apps with MVVM in a way that is similar to WPF. So it naturally makes sense to look at practices and patterns from that platform and see if they work in Android development.
@@ -251,35 +283,3 @@ The library includes some BindingAdapters for DataBinding XML that are used regu
 
 - `android:longClickCommand`  
   Binds a Command that will be invoked when the View triggers the OnLongClickListener. As the OnLongClickListener returns a Boolean the command can do the same, otherwise `true` will be returned from the listener. Needs a parameter-less command.
-
-## EventChannel
-
-Every `ViewModel` has an `EventChannel`. This can be used to transfer information to the view that are not state (e.g. showing a temporary error as toast).
-
-```kotlin
-sealed class MainEvent : Event {
-    class ShowToast(val text: String) : MainEvent()
-    class ShowSnackbar(val text: String) : MainEvent()
-}
-
-class MainViewModel : BaseViewModel() {
-    init {
-        eventChannel(MainEvent.ShowToast("Test"))
-    }
-}
-
-class MainActivity : MvvmBindingActivity<MainViewModel, ActivityMainBinding>() {
-    [...]
-    override fun onEvent(event: Event) {
-        super.onEvent(event)
-
-        when (event as? MainEvent ?: return) {
-            is MainEvent.ShowToast -> Toast.makeText(this, event.text, Toast.LENGTH_LONG).show()
-            is MainEvent.ShowSnackbar -> Snackbar.make(binding.root, event.text, Snackbar.LENGTH_SHORT).show()
-        }
-    }
-}
-```
-
-Because of the Activity/Fragment lifecycle it can happen that events are called when no listener is registered. By default these events are kept in memory until a listener is registered. That listener will then be called with all those events in the same order in which they were raised.  
-This behavior can be turned off in the `BaseViewModel` by overriding `memorizeNotReceivedEvents` to let it return `false`.
