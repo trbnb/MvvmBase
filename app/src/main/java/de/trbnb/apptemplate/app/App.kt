@@ -1,25 +1,24 @@
 package de.trbnb.apptemplate.app
 
 import android.app.Application
+import android.content.Context
 import de.trbnb.apptemplate.BR
 import de.trbnb.mvvmbase.bindableproperty.BindableProperty
 
-class App : Application(){
-
-    companion object{
-        lateinit var appComponent: AppComponent
-            private set
+class App : Application() {
+    val appComponent: AppComponent by lazy {
+        DaggerAppComponent.builder()
+            .appModule(AppModule(this))
+            .build()
     }
 
     override fun onCreate() {
         super.onCreate()
 
         BindableProperty.init<BR>()
-
-        appComponent = DaggerAppComponent
-                .builder()
-                .appModule(AppModule(this))
-                .build()
     }
 
 }
+
+val Context.appComponent: AppComponent
+    get() = (applicationContext as? App)?.appComponent ?: throw IllegalStateException("Application context must be App.")

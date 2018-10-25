@@ -2,7 +2,7 @@ package de.trbnb.mvvmbase.bindableproperty
 
 import android.databinding.BaseObservable
 import de.trbnb.mvvmbase.BR
-import de.trbnb.mvvmbase.BaseViewModel
+import de.trbnb.mvvmbase.ViewModel
 import kotlin.reflect.KProperty
 
 /**
@@ -12,7 +12,7 @@ import kotlin.reflect.KProperty
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  * @param defaultValue Value that will be used at start.
  */
-class BindableByteProperty<R : BaseViewModel> (
+class BindableByteProperty<R : ViewModel> (
         private var fieldId: Int?,
         defaultValue: Byte
 ) : BindablePropertyBase() {
@@ -74,7 +74,7 @@ class BindableByteProperty<R : BaseViewModel> (
  * @param defaultValue Value of the property from the start.
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  */
-fun <R : BaseViewModel> R.bindableByte(defaultValue: Byte = 0, fieldId: Int? = null): BindableByteProperty<R> {
+fun <R : ViewModel> R.bindableByte(defaultValue: Byte = 0, fieldId: Int? = null): BindableByteProperty<R> {
     return BindableByteProperty(fieldId, defaultValue)
 }
 
@@ -82,17 +82,17 @@ fun <R : BaseViewModel> R.bindableByte(defaultValue: Byte = 0, fieldId: Int? = n
  * Sets [BindableByteProperty.beforeSet] of a [BindableByteProperty] instance to a given function and
  * returns that instance.
  */
-fun <R : BaseViewModel> BindableByteProperty<R>.beforeSet(action: R.(Byte, Byte) -> Unit) = apply { beforeSet = action }
+fun <R : ViewModel> BindableByteProperty<R>.beforeSet(action: R.(Byte, Byte) -> Unit) = apply { beforeSet = action }
 
 /**
  * Sets [BindableByteProperty.validate] of a [BindableByteProperty] instance to a given function and
  * returns that instance.
  */
-fun <R : BaseViewModel> BindableByteProperty<R>.validate(action: R.(Byte, Byte) -> Byte) = apply { validate = action }
+fun <R : ViewModel> BindableByteProperty<R>.validate(action: R.(Byte, Byte) -> Byte) = apply { validate = action }
 
 /**
  * Sets [BindableByteProperty.afterSet] of a [BindableByteProperty] instance to a given function and
  * returns that instance.
  */
-fun <R : BaseViewModel> BindableByteProperty<R>.afterSet(action: R.(Byte) -> Unit) = apply { afterSet = action }
+fun <R : ViewModel> BindableByteProperty<R>.afterSet(action: R.(Byte) -> Unit) = apply { afterSet = action }
 

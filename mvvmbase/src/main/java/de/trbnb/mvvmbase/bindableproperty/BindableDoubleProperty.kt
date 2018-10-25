@@ -2,7 +2,7 @@ package de.trbnb.mvvmbase.bindableproperty
 
 import android.databinding.BaseObservable
 import de.trbnb.mvvmbase.BR
-import de.trbnb.mvvmbase.BaseViewModel
+import de.trbnb.mvvmbase.ViewModel
 import kotlin.reflect.KProperty
 
 /**
@@ -12,7 +12,7 @@ import kotlin.reflect.KProperty
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  * @param defaultValue Value that will be used at start.
  */
-class BindableDoubleProperty<R : BaseViewModel> (
+class BindableDoubleProperty<R : ViewModel> (
         private var fieldId: Int?,
         defaultValue: Double
 ) : BindablePropertyBase() {
@@ -74,7 +74,7 @@ class BindableDoubleProperty<R : BaseViewModel> (
  * @param defaultValue Value of the property from the start.
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  */
-fun <R : BaseViewModel> R.bindableDouble(defaultValue: Double = 0.0, fieldId: Int? = null): BindableDoubleProperty<R> {
+fun <R : ViewModel> R.bindableDouble(defaultValue: Double = 0.0, fieldId: Int? = null): BindableDoubleProperty<R> {
     return BindableDoubleProperty(fieldId, defaultValue)
 }
 
@@ -82,17 +82,17 @@ fun <R : BaseViewModel> R.bindableDouble(defaultValue: Double = 0.0, fieldId: In
  * Sets [BindableDoubleProperty.beforeSet] of a [BindableDoubleProperty] instance to a given function and
  * returns that instance.
  */
-fun <R : BaseViewModel> BindableDoubleProperty<R>.beforeSet(action: R.(Double, Double) -> Unit) = apply { beforeSet = action }
+fun <R : ViewModel> BindableDoubleProperty<R>.beforeSet(action: R.(Double, Double) -> Unit) = apply { beforeSet = action }
 
 /**
  * Sets [BindableDoubleProperty.validate] of a [BindableDoubleProperty] instance to a given function and
  * returns that instance.
  */
-fun <R : BaseViewModel> BindableDoubleProperty<R>.validate(action: R.(Double, Double) -> Double) = apply { validate = action }
+fun <R : ViewModel> BindableDoubleProperty<R>.validate(action: R.(Double, Double) -> Double) = apply { validate = action }
 
 /**
  * Sets [BindableDoubleProperty.afterSet] of a [BindableDoubleProperty] instance to a given function and
  * returns that instance.
  */
-fun <R : BaseViewModel> BindableDoubleProperty<R>.afterSet(action: R.(Double) -> Unit) = apply { afterSet = action }
+fun <R : ViewModel> BindableDoubleProperty<R>.afterSet(action: R.(Double) -> Unit) = apply { afterSet = action }
 

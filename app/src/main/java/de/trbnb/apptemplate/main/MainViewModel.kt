@@ -1,61 +1,57 @@
 package de.trbnb.apptemplate.main
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.databinding.Bindable
 import de.trbnb.apptemplate.R
-import de.trbnb.apptemplate.app.App
 import de.trbnb.apptemplate.second.SecondActivity
-import de.trbnb.databindingcommands.command.RuleCommand
-import de.trbnb.databindingcommands.command.SimpleCommand
 import de.trbnb.mvvmbase.BaseViewModel
 import de.trbnb.mvvmbase.bindableproperty.afterSet
-import de.trbnb.mvvmbase.bindableproperty.bindable
-import org.jetbrains.anko.startActivity
+import de.trbnb.mvvmbase.bindableproperty.bindableBoolean
+import de.trbnb.mvvmbase.commands.ruleCommand
+import de.trbnb.mvvmbase.commands.simpleCommand
+import org.jetbrains.anko.intentFor
+import org.jetbrains.anko.newTask
+import de.trbnb.mvvmbase.events.Event
 import javax.inject.Inject
 
-class MainViewModel : BaseViewModel() {
+@SuppressLint("StaticFieldLeak")
+class MainViewModel @Inject constructor(private val context: Context) : BaseViewModel() {
 
-    @Inject
-    lateinit var context: Context
-
-    val text: String
+    val text: String = context.getString(R.string.example_text)
 
     @get:Bindable
-    var isShowingDialog by bindable(false)
+    var isShowingDialog by bindableBoolean(false)
 
     @get:Bindable
-    var showSnackbar: Boolean by bindable( false)
+    var showSnackbar: Boolean by bindableBoolean( false)
             .afterSet {
                 showSnackbarCommand.onEnabledChanged()
             }
 
-    val showDialogCommand = SimpleCommand {
+    val showDialogCommand = simpleCommand {
         isShowingDialog = true
     }
 
-    val showSnackbarCommand = RuleCommand(
+    val showSnackbarCommand = ruleCommand(
             action = { showSnackbar = true },
             enabledRule = { !showSnackbar }
     )
 
-    val showFragmentExampleCommand = SimpleCommand {
-        context.startActivity<SecondActivity>()
+    val showToastCommand = simpleCommand {
+        eventChannel(MainEvent.ShowToast)
     }
 
-    val showMainActivityAgain = SimpleCommand {
-        context.startActivity<MainActivity>()
+    val showFragmentExampleCommand = simpleCommand {
+        context.startActivity(context.intentFor<SecondActivity>().newTask())
     }
 
-    init {
-        App.appComponent.inject(this)
-
-        text = context.getString(R.string.example_text)
+    val showMainActivityAgain = simpleCommand {
+        context.startActivity(context.intentFor<MainActivity>().newTask())
     }
 
-    override fun onUnbind() {
-        showDialogCommand.clearEnabledListeners()
-        showSnackbarCommand.clearEnabledListeners()
-        showFragmentExampleCommand.clearEnabledListeners()
-    }
+}
 
+sealed class MainEvent : Event {
+    object ShowToast : MainEvent()
 }
