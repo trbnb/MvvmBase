@@ -9,7 +9,8 @@ import de.trbnb.mvvmbase.commands.Command
  * This will also bind the [View.isEnabled] property to the [Command.isEnabled] property.
  */
 @BindingAdapter("android:clickCommand")
-fun View.bindClickCommand(command: Command<Unit, *>) {
+fun View.bindClickCommand(command: Command<Unit, *>?) {
+    command ?: return
     bindEnabled(command)
 
     setOnClickListener {
@@ -20,7 +21,8 @@ fun View.bindClickCommand(command: Command<Unit, *>) {
 /**
  * Binds the [View.isEnabled] property to the [Command.isEnabled] property of the given instances.
  */
-private fun View.bindEnabled(command: Command<*, *>) {
+private fun View.bindEnabled(command: Command<*, *>?) {
+    command ?: return
     isEnabled = command.isEnabled
 
     command.addEnabledListener {
@@ -34,7 +36,8 @@ private fun View.bindEnabled(command: Command<*, *>) {
  * Binds the given [Command] as command that will be invoked when the View has been long-clicked.
  */
 @BindingAdapter("android:longClickCommand")
-fun View.bindLongClickCommand(command: Command<Unit, *>) {
+fun View.bindLongClickCommand(command: Command<Unit, *>?) {
+    command ?: return
     setOnLongClickListener {
         if (command.isEnabled) {
             command.invoke(Unit) as? Boolean ?: true
