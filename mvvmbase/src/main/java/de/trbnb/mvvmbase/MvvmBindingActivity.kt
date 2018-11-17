@@ -40,11 +40,7 @@ abstract class MvvmBindingActivity<VM : BaseViewModel, B : ViewDataBinding> : Ap
     /**
      * The [ViewModel] that is used for data binding.
      */
-    protected val viewModel: VM by lazy {
-        ViewModelProvider(viewModelStore, viewModelFactory)[viewModelClass].also { viewModel ->
-            onViewModelLoaded(viewModel)
-        }
-    }
+    protected val viewModel: VM by lazy { ViewModelProvider(viewModelStore, viewModelFactory)[viewModelClass] }
 
     /**
      * The [de.trbnb.mvvmbase.BR] value that is used as parameter for the view model in the binding.
@@ -103,6 +99,7 @@ abstract class MvvmBindingActivity<VM : BaseViewModel, B : ViewDataBinding> : Ap
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = initBinding()
+        onViewModelLoaded(viewModel)
     }
 
     /**
