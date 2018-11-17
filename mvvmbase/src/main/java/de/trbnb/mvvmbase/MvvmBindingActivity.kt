@@ -62,6 +62,16 @@ abstract class MvvmBindingActivity<VM : BaseViewModel, B : ViewDataBinding> : Ap
     abstract val viewModelProvider: Provider<VM>
 
     /**
+     * Is called when the ViewModel sends an [Event].
+     * Will only call [onEvent].
+     *
+     * @see onEvent
+     */
+    private val eventListener = { event: Event ->
+        onEvent(event)
+    }
+
+    /**
      * Gets the class of the view model that an implementation uses.
      */
     protected open val viewModelClass: Class<VM>
@@ -120,7 +130,7 @@ abstract class MvvmBindingActivity<VM : BaseViewModel, B : ViewDataBinding> : Ap
     protected open fun onViewModelLoaded(viewModel: VM) {
         viewModel.addOnPropertyChangedCallback(viewModelObserver)
         viewModel.onBind()
-        viewModel.eventChannel.addListener(this, ::onEvent)
+        viewModel.eventChannel.addListener(this, eventListener)
     }
 
     /**

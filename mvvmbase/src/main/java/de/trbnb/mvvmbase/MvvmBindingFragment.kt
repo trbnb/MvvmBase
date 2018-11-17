@@ -123,7 +123,9 @@ abstract class MvvmBindingFragment<VM : BaseViewModel, B : ViewDataBinding> : Fr
      *
      * @see onEvent
      */
-    private val eventListener = ::onEvent
+    private val eventListener = { event: Event ->
+        onEvent(event)
+    }
 
     /**
      * Gets the view model with the Architecture Components.
@@ -163,7 +165,7 @@ abstract class MvvmBindingFragment<VM : BaseViewModel, B : ViewDataBinding> : Fr
     protected open fun onViewModelLoaded(viewModel: VM) {
         viewModel.addOnPropertyChangedCallback(viewModelObserver)
         viewModel.onBind()
-        viewModel.eventChannel.addListener(::onEvent)
+        viewModel.eventChannel.addListener(eventListener)
     }
 
     /**
