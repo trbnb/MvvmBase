@@ -64,7 +64,7 @@ abstract class MvvmBindingActivity<VM : BaseViewModel, B : ViewDataBinding> : Ap
     /**
      * Gets the class of the view model that an implementation uses.
      */
-    private val viewModelClass: Class<VM>
+    protected open val viewModelClass: Class<VM>
         @Suppress("UNCHECKED_CAST")
         get() {
             val superClass = findGenericSuperclass<MvvmBindingActivity<VM, B>>() ?: throw IllegalStateException()
