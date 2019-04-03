@@ -62,6 +62,8 @@ dependencies {
 
     // Java inject API for dependency injection
     api 'javax.inject:javax.inject:1'
+
+    implementation project(":mvvmbaseCommons")
 }
 
 repositories {

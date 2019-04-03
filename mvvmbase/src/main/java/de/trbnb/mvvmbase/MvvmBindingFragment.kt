@@ -12,8 +12,8 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import de.trbnb.mvvmbase.commons.findGenericSuperclass
 import de.trbnb.mvvmbase.events.Event
-import de.trbnb.mvvmbase.utils.findGenericSuperclass
 import javax.inject.Provider
 
 /**

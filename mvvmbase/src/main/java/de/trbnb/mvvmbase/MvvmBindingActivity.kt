@@ -8,9 +8,9 @@ import android.os.Bundle
 import android.support.annotation.CallSuper
 import android.support.annotation.LayoutRes
 import android.support.v7.app.AppCompatActivity
+import de.trbnb.mvvmbase.commons.findGenericSuperclass
 import de.trbnb.mvvmbase.events.Event
 import de.trbnb.mvvmbase.events.addListener
-import de.trbnb.mvvmbase.utils.findGenericSuperclass
 import javax.inject.Provider
 
 /**
