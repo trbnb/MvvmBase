@@ -10,7 +10,10 @@ import de.trbnb.mvvmbase.commands.Command
  */
 @BindingAdapter("android:clickCommand")
 fun View.bindClickCommand(command: Command<Unit, *>?) {
-    command ?: return
+    if (command == null) {
+        setOnClickListener(null)
+        return
+    }
     bindEnabled(command)
 
     setOnClickListener {
@@ -37,7 +40,11 @@ private fun View.bindEnabled(command: Command<*, *>?) {
  */
 @BindingAdapter("android:longClickCommand")
 fun View.bindLongClickCommand(command: Command<Unit, *>?) {
-    command ?: return
+    if (command == null) {
+        setOnLongClickListener(null)
+        return
+    }
+
     setOnLongClickListener {
         if (command.isEnabled) {
             command.invoke(Unit) as? Boolean ?: true
