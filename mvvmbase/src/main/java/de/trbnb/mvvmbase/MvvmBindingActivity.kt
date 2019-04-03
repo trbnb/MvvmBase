@@ -27,7 +27,8 @@ import javax.inject.Provider
  * @param[VM] The type of the specific [ViewModel] implementation for this Activity.
  * @param[B] The type of the specific [ViewDataBinding] implementation for this Activity.
  */
-abstract class MvvmBindingActivity<VM : BaseViewModel, B : ViewDataBinding> : AppCompatActivity() {
+abstract class MvvmBindingActivity<VM, B> : AppCompatActivity()
+    where VM : ViewModel, VM : android.arch.lifecycle.ViewModel, B : ViewDataBinding {
 
     /**
      * The [ViewDataBinding] implementation for a specific layout.
@@ -109,6 +110,14 @@ abstract class MvvmBindingActivity<VM : BaseViewModel, B : ViewDataBinding> : Ap
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = initBinding()
+    }
+
+    /**
+     * Calls [onViewModelLoaded]. This happens here and not in [onCreate] so that initializations can finish before event callbacks like
+     * [onEvent] and [onViewModelPropertyChanged] are can access those initilaized components.
+     */
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
         onViewModelLoaded(viewModel)
     }
 
@@ -119,6 +128,7 @@ abstract class MvvmBindingActivity<VM : BaseViewModel, B : ViewDataBinding> : Ap
      */
     private fun initBinding(): B = DataBindingUtil.setContentView<B>(this, layoutId).apply {
         setVariable(viewModelBindingId, viewModel)
+        viewModel.onBind()
     }
 
     /**
@@ -129,7 +139,6 @@ abstract class MvvmBindingActivity<VM : BaseViewModel, B : ViewDataBinding> : Ap
     @CallSuper
     protected open fun onViewModelLoaded(viewModel: VM) {
         viewModel.addOnPropertyChangedCallback(viewModelObserver)
-        viewModel.onBind()
         viewModel.eventChannel.addListener(this, eventListener)
     }
 
