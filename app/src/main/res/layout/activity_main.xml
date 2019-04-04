@@ -20,7 +20,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@{vm.text}"
+            android:text="@{vm.title}"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
             tools:text="Foo bar"/>
 
         <Button
@@ -46,6 +47,12 @@
             android:layout_height="wrap_content"
             android:text="Show Fragment example"
             android:clickCommand="@{vm.showFragmentExampleCommand}"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Show Conductor example"
+            android:clickCommand="@{vm.showConductorEvent}"/>
 
         <Button
             android:layout_width="wrap_content"

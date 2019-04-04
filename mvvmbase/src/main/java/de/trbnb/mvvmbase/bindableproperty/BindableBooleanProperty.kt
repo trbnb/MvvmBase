@@ -12,18 +12,13 @@ import kotlin.reflect.KProperty
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  * @param defaultValue Value that will be used at start.
  */
-class BindableBooleanProperty<R : ViewModel> (
-        private var fieldId: Int?,
-        defaultValue: Boolean
-) : BindablePropertyBase() {
-
+class BindableBooleanProperty(private var fieldId: Int?, defaultValue: Boolean) : BindablePropertyBase() {
     override val isBoolean = true
 
     /**
      * Gets or sets the stored value.
      */
     private var value = defaultValue
-
 
     /**
      * Gets or sets a function that will be invoked if a new value is about to be set.
@@ -32,7 +27,7 @@ class BindableBooleanProperty<R : ViewModel> (
      * This function will not be invoked if [BindablePropertyBase.distinct] is true and the new value
      * is equal to the old value.
      */
-    internal var beforeSet: (R.(Boolean, Boolean) -> Unit)? = null
+    internal var beforeSet: ((old: Boolean, new: Boolean) -> Unit)? = null
 
     /**
      * Gets or sets a function that will validate a newly set value.
@@ -41,18 +36,18 @@ class BindableBooleanProperty<R : ViewModel> (
      *
      * If this function is null validation will not happen and the new value will simply be set.
      */
-    internal var validate: (R.(Boolean, Boolean) -> Boolean)? = null
+    internal var validate: ((old: Boolean, new: Boolean) -> Boolean)? = null
 
     /**
      * Gets or sets a function that will be invoked if a new value was set and
      * [BaseObservable.notifyPropertyChanged] was invoked.
      * The first parameter is the old value and the second parameter is the new value.
      */
-    internal var afterSet: (R.(Boolean) -> Unit)? = null
+    internal var afterSet: ((new: Boolean) -> Unit)? = null
 
-    operator fun getValue(thisRef: R, property: KProperty<*>) = value
+    operator fun getValue(thisRef: ViewModel, property: KProperty<*>) = value
 
-    operator fun setValue(thisRef: R, property: KProperty<*>, value: Boolean) {
+    operator fun setValue(thisRef: ViewModel, property: KProperty<*>, value: Boolean) {
         if (fieldId == null) {
             fieldId = resolveFieldId(property)
         }
@@ -61,10 +56,10 @@ class BindableBooleanProperty<R : ViewModel> (
             return
         }
 
-        beforeSet?.invoke(thisRef, this.value, value)
-        this.value = validate?.invoke(thisRef, this.value, value) ?: value
+        beforeSet?.invoke(this.value, value)
+        this.value = validate?.invoke(this.value, value) ?: value
         thisRef.notifyPropertyChanged(fieldId ?: BR._all)
-        afterSet?.invoke(thisRef, this.value)
+        afterSet?.invoke(this.value)
     }
 }
 
@@ -74,7 +69,7 @@ class BindableBooleanProperty<R : ViewModel> (
  * @param defaultValue Value of the property from the start.
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  */
-fun <R : ViewModel> R.bindableBoolean(defaultValue: Boolean = false, fieldId: Int? = null): BindableBooleanProperty<R> {
+fun ViewModel.bindableBoolean(defaultValue: Boolean = false, fieldId: Int? = null): BindableBooleanProperty {
     return BindableBooleanProperty(fieldId, defaultValue)
 }
 
@@ -82,17 +77,17 @@ fun <R : ViewModel> R.bindableBoolean(defaultValue: Boolean = false, fieldId: In
  * Sets [BindableBooleanProperty.beforeSet] of a [BindableBooleanProperty] instance to a given function and
  * returns that instance.
  */
-fun <R : ViewModel> BindableBooleanProperty<R>.beforeSet(action: R.(Boolean, Boolean) -> Unit) = apply { beforeSet = action }
+fun BindableBooleanProperty.beforeSet(action: (old: Boolean, new: Boolean) -> Unit) = apply { beforeSet = action }
 
 /**
  * Sets [BindableBooleanProperty.validate] of a [BindableBooleanProperty] instance to a given function and
  * returns that instance.
  */
-fun <R : ViewModel> BindableBooleanProperty<R>.validate(action: R.(Boolean, Boolean) -> Boolean) = apply { validate = action }
+fun BindableBooleanProperty.validate(action: (old: Boolean, new: Boolean) -> Boolean) = apply { validate = action }
 
 /**
  * Sets [BindableBooleanProperty.afterSet] of a [BindableBooleanProperty] instance to a given function and
  * returns that instance.
  */
-fun <R : ViewModel> BindableBooleanProperty<R>.afterSet(action: R.(Boolean) -> Unit) = apply { afterSet = action }
+fun BindableBooleanProperty.afterSet(action: (Boolean) -> Unit) = apply { afterSet = action }
 

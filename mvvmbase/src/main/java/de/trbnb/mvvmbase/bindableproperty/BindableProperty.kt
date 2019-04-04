@@ -1,7 +1,6 @@
 package de.trbnb.mvvmbase.bindableproperty
 
 import android.databinding.BaseObservable
-import android.util.Log
 import de.trbnb.mvvmbase.BR
 import de.trbnb.mvvmbase.ViewModel
 import kotlin.properties.ReadWriteProperty
@@ -16,11 +15,11 @@ import kotlin.reflect.KProperty
  * @param defaultValue Value that will be used at start.
  * @param isBoolean Indicates if this delegate property is for a property that has the type Boolean.
  */
-class BindableProperty<R : ViewModel, T> (
+class BindableProperty<T> (
         private var fieldId: Int?,
         defaultValue: T,
-        internal val isBoolean: Boolean = defaultValue is Boolean
-) : ReadWriteProperty<R, T> {
+        override val isBoolean: Boolean = defaultValue is Boolean
+) : BindablePropertyBase(), ReadWriteProperty<ViewModel, T> {
 
     companion object {
         internal var brClass: Class<*>? = null
@@ -46,19 +45,13 @@ class BindableProperty<R : ViewModel, T> (
     private var value = defaultValue
 
     /**
-     * Gets or sets whether the setter should check if a new value is not equal to the old value.
-     * If true and a value is about to be set that is equal to the old one the setter will do nothing.
-     */
-    internal var distinct: Boolean = false
-
-    /**
      * Gets or sets a function that will be invoked if a new value is about to be set.
      * The first parameter is the old value and the second parameter is the new value.
      *
      * This function will not be invoked if [BindableProperty.distinct] is true and the new value
      * is equal to the old value.
      */
-    internal var beforeSet: (R.(T, T) -> Unit)? = null
+    internal var beforeSet: ((old: T, new: T) -> Unit)? = null
 
     /**
      * Gets or sets a function that will validate a newly set value.
@@ -67,18 +60,18 @@ class BindableProperty<R : ViewModel, T> (
      *
      * If this function is null validation will not happen and the new value will simply be set.
      */
-    internal var validate: (R.(T, T) -> T)? = null
+    internal var validate: ((old: T, new: T) -> T)? = null
 
     /**
      * Gets or sets a function that will be invoked if a new value was set and
      * [BaseObservable.notifyPropertyChanged] was invoked.
      * The first parameter is the old value and the second parameter is the new value.
      */
-    internal var afterSet: (R.(T) -> Unit)? = null
+    internal var afterSet: ((new: T) -> Unit)? = null
 
-    override fun getValue(thisRef: R, property: KProperty<*>) = value
+    override fun getValue(thisRef: ViewModel, property: KProperty<*>) = value
 
-    override fun setValue(thisRef: R, property: KProperty<*>, value: T) {
+    override fun setValue(thisRef: ViewModel, property: KProperty<*>, value: T) {
         if (fieldId == null) {
             fieldId = resolveFieldId(property)
         }
@@ -87,28 +80,10 @@ class BindableProperty<R : ViewModel, T> (
             return
         }
 
-        beforeSet?.invoke(thisRef, this.value, value)
-        this.value = validate?.invoke(thisRef, this.value, value) ?: value
+        beforeSet?.invoke(this.value, value)
+        this.value = validate?.invoke(this.value, value) ?: value
         thisRef.notifyPropertyChanged(fieldId ?: BR._all)
-        afterSet?.invoke(thisRef, this.value)
-    }
-
-    /**
-     * Finds the field ID of the given property.
-     */
-    private fun resolveFieldId(property: KProperty<*>): Int {
-        val brClass = brClass ?: return BR._all
-
-        val checkedPropertyName = property.brFieldName(isBoolean)
-
-        Log.d("BindableProperty", "$checkedPropertyName dectected")
-
-        return try {
-            brClass.getField(checkedPropertyName).getInt(null)
-        } catch (e: NoSuchFieldException) {
-            Log.d("BindableProperty", "Automatic field ID detection failed for ${property.name}. Defaulting to BR._all...")
-            BR._all
-        }
+        afterSet?.invoke(this.value)
     }
 }
 
@@ -118,7 +93,7 @@ class BindableProperty<R : ViewModel, T> (
  * @param defaultValue Value of the property from the start.
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  */
-inline fun <R : ViewModel, reified T> R.bindable(defaultValue: T, fieldId: Int? = null): BindableProperty<R, T> {
+inline fun <reified T> ViewModel.bindable(defaultValue: T, fieldId: Int? = null): BindableProperty<T> {
     return BindableProperty(fieldId, defaultValue, T::class == Boolean::class)
 }
 
@@ -127,30 +102,26 @@ inline fun <R : ViewModel, reified T> R.bindable(defaultValue: T, fieldId: Int? 
  *
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  */
-inline fun <R : ViewModel, reified T> R.bindable(fieldId: Int? = null): BindableProperty<R, T?> {
+inline fun <reified T> ViewModel.bindable(fieldId: Int? = null): BindableProperty<T?> {
     return bindable(null, fieldId)
 }
-
-/**
- * Sets [BindableProperty.distinct] of a [BindableProperty] instance to `true` and returns that
- * instance.
- */
-fun <R : ViewModel, T> BindableProperty<R, T>.distinct() = apply { distinct = true }
 
 /**
  * Sets [BindableProperty.beforeSet] of a [BindableProperty] instance to a given function and
  * returns that instance.
  */
-fun <R : ViewModel, T> BindableProperty<R, T>.beforeSet(action: R.(T, T) -> Unit) = apply { beforeSet = action }
+fun <T> BindableProperty<T>.beforeSet(action: (old: T, new: T) -> Unit): BindableProperty<T> {
+    return apply { beforeSet = action }
+}
 
 /**
  * Sets [BindableProperty.validate] of a [BindableProperty] instance to a given function and
  * returns that instance.
  */
-fun <R : ViewModel, T> BindableProperty<R, T>.validate(action: R.(T, T) -> T) = apply { validate = action }
+fun <T> BindableProperty<T>.validate(action: (old: T, new: T) -> T) = apply { validate = action }
 
 /**
  * Sets [BindableProperty.afterSet] of a [BindableProperty] instance to a given function and
  * returns that instance.
  */
-fun <R : ViewModel, T> BindableProperty<R, T>.afterSet(action: R.(T) -> Unit) = apply { afterSet = action }
+fun <T> BindableProperty<T>.afterSet(action: (new: T) -> Unit) = apply { afterSet = action }
