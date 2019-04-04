@@ -4,11 +4,17 @@ import android.app.AlertDialog
 import android.app.Dialog
 import com.google.android.material.snackbar.Snackbar
 import android.os.Bundle
+import com.bluelinelabs.conductor.Conductor
+import com.bluelinelabs.conductor.Router
+import com.bluelinelabs.conductor.RouterTransaction
 import de.trbnb.apptemplate.BR
 import de.trbnb.apptemplate.R
 import de.trbnb.apptemplate.app.appComponent
+import de.trbnb.apptemplate.second.SecondActivity
+import de.trbnb.apptemplate.second.SecondController
 import de.trbnb.mvvmbase.MvvmActivity
 import de.trbnb.mvvmbase.events.Event
+import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.toast
 import javax.inject.Inject
 import javax.inject.Provider
@@ -24,9 +30,13 @@ class MainActivity : MvvmActivity<MainViewModel>() {
     @Inject
     override lateinit var viewModelProvider: Provider<MainViewModel>
 
+    private lateinit var router: Router
+
     override fun onCreate(savedInstanceState: Bundle?) {
         appComponent.inject(this)
         super.onCreate(savedInstanceState)
+
+        router = Conductor.attachRouter(this, findViewById(android.R.id.content), savedInstanceState)
     }
 
     override fun onViewModelLoaded(viewModel: MainViewModel) {
@@ -34,7 +44,7 @@ class MainActivity : MvvmActivity<MainViewModel>() {
 
         // now that the view-model is loaded, we know whether or not we should know if we should
         // show the dialog and snackbar
-        arrayOf(BR.showingDialog, BR.showingSnackbar).forEach { onViewModelPropertyChanged(viewModel, it) }
+        arrayOf(BR.showingDialog, BR.showSnackbar).forEach { onViewModelPropertyChanged(viewModel, it) }
     }
 
     /**
@@ -43,7 +53,7 @@ class MainActivity : MvvmActivity<MainViewModel>() {
     override fun onViewModelPropertyChanged(viewModel: MainViewModel, fieldId: Int) {
         when (fieldId) {
             BR.showingDialog -> if (viewModel.isShowingDialog) showDialog() else dismissDialog()
-            BR.showingSnackbar -> if (viewModel.isShowingSnackbar) showSnackbar() else dismissSnackbar()
+            BR.showSnackbar -> if (viewModel.isShowingSnackbar) showSnackbar() else dismissSnackbar()
         }
     }
 
@@ -101,11 +111,11 @@ class MainActivity : MvvmActivity<MainViewModel>() {
                         return
                     }
 
-                    viewModel.isShowingSnackbar = false
+                    viewModel.showSnackbar = false
                 }
             })
 
-            setAction("Hide") { viewModel.isShowingSnackbar = false }
+            setAction("Hide") { viewModel.showSnackbar = false }
 
             show()
         }
@@ -116,6 +126,17 @@ class MainActivity : MvvmActivity<MainViewModel>() {
 
         when (event as? MainEvent ?: return) {
             is MainEvent.ShowToast -> toast("Toast message!")
+            is MainEvent.ShowMainActivityAgainEvent -> startActivity(intentFor<MainActivity>())
+            is MainEvent.ShowSecondActivityEvent -> startActivity(intentFor<SecondActivity>())
+            is MainEvent.ShowConductorEvent -> {
+                router.pushController(RouterTransaction.with(SecondController()))
+            }
+        }
+    }
+
+    override fun onBackPressed() {
+        if (!router.handleBack()) {
+            super.onBackPressed()
         }
     }
 

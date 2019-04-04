@@ -33,7 +33,7 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel {
      * Gets if events that are raised when no listeners are registered are raised later when a listener is registered.
      */
     protected open val memorizeNotReceivedEvents: Boolean
-        get() = false
+        get() = true
 
     /**
      * Gets the custom lifecycle for ViewModels.

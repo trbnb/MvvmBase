@@ -45,12 +45,12 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     // Support library
-    implementation "androidx.appcompat:appcompat:1.0.0"
+    implementation "androidx.appcompat:appcompat:1.0.2"
 
     // Testing
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.1.0-alpha4'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha4'
+    androidTestImplementation 'androidx.test:runner:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
 
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
@@ -61,6 +61,8 @@ dependencies {
 
     // Java inject API for dependency injection
     api 'javax.inject:javax.inject:1'
+
+    implementation project(":mvvmbaseCommons")
 }
 
 repositories {

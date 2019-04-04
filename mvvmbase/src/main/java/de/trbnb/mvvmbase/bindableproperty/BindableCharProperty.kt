@@ -12,18 +12,13 @@ import kotlin.reflect.KProperty
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  * @param defaultValue Value that will be used at start.
  */
-class BindableCharProperty<R : ViewModel> (
-        private var fieldId: Int?,
-        defaultValue: Char
-) : BindablePropertyBase() {
-
+class BindableCharProperty(private var fieldId: Int?, defaultValue: Char) : BindablePropertyBase() {
     override val isBoolean = false
 
     /**
      * Gets or sets the stored value.
      */
     private var value = defaultValue
-
 
     /**
      * Gets or sets a function that will be invoked if a new value is about to be set.
@@ -32,7 +27,7 @@ class BindableCharProperty<R : ViewModel> (
      * This function will not be invoked if [BindablePropertyBase.distinct] is true and the new value
      * is equal to the old value.
      */
-    internal var beforeSet: (R.(Char, Char) -> Unit)? = null
+    internal var beforeSet: ((old: Char, new: Char) -> Unit)? = null
 
     /**
      * Gets or sets a function that will validate a newly set value.
@@ -41,18 +36,18 @@ class BindableCharProperty<R : ViewModel> (
      *
      * If this function is null validation will not happen and the new value will simply be set.
      */
-    internal var validate: (R.(Char, Char) -> Char)? = null
+    internal var validate: ((old: Char, new: Char) -> Char)? = null
 
     /**
      * Gets or sets a function that will be invoked if a new value was set and
      * [BaseObservable.notifyPropertyChanged] was invoked.
      * The first parameter is the old value and the second parameter is the new value.
      */
-    internal var afterSet: (R.(Char) -> Unit)? = null
+    internal var afterSet: ((new: Char) -> Unit)? = null
 
-    operator fun getValue(thisRef: R, property: KProperty<*>) = value
+    operator fun getValue(thisRef: ViewModel, property: KProperty<*>) = value
 
-    operator fun setValue(thisRef: R, property: KProperty<*>, value: Char) {
+    operator fun setValue(thisRef: ViewModel, property: KProperty<*>, value: Char) {
         if (fieldId == null) {
             fieldId = resolveFieldId(property)
         }
@@ -61,10 +56,10 @@ class BindableCharProperty<R : ViewModel> (
             return
         }
 
-        beforeSet?.invoke(thisRef, this.value, value)
-        this.value = validate?.invoke(thisRef, this.value, value) ?: value
+        beforeSet?.invoke(this.value, value)
+        this.value = validate?.invoke(this.value, value) ?: value
         thisRef.notifyPropertyChanged(fieldId ?: BR._all)
-        afterSet?.invoke(thisRef, this.value)
+        afterSet?.invoke(this.value)
     }
 }
 
@@ -74,7 +69,7 @@ class BindableCharProperty<R : ViewModel> (
  * @param defaultValue Value of the property from the start.
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  */
-fun <R : ViewModel> R.bindableChar(defaultValue: Char, fieldId: Int? = null): BindableCharProperty<R> {
+fun ViewModel.bindableChar(defaultValue: Char, fieldId: Int? = null): BindableCharProperty {
     return BindableCharProperty(fieldId, defaultValue)
 }
 
@@ -82,17 +77,17 @@ fun <R : ViewModel> R.bindableChar(defaultValue: Char, fieldId: Int? = null): Bi
  * Sets [BindableCharProperty.beforeSet] of a [BindableCharProperty] instance to a given function and
  * returns that instance.
  */
-fun <R : ViewModel> BindableCharProperty<R>.beforeSet(action: R.(Char, Char) -> Unit) = apply { beforeSet = action }
+fun BindableCharProperty.beforeSet(action: (old: Char, new: Char) -> Unit) = apply { beforeSet = action }
 
 /**
  * Sets [BindableCharProperty.validate] of a [BindableCharProperty] instance to a given function and
  * returns that instance.
  */
-fun <R : ViewModel> BindableCharProperty<R>.validate(action: R.(Char, Char) -> Char) = apply { validate = action }
+fun BindableCharProperty.validate(action: (old: Char, new: Char) -> Char) = apply { validate = action }
 
 /**
  * Sets [BindableCharProperty.afterSet] of a [BindableCharProperty] instance to a given function and
  * returns that instance.
  */
-fun <R : ViewModel> BindableCharProperty<R>.afterSet(action: R.(Char) -> Unit) = apply { afterSet = action }
+fun BindableCharProperty.afterSet(action: (new: Char) -> Unit) = apply { afterSet = action }
 

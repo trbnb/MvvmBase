@@ -12,12 +12,12 @@ import androidx.databinding.Observable
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import de.trbnb.mvvmbase.commons.findGenericSuperclass
 import de.trbnb.mvvmbase.events.Event
-import de.trbnb.mvvmbase.utils.findGenericSuperclass
 import javax.inject.Provider
 
 /**
- * Base class for Frgaments that serve as view within an MVVM structure.
+ * Base class for Fragments that serve as view within an MVVM structure.
  *
  * It automatically creates the binding and sets the view model as that bindings parameter.
  * Note that the parameter has to have to name "vm".
@@ -29,7 +29,8 @@ import javax.inject.Provider
  * @param[VM] The type of the specific [ViewModel] implementation for this Fragment.
  * @param[B] The type of the specific [ViewDataBinding] implementation for this Fragment.
  */
-abstract class MvvmBindingFragment<VM : BaseViewModel, B : ViewDataBinding> : Fragment() {
+abstract class MvvmBindingFragment<VM, B> : Fragment()
+    where VM : ViewModel, VM : androidx.lifecycle.ViewModel, B : ViewDataBinding{
 
     /**
      * The [ViewDataBinding] implementation for a specific layout.
@@ -37,41 +38,18 @@ abstract class MvvmBindingFragment<VM : BaseViewModel, B : ViewDataBinding> : Fr
      */
     @Suppress("MemberVisibilityCanBePrivate")
     protected var binding: B? = null
-        private set(value) {
-            if (value === field) return
-
-            field?.setVariable(viewModelBindingId, null)
-
-            field = value
-
-            value?.setVariable(viewModelBindingId, viewModel)
-        }
 
     /**
      * The [ViewModel] that is used for data binding.
      */
     @Suppress("MemberVisibilityCanBePrivate")
     protected var viewModel: VM? = null
-        private set(value) {
-            if(field === value) return
-
-            field?.eventChannel?.removeListener(eventListener)
-            field?.onUnbind()
-            field?.removeOnPropertyChangedCallback(viewModelObserver)
-
-            field = value
-
-            value?.let {
-                binding?.setVariable(viewModelBindingId, it)
-
-                onViewModelLoaded(it)
-            }
-        }
+        private set
 
     /**
      * Gets the class of the view model that an implementation uses.
      */
-    private val viewModelClass: Class<VM>
+    protected open val viewModelClass: Class<VM>
         @Suppress("UNCHECKED_CAST")
         get() {
             val superClass = findGenericSuperclass<MvvmBindingFragment<VM, B>>()?: throw IllegalStateException()
@@ -123,12 +101,14 @@ abstract class MvvmBindingFragment<VM : BaseViewModel, B : ViewDataBinding> : Fr
      *
      * @see onEvent
      */
-    private val eventListener = ::onEvent
+    private val eventListener = { event: Event ->
+        onEvent(event)
+    }
 
     /**
      * Gets the view model with the Architecture Components.
      */
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
 
         viewModel = ViewModelProvider(viewModelStore, viewModelFactory)[viewModelClass]
@@ -144,6 +124,23 @@ abstract class MvvmBindingFragment<VM : BaseViewModel, B : ViewDataBinding> : Fr
             binding = it
         }.root
     }
+
+    final override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewModel?.let { viewModel ->
+            binding?.setVariable(viewModelBindingId, viewModel)
+            viewModel.onBind()
+            onViewModelLoaded(viewModel)
+        }
+
+        binding?.let(this::onBindingCreated)
+    }
+
+    /**
+     * Called after [onViewCreated]. Passes the view of the Fragment contained in the [binding].
+     */
+    protected open fun onBindingCreated(binding: B) { }
 
     /**
      * Creates a new [ViewDataBinding].
@@ -162,8 +159,7 @@ abstract class MvvmBindingFragment<VM : BaseViewModel, B : ViewDataBinding> : Fr
     @CallSuper
     protected open fun onViewModelLoaded(viewModel: VM) {
         viewModel.addOnPropertyChangedCallback(viewModelObserver)
-        viewModel.onBind()
-        viewModel.eventChannel.addListener(::onEvent)
+        viewModel.eventChannel.addListener(eventListener)
     }
 
     /**
@@ -182,11 +178,16 @@ abstract class MvvmBindingFragment<VM : BaseViewModel, B : ViewDataBinding> : Fr
     override fun onDestroyView() {
         super.onDestroyView()
 
+        binding?.setVariable(viewModelBindingId, null)
+        viewModel?.onUnbind()
+        viewModel?.eventChannel?.removeListener(eventListener)
+        viewModel?.removeOnPropertyChangedCallback(viewModelObserver)
+
         binding = null
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDetach() {
+        super.onDetach()
 
         viewModel = null
     }

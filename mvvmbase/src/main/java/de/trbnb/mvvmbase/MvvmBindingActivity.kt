@@ -8,9 +8,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.Observable
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModelProvider
+import de.trbnb.mvvmbase.commons.findGenericSuperclass
 import de.trbnb.mvvmbase.events.Event
 import de.trbnb.mvvmbase.events.addListener
-import de.trbnb.mvvmbase.utils.findGenericSuperclass
 import javax.inject.Provider
 
 /**
@@ -27,7 +27,8 @@ import javax.inject.Provider
  * @param[VM] The type of the specific [ViewModel] implementation for this Activity.
  * @param[B] The type of the specific [ViewDataBinding] implementation for this Activity.
  */
-abstract class MvvmBindingActivity<VM : BaseViewModel, B : ViewDataBinding> : AppCompatActivity() {
+abstract class MvvmBindingActivity<VM, B> : AppCompatActivity()
+    where VM : ViewModel, VM : androidx.lifecycle.ViewModel, B : ViewDataBinding {
 
     /**
      * The [ViewDataBinding] implementation for a specific layout.
@@ -40,11 +41,7 @@ abstract class MvvmBindingActivity<VM : BaseViewModel, B : ViewDataBinding> : Ap
     /**
      * The [ViewModel] that is used for data binding.
      */
-    protected val viewModel: VM by lazy {
-        ViewModelProvider(viewModelStore, viewModelFactory)[viewModelClass].also { viewModel ->
-            onViewModelLoaded(viewModel)
-        }
-    }
+    protected val viewModel: VM by lazy { ViewModelProvider(viewModelStore, viewModelFactory)[viewModelClass] }
 
     /**
      * The [de.trbnb.mvvmbase.BR] value that is used as parameter for the view model in the binding.
@@ -66,9 +63,19 @@ abstract class MvvmBindingActivity<VM : BaseViewModel, B : ViewDataBinding> : Ap
     abstract val viewModelProvider: Provider<VM>
 
     /**
+     * Is called when the ViewModel sends an [Event].
+     * Will only call [onEvent].
+     *
+     * @see onEvent
+     */
+    private val eventListener = { event: Event ->
+        onEvent(event)
+    }
+
+    /**
      * Gets the class of the view model that an implementation uses.
      */
-    private val viewModelClass: Class<VM>
+    protected open val viewModelClass: Class<VM>
         @Suppress("UNCHECKED_CAST")
         get() {
             val superClass = findGenericSuperclass<MvvmBindingActivity<VM, B>>() ?: throw IllegalStateException()
@@ -106,12 +113,22 @@ abstract class MvvmBindingActivity<VM : BaseViewModel, B : ViewDataBinding> : Ap
     }
 
     /**
+     * Calls [onViewModelLoaded]. This happens here and not in [onCreate] so that initializations can finish before event callbacks like
+     * [onEvent] and [onViewModelPropertyChanged] are can access those initilaized components.
+     */
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+        onViewModelLoaded(viewModel)
+    }
+
+    /**
      * Creates the [ViewDataBinding].
      *
      * @return The new [ViewDataBinding] instance that fits this Activity.
      */
     private fun initBinding(): B = DataBindingUtil.setContentView<B>(this, layoutId).apply {
         setVariable(viewModelBindingId, viewModel)
+        viewModel.onBind()
     }
 
     /**
@@ -122,8 +139,7 @@ abstract class MvvmBindingActivity<VM : BaseViewModel, B : ViewDataBinding> : Ap
     @CallSuper
     protected open fun onViewModelLoaded(viewModel: VM) {
         viewModel.addOnPropertyChangedCallback(viewModelObserver)
-        viewModel.onBind()
-        viewModel.eventChannel.addListener(this, ::onEvent)
+        viewModel.eventChannel.addListener(this, eventListener)
     }
 
     /**

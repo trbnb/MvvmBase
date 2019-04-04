@@ -13,29 +13,41 @@ import de.trbnb.mvvmbase.commands.simpleCommand
 import de.trbnb.mvvmbase.events.Event
 import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.newTask
+import de.trbnb.mvvmbase.rx.RxViewModel
+import io.reactivex.Observable
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @SuppressLint("StaticFieldLeak")
-class MainViewModel @Inject constructor(private val context: Context) : BaseViewModel() {
-
-    val text: String = context.getString(R.string.example_text)
+class MainViewModel @Inject constructor() : BaseViewModel(), RxViewModel {
 
     @get:Bindable
     var isShowingDialog by bindableBoolean(false)
 
     @get:Bindable
-    var isShowingSnackbar: Boolean by bindableBoolean( false)
-            .afterSet {
-                showSnackbarCommand.onEnabledChanged()
-            }
+    var showSnackbar: Boolean by bindableBoolean( false)
+        .afterSet {
+            showSnackbarCommand.onEnabledChanged()
+        }
+
+    @get:Bindable
+    val title by Observable.create<String> {
+        it.onNext("Foo")
+        GlobalScope.launch {
+            delay(5000)
+            it.onNext("bar")
+        }
+    }.toBindable()
 
     val showDialogCommand = simpleCommand {
         isShowingDialog = true
     }
 
     val showSnackbarCommand = ruleCommand(
-            action = { isShowingSnackbar = true },
-            enabledRule = { !isShowingSnackbar }
+        action = { showSnackbar = true },
+        enabledRule = { !showSnackbar }
     )
 
     val showToastCommand = simpleCommand {
@@ -43,13 +55,21 @@ class MainViewModel @Inject constructor(private val context: Context) : BaseView
     }
 
     val showFragmentExampleCommand = simpleCommand {
-        context.startActivity(context.intentFor<SecondActivity>().newTask())
+        eventChannel(MainEvent.ShowSecondActivityEvent)
     }
+
     val showMainActivityAgain = simpleCommand {
-        context.startActivity(context.intentFor<MainActivity>().newTask())
+        eventChannel(MainEvent.ShowMainActivityAgainEvent)
+    }
+
+    val showConductorEvent = simpleCommand {
+        eventChannel(MainEvent.ShowConductorEvent)
     }
 }
 
 sealed class MainEvent : Event {
     object ShowToast : MainEvent()
+    object ShowSecondActivityEvent : MainEvent()
+    object ShowMainActivityAgainEvent : MainEvent()
+    object ShowConductorEvent : MainEvent()
 }
