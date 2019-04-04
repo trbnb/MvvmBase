@@ -1,14 +1,26 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
+// for Bintray
+def projectVersionCodeNr = Integer.parseInt(projectVersionCode)
+def libGit = libGit
+def libUrl = libUrl
+def libDescription = libRxDescription
+def libGroupId = libGroupId
+def libArtifactId = libRxArtifactId
+
+// for Maven
+group = libGroupId
+def projectVersionName = projectVersionName
+
 android {
     compileSdkVersion 28
 
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        versionCode = projectVersionCodeNr
+        versionName = projectVersionName
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -31,4 +43,81 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+}
+
+
+apply plugin: 'com.github.dcendents.android-maven'
+
+install {
+    repositories.mavenInstaller {
+        // This generates POM.xml with proper parameters
+        pom.project {
+            packaging 'aar'
+            groupId libGroupId
+            artifactId libArtifactId
+
+            // Add your description here
+            name libArtifactId
+            description libDescription
+            url libUrl
+
+            // Set your license
+            licenses {
+                license {
+                    name 'The Apache Software License, Version 2.0'
+                    url libLicenseUrl
+                }
+            }
+            scm {
+                connection libGit
+                developerConnection libGit
+                url libUrl
+            }
+        }
+
+    }
+}
+
+apply plugin: 'com.jfrog.bintray'
+
+version = projectVersionName
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from android.sourceSets.main.java.srcDirs
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+artifacts {
+    archives sourcesJar
+}
+
+// Bintray
+bintray {
+    user = private_bintray_user
+    key = private_bintray_apikey
+
+    configurations = ['archives']
+    pkg {
+        repo = libGroupId
+        name = libArtifactId
+        desc = libDescription
+        websiteUrl = libUrl
+        vcsUrl = libGit
+        licenses = ["Apache-2.0"]
+        publish = true
+        publicDownloadNumbers = true
+        version {
+            name = projectVersionName
+            desc = libDescription
+            gpg {
+                sign = true
+                passphrase = private_bintray_gpg_passphrase
+            }
+        }
+    }
 }
