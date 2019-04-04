@@ -41,6 +41,8 @@ android {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
+    implementation 'androidx.lifecycle:lifecycle-viewmodel:2.0.0'
+
     implementation project(":mvvmbase")
     implementation project(":mvvmbaseCommons")
 

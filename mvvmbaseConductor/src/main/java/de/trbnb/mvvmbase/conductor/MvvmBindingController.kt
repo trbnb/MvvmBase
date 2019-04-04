@@ -1,17 +1,17 @@
 package de.trbnb.mvvmbase.conductor
 
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelStore
-import android.arch.lifecycle.ViewModelStoreOwner
-import android.databinding.DataBindingUtil
-import android.databinding.Observable
-import android.databinding.ViewDataBinding
 import android.os.Bundle
 import android.support.annotation.CallSuper
 import android.support.annotation.LayoutRes
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.Observable
+import androidx.databinding.ViewDataBinding
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStore
+import androidx.lifecycle.ViewModelStoreOwner
 import com.bluelinelabs.conductor.archlifecycle.LifecycleController
 import de.trbnb.mvvmbase.BR
 import de.trbnb.mvvmbase.ViewModel
@@ -33,7 +33,7 @@ import javax.inject.Provider
  * @param[B] The type of the specific [ViewDataBinding] implementation for this Controller.
  */
 abstract class MvvmBindingController<VM, B> : LifecycleController, ViewModelStoreOwner
-        where VM : ViewModel, VM : android.arch.lifecycle.ViewModel, B : ViewDataBinding {
+        where VM : ViewModel, VM : androidx.lifecycle.ViewModel, B : ViewDataBinding {
 
     constructor() : super()
     constructor(bundle: Bundle? = null) : super(bundle)
@@ -67,7 +67,7 @@ abstract class MvvmBindingController<VM, B> : LifecycleController, ViewModelStor
      */
     private val viewModelFactory = object : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
-        override fun <T : android.arch.lifecycle.ViewModel> create(modelClass: Class<T>): T {
+        override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
             return viewModelProvider.get() as T
         }
     }
