@@ -2,11 +2,11 @@ package de.trbnb.apptemplate.main
 
 import android.app.AlertDialog
 import android.app.Dialog
-import com.google.android.material.snackbar.Snackbar
 import android.os.Bundle
 import com.bluelinelabs.conductor.Conductor
 import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
+import com.google.android.material.snackbar.Snackbar
 import de.trbnb.apptemplate.BR
 import de.trbnb.apptemplate.R
 import de.trbnb.apptemplate.app.appComponent
@@ -53,7 +53,7 @@ class MainActivity : MvvmActivity<MainViewModel>() {
     override fun onViewModelPropertyChanged(viewModel: MainViewModel, fieldId: Int) {
         when (fieldId) {
             BR.showingDialog -> if (viewModel.isShowingDialog) showDialog() else dismissDialog()
-            BR.showSnackbar -> if (viewModel.isShowingSnackbar) showSnackbar() else dismissSnackbar()
+            BR.showSnackbar -> if (viewModel.showSnackbar) showSnackbar() else dismissSnackbar()
         }
     }
 
