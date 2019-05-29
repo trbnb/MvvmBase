@@ -2,6 +2,7 @@ package de.trbnb.mvvmbase.bindableproperty
 
 import android.util.Log
 import de.trbnb.mvvmbase.BR
+import de.trbnb.mvvmbase.MvvmBase
 import kotlin.reflect.KProperty
 
 /**
@@ -23,17 +24,12 @@ abstract class BindablePropertyBase {
     }
 
     /**
-     * Gets if this delegate property is for a property that has the type Boolean.
-     */
-    protected abstract val isBoolean: Boolean
-
-    /**
      * Finds the field ID of the given property.
      */
     protected fun resolveFieldId(property: KProperty<*>): Int {
-        val brClass = BindableProperty.brClass ?: return BR._all
+        val brClass = MvvmBase.brClass ?: return BR._all
 
-        val checkedPropertyName = property.brFieldName(isBoolean)
+        val checkedPropertyName = property.brFieldName()
 
         Log.d("BindableProperty", "$checkedPropertyName dectected")
 

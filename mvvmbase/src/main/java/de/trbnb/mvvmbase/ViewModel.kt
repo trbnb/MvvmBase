@@ -3,6 +3,7 @@ package de.trbnb.mvvmbase
 import androidx.databinding.Observable
 import androidx.lifecycle.LifecycleOwner
 import de.trbnb.mvvmbase.events.EventChannel
+import kotlin.reflect.KProperty
 
 /**
  * Base interface that defines basic functionality for all view models.
@@ -34,6 +35,17 @@ interface ViewModel : Observable, LifecycleOwner {
      * @param fieldId The generated BR id for the Bindable field.
      */
     fun notifyPropertyChanged(fieldId: Int)
+
+    /**
+     * Notifies listeners that a specific property has changed. The getter for the property
+     * that changes should be marked with [Bindable] to generate a field in
+     * `BR` to be used as `fieldId`.
+     *
+     * @see notifyPropertyChanged
+     *
+     * @param property The property whose BR field ID will be detected via reflection.
+     */
+    fun notifyPropertyChanged(property: KProperty<*>)
 
     /**
      * Registers a property changed callback.

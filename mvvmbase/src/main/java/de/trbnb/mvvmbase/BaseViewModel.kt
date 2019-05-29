@@ -11,6 +11,8 @@ import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
 import de.trbnb.mvvmbase.events.EventChannel
 import de.trbnb.mvvmbase.events.EventChannelImpl
+import de.trbnb.mvvmbase.utils.resolveFieldId
+import kotlin.reflect.KProperty
 import androidx.lifecycle.ViewModel as ArchitectureViewModel
 
 /**
@@ -111,6 +113,10 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel {
 
     final override fun notifyPropertyChanged(fieldId: Int) {
         callbacks.notifyCallbacks(this, fieldId, null)
+    }
+
+    final override fun notifyPropertyChanged(property: KProperty<*>) {
+        notifyPropertyChanged(property.resolveFieldId())
     }
 
     /**

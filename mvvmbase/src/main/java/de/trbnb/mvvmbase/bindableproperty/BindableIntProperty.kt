@@ -13,8 +13,6 @@ import kotlin.reflect.KProperty
  * @param defaultValue Value that will be used at start.
  */
 class BindableIntProperty(private var fieldId: Int?, defaultValue: Int) : BindablePropertyBase() {
-    override val isBoolean = false
-
     /**
      * Gets or sets the stored value.
      */
