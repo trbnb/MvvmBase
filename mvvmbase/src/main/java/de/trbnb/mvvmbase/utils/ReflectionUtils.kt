@@ -1,4 +1,4 @@
-package de.trbnb.mvvmbase.commons
+package de.trbnb.mvvmbase.utils
 
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type

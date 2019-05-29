@@ -15,7 +15,7 @@ import androidx.lifecycle.ViewModelStoreOwner
 import com.bluelinelabs.conductor.archlifecycle.LifecycleController
 import de.trbnb.mvvmbase.BR
 import de.trbnb.mvvmbase.ViewModel
-import de.trbnb.mvvmbase.commons.findGenericSuperclass
+import de.trbnb.mvvmbase.utils.findGenericSuperclass
 import de.trbnb.mvvmbase.events.Event
 import javax.inject.Provider
 

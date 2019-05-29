@@ -12,7 +12,7 @@ import androidx.databinding.Observable
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import de.trbnb.mvvmbase.commons.findGenericSuperclass
+import de.trbnb.mvvmbase.utils.findGenericSuperclass
 import de.trbnb.mvvmbase.events.Event
 import javax.inject.Provider
 

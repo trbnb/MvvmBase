@@ -44,7 +44,6 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel:2.0.0'
 
     implementation project(":mvvmbase")
-    implementation project(":mvvmbaseCommons")
 
     implementation 'com.bluelinelabs:conductor:2.1.5'
     implementation 'com.bluelinelabs:conductor-archlifecycle:2.1.5'

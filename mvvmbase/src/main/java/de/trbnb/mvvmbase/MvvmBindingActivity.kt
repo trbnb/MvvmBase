@@ -8,7 +8,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.Observable
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModelProvider
-import de.trbnb.mvvmbase.commons.findGenericSuperclass
+import de.trbnb.mvvmbase.utils.findGenericSuperclass
 import de.trbnb.mvvmbase.events.Event
 import de.trbnb.mvvmbase.events.addListener
 import javax.inject.Provider
