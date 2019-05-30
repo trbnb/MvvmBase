@@ -45,14 +45,14 @@ dependencies {
     implementation project(":mvvmbaseRx")
 
     // Support library
-    implementation "androidx.appcompat:appcompat:1.0.0"
+    implementation "androidx.appcompat:appcompat:1.0.2"
     implementation "com.google.android.material:material:1.0.0"
     implementation "androidx.recyclerview:recyclerview:1.0.0"
     implementation "androidx.cardview:cardview:1.0.0"
 
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.0"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.1"
     implementation "org.jetbrains.anko:anko-sdk21:$ankoVersion" // sdk19, sdk21, sdk23 are also available
     implementation "org.jetbrains.anko:anko-support-v4:$ankoVersion" // In case you need support-v4 bindings
     implementation "org.jetbrains.anko:anko-appcompat-v7:$ankoVersion" // For appcompat-v7 bindings
