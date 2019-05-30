@@ -12,8 +12,8 @@ import androidx.databinding.Observable
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import de.trbnb.mvvmbase.utils.findGenericSuperclass
 import de.trbnb.mvvmbase.events.Event
+import de.trbnb.mvvmbase.utils.findGenericSuperclass
 import javax.inject.Provider
 
 /**
@@ -30,7 +30,7 @@ import javax.inject.Provider
  * @param[B] The type of the specific [ViewDataBinding] implementation for this Fragment.
  */
 abstract class MvvmBindingFragment<VM, B> : Fragment()
-    where VM : ViewModel, VM : androidx.lifecycle.ViewModel, B : ViewDataBinding{
+    where VM : ViewModel, VM : androidx.lifecycle.ViewModel, B : ViewDataBinding {
 
     /**
      * The [ViewDataBinding] implementation for a specific layout.
@@ -121,6 +121,7 @@ abstract class MvvmBindingFragment<VM, B> : Fragment()
      */
     final override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return initBinding(inflater, container).also {
+            it.lifecycleOwner = viewLifecycleOwner
             binding = it
         }.root
     }

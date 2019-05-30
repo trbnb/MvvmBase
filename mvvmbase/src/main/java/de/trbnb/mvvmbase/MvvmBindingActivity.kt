@@ -8,9 +8,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.Observable
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModelProvider
-import de.trbnb.mvvmbase.utils.findGenericSuperclass
 import de.trbnb.mvvmbase.events.Event
 import de.trbnb.mvvmbase.events.addListener
+import de.trbnb.mvvmbase.utils.findGenericSuperclass
 import javax.inject.Provider
 
 /**
@@ -127,6 +127,7 @@ abstract class MvvmBindingActivity<VM, B> : AppCompatActivity()
      * @return The new [ViewDataBinding] instance that fits this Activity.
      */
     private fun initBinding(): B = DataBindingUtil.setContentView<B>(this, layoutId).apply {
+        lifecycleOwner = this@MvvmBindingActivity
         setVariable(viewModelBindingId, viewModel)
         viewModel.onBind()
     }

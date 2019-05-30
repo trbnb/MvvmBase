@@ -1,11 +1,11 @@
 package de.trbnb.mvvmbase.conductor
 
 import android.os.Bundle
-import android.support.annotation.CallSuper
-import android.support.annotation.LayoutRes
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.CallSuper
+import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.Observable
 import androidx.databinding.ViewDataBinding
@@ -15,8 +15,8 @@ import androidx.lifecycle.ViewModelStoreOwner
 import com.bluelinelabs.conductor.archlifecycle.LifecycleController
 import de.trbnb.mvvmbase.BR
 import de.trbnb.mvvmbase.ViewModel
-import de.trbnb.mvvmbase.utils.findGenericSuperclass
 import de.trbnb.mvvmbase.events.Event
+import de.trbnb.mvvmbase.utils.findGenericSuperclass
 import javax.inject.Provider
 
 /**
@@ -124,6 +124,7 @@ abstract class MvvmBindingController<VM, B> : LifecycleController, ViewModelStor
         return initBinding(inflater, container).also { binding ->
             this.binding = binding
 
+            binding.lifecycleOwner = this
             binding.setVariable(viewModelBindingId, viewModel)
             viewModel.onBind()
             onViewModelLoaded(viewModel)
