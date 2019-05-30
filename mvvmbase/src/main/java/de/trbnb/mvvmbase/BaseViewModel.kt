@@ -9,10 +9,12 @@ import androidx.lifecycle.GenericLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
+import de.trbnb.mvvmbase.annotations.DependsOn
 import de.trbnb.mvvmbase.events.EventChannel
 import de.trbnb.mvvmbase.events.EventChannelImpl
 import de.trbnb.mvvmbase.utils.resolveFieldId
 import kotlin.reflect.KProperty
+import kotlin.reflect.full.memberProperties
 import androidx.lifecycle.ViewModel as ArchitectureViewModel
 
 /**
@@ -36,6 +38,17 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel {
      */
     protected open val memorizeNotReceivedEvents: Boolean
         get() = true
+
+    private val dependentFieldIds: Map<Int, IntArray>
+
+    init {
+        dependentFieldIds = this::class.memberProperties.asSequence()
+            .filter { it.annotations.any { annotation -> annotation is DependsOn } }
+            .map { it.resolveFieldId() to it.annotations.filterIsInstance<DependsOn>().firstOrNull()?.value }
+            .filter { it.second != null }
+            .filterIsInstance<Pair<Int, IntArray>>()
+            .toMap()
+    }
 
     /**
      * Gets the custom lifecycle for ViewModels.
@@ -64,17 +77,13 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel {
                 val observers = List(observers.size) { observers[it] }
                 observers.forEach { observer ->
                     when (observer) {
-                        is GenericLifecycleObserver -> observer.onStateChanged(
-                            this@BaseViewModel,
-                            event
-                        )
+                        is GenericLifecycleObserver -> observer.onStateChanged(this@BaseViewModel, event)
                         else -> {
                             // LifecycleObservers that are not a GenericLifecycleObserver will be triggered
                             // via reflection. See OnLifecycleEvent annotation.
                             observer.javaClass.declaredMethods.filter {
                                 it.annotations.any { annotation ->
-                                    val annotationValue =
-                                        (annotation as? OnLifecycleEvent)?.value ?: return@any false
+                                    val annotationValue = (annotation as? OnLifecycleEvent)?.value ?: return@any false
                                     annotationValue == event || annotationValue == Event.ON_ANY
                                 }
                             }.forEach { it.invoke(observer) }
@@ -113,6 +122,7 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel {
 
     final override fun notifyPropertyChanged(fieldId: Int) {
         callbacks.notifyCallbacks(this, fieldId, null)
+        dependentFieldIds[fieldId]?.forEach { notifyPropertyChanged(it) }
     }
 
     final override fun notifyPropertyChanged(property: KProperty<*>) {
