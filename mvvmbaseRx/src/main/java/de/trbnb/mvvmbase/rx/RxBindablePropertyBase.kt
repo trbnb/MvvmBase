@@ -2,6 +2,7 @@ package de.trbnb.mvvmbase.rx
 
 import de.trbnb.mvvmbase.ViewModel
 import de.trbnb.mvvmbase.bindableproperty.BindablePropertyBase
+import de.trbnb.mvvmbase.utils.resolveFieldId
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
@@ -28,12 +29,9 @@ open class RxBindablePropertyBase<T : Any> protected constructor(
             afterSet?.invoke(value)
         }
 
-    final override val isBoolean: Boolean
-        get() = false
-
     final override fun getValue(thisRef: Any?, property: KProperty<*>): T? {
         if (fieldId == null) {
-            fieldId = resolveFieldId(property)
+            fieldId = property.resolveFieldId()
         }
 
         return value

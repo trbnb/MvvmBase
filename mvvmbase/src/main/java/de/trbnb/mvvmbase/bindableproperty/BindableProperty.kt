@@ -4,6 +4,7 @@ import androidx.databinding.BaseObservable
 import de.trbnb.mvvmbase.BR
 import de.trbnb.mvvmbase.MvvmBase
 import de.trbnb.mvvmbase.ViewModel
+import de.trbnb.mvvmbase.utils.resolveFieldId
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
@@ -79,7 +80,7 @@ class BindableProperty<T> (
 
     override fun setValue(thisRef: ViewModel, property: KProperty<*>, value: T) {
         if (fieldId == null) {
-            fieldId = resolveFieldId(property)
+            fieldId = property.resolveFieldId()
         }
 
         if (distinct && this.value == value) {

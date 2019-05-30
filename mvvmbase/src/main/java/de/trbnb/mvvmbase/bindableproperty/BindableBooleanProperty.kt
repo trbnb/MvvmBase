@@ -3,6 +3,7 @@ package de.trbnb.mvvmbase.bindableproperty
 import androidx.databinding.BaseObservable
 import de.trbnb.mvvmbase.BR
 import de.trbnb.mvvmbase.ViewModel
+import de.trbnb.mvvmbase.utils.resolveFieldId
 import kotlin.reflect.KProperty
 
 /**
@@ -47,7 +48,7 @@ class BindableBooleanProperty(private var fieldId: Int?, defaultValue: Boolean) 
 
     operator fun setValue(thisRef: ViewModel, property: KProperty<*>, value: Boolean) {
         if (fieldId == null) {
-            fieldId = resolveFieldId(property)
+            fieldId = property.resolveFieldId()
         }
 
         if (distinct && this.value == value) {

@@ -33,19 +33,12 @@ tailrec fun <T> Type.findGenericSuperclass(targetType: Class<T>): ParameterizedT
  *
  * @see MvvmBase.init
  */
-fun KProperty<*>.resolveFieldId(): Int {
-    val brClass = MvvmBase.brClass ?: return BR._all
-
-    val checkedPropertyName = brFieldName()
-
-    Log.d("MvvmBase", "$checkedPropertyName dectected")
-
-    return try {
-        brClass.getField(checkedPropertyName).getInt(null)
-    } catch (e: NoSuchFieldException) {
+fun KProperty<*>.resolveFieldId(): Int = when (val detectedFieldId = MvvmBase.lookupFieldIdByName(brFieldName())) {
+    null -> {
         Log.d("MvvmBase", "Automatic field ID detection failed for $name. Defaulting to BR._all...")
         BR._all
     }
+    else -> detectedFieldId
 }
 
 /**

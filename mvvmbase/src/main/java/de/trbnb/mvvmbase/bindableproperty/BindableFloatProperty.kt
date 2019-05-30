@@ -3,6 +3,7 @@ package de.trbnb.mvvmbase.bindableproperty
 import androidx.databinding.BaseObservable
 import de.trbnb.mvvmbase.BR
 import de.trbnb.mvvmbase.ViewModel
+import de.trbnb.mvvmbase.utils.resolveFieldId
 import kotlin.reflect.KProperty
 
 /**
@@ -47,7 +48,7 @@ class BindableFloatProperty(private var fieldId: Int?, defaultValue: Float) : Bi
 
     operator fun setValue(thisRef: ViewModel, property: KProperty<*>, value: Float) {
         if (fieldId == null) {
-            fieldId = resolveFieldId(property)
+            fieldId = property.resolveFieldId()
         }
 
         if (distinct && this.value == value) {
