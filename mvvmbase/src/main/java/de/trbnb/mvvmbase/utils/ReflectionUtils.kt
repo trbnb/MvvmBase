@@ -1,6 +1,5 @@
 package de.trbnb.mvvmbase.utils
 
-import android.util.Log
 import de.trbnb.mvvmbase.BR
 import de.trbnb.mvvmbase.MvvmBase
 import java.lang.reflect.ParameterizedType
@@ -34,10 +33,7 @@ tailrec fun <T> Type.findGenericSuperclass(targetType: Class<T>): ParameterizedT
  * @see MvvmBase.init
  */
 fun KProperty<*>.resolveFieldId(): Int = when (val detectedFieldId = MvvmBase.lookupFieldIdByName(brFieldName())) {
-    null -> {
-        Log.d("MvvmBase", "Automatic field ID detection failed for $name. Defaulting to BR._all...")
-        BR._all
-    }
+    null -> BR._all
     else -> detectedFieldId
 }
 

@@ -44,8 +44,11 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel {
     init {
         dependentFieldIds = this::class.memberProperties.asSequence()
             .filter { it.annotations.any { annotation -> annotation is DependsOn } }
-            .map { it.resolveFieldId() to it.annotations.filterIsInstance<DependsOn>().firstOrNull()?.value }
-            .filter { it.second != null }
+            .map {
+                it.resolveFieldId().takeUnless { id -> id == BR._all } to
+                it.annotations.filterIsInstance<DependsOn>().firstOrNull()?.value
+            }
+            .filter { it.first != null && it.second != null }
             .filterIsInstance<Pair<Int, IntArray>>()
             .toMap()
     }

@@ -2,7 +2,7 @@ package de.trbnb.mvvmbase
 
 import de.trbnb.mvvmbase.bindableproperty.bindable
 import de.trbnb.mvvmbase.bindableproperty.bindableBoolean
-import de.trbnb.mvvmbase.bindableproperty.brFieldName
+import de.trbnb.mvvmbase.utils.brFieldName
 import org.junit.Test
 
 class BindablePropertyTests {

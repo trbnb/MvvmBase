@@ -1,18 +1,13 @@
 package de.trbnb.apptemplate.main
 
 import android.annotation.SuppressLint
-import android.content.Context
 import androidx.databinding.Bindable
-import de.trbnb.apptemplate.R
-import de.trbnb.apptemplate.second.SecondActivity
 import de.trbnb.mvvmbase.BaseViewModel
 import de.trbnb.mvvmbase.bindableproperty.afterSet
 import de.trbnb.mvvmbase.bindableproperty.bindableBoolean
 import de.trbnb.mvvmbase.commands.ruleCommand
 import de.trbnb.mvvmbase.commands.simpleCommand
 import de.trbnb.mvvmbase.events.Event
-import org.jetbrains.anko.intentFor
-import org.jetbrains.anko.newTask
 import de.trbnb.mvvmbase.rx.RxViewModel
 import io.reactivex.Observable
 import kotlinx.coroutines.GlobalScope
