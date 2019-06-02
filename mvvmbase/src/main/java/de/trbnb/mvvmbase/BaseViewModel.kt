@@ -152,13 +152,14 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel {
      * Is called when this instance is about to be destroyed.
      * Any references that could cause memory leaks should be cleared here.
      */
-    override fun onDestroy() { }
+    @CallSuper
+    override fun onDestroy() {
+        super.onCleared()
+        lifecycle.state = ViewModelLifecycleState.DESTROYED
+    }
 
     final override fun onCleared() {
-        super.onCleared()
-
         onDestroy()
-        lifecycle.state = ViewModelLifecycleState.DESTROYED
     }
 
     override fun getLifecycle() = lifecycle
