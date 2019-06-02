@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.annotation.CallSuper
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.Observable
 import androidx.databinding.ViewDataBinding
@@ -102,6 +103,9 @@ abstract class MvvmBindingActivity<VM, B> : AppCompatActivity()
         }
     }
 
+    protected open val dataBindingComponent: DataBindingComponent?
+        get() = null
+
     /**
      * Called by the lifecycle.
      * Creates the [ViewDataBinding] and loads the view model.
@@ -126,10 +130,16 @@ abstract class MvvmBindingActivity<VM, B> : AppCompatActivity()
      *
      * @return The new [ViewDataBinding] instance that fits this Activity.
      */
-    private fun initBinding(): B = DataBindingUtil.setContentView<B>(this, layoutId).apply {
-        lifecycleOwner = this@MvvmBindingActivity
-        setVariable(viewModelBindingId, viewModel)
-        viewModel.onBind()
+    private fun initBinding(): B {
+        val binding: B = when (val dataBindingComponent = dataBindingComponent) {
+            null -> DataBindingUtil.setContentView(this, layoutId)
+            else -> DataBindingUtil.setContentView(this, layoutId, dataBindingComponent)
+        }
+        return binding.apply {
+            lifecycleOwner = this@MvvmBindingActivity
+            setVariable(viewModelBindingId, viewModel)
+            viewModel.onBind()
+        }
     }
 
     /**

@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.annotation.LayoutRes
+import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.Observable
 import androidx.databinding.ViewDataBinding
@@ -105,6 +106,9 @@ abstract class MvvmBindingFragment<VM, B> : Fragment()
         onEvent(event)
     }
 
+    protected open val dataBindingComponent: DataBindingComponent?
+        get() = null
+
     /**
      * Gets the view model with the Architecture Components.
      */
@@ -149,7 +153,10 @@ abstract class MvvmBindingFragment<VM, B> : Fragment()
      * @return The new [ViewDataBinding] instance that fits this Fragment.
      */
     private fun initBinding(inflater: LayoutInflater, container: ViewGroup?): B {
-        return DataBindingUtil.inflate(inflater, layoutId, container, false)
+        return when (val dataBindingComponent = dataBindingComponent) {
+            null -> DataBindingUtil.inflate(inflater, layoutId, container, false)
+            else -> DataBindingUtil.inflate(inflater, layoutId, container, false, dataBindingComponent)
+        }
     }
 
     /**
