@@ -1,6 +1,6 @@
 package de.trbnb.apptemplate.second
 
-import android.databinding.Bindable
+import androidx.databinding.Bindable
 import de.trbnb.mvvmbase.BaseViewModel
 import de.trbnb.mvvmbase.bindableproperty.bindableInt
 import de.trbnb.mvvmbase.bindableproperty.distinct

@@ -1,8 +1,9 @@
 package de.trbnb.mvvmbase.bindableproperty
 
-import android.databinding.BaseObservable
+import androidx.databinding.BaseObservable
 import de.trbnb.mvvmbase.BR
 import de.trbnb.mvvmbase.ViewModel
+import de.trbnb.mvvmbase.utils.resolveFieldId
 import kotlin.reflect.KProperty
 
 /**
@@ -13,8 +14,6 @@ import kotlin.reflect.KProperty
  * @param defaultValue Value that will be used at start.
  */
 class BindableByteProperty(private var fieldId: Int?, defaultValue: Byte) : BindablePropertyBase() {
-    override val isBoolean = false
-
     /**
      * Gets or sets the stored value.
      */
@@ -49,7 +48,7 @@ class BindableByteProperty(private var fieldId: Int?, defaultValue: Byte) : Bind
 
     operator fun setValue(thisRef: ViewModel, property: KProperty<*>, value: Byte) {
         if (fieldId == null) {
-            fieldId = resolveFieldId(property)
+            fieldId = property.resolveFieldId()
         }
 
         if (distinct && this.value == value) {

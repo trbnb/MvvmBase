@@ -1,17 +1,21 @@
 package de.trbnb.mvvmbase
 
 import android.annotation.SuppressLint
-import android.arch.lifecycle.GenericLifecycleObserver
-import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.LifecycleObserver
-import android.arch.lifecycle.OnLifecycleEvent
-import android.databinding.BaseObservable
-import android.databinding.Observable
-import android.databinding.PropertyChangeRegistry
-import android.support.annotation.CallSuper
+import androidx.annotation.CallSuper
+import androidx.databinding.BaseObservable
+import androidx.databinding.Observable
+import androidx.databinding.PropertyChangeRegistry
+import androidx.lifecycle.GenericLifecycleObserver
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
+import de.trbnb.mvvmbase.annotations.DependsOn
 import de.trbnb.mvvmbase.events.EventChannel
 import de.trbnb.mvvmbase.events.EventChannelImpl
-import android.arch.lifecycle.ViewModel as ArchitectureViewModel
+import de.trbnb.mvvmbase.utils.resolveFieldId
+import kotlin.reflect.KProperty
+import kotlin.reflect.full.memberProperties
+import androidx.lifecycle.ViewModel as ArchitectureViewModel
 
 /**
  * Simple base implementation of the [ViewModel] interface based on [BaseObservable].
@@ -34,6 +38,20 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel {
      */
     protected open val memorizeNotReceivedEvents: Boolean
         get() = true
+
+    private val dependentFieldIds: Map<Int, IntArray>
+
+    init {
+        dependentFieldIds = this::class.memberProperties.asSequence()
+            .filter { it.annotations.any { annotation -> annotation is DependsOn } }
+            .map {
+                it.resolveFieldId().takeUnless { id -> id == BR._all } to
+                it.annotations.filterIsInstance<DependsOn>().firstOrNull()?.value
+            }
+            .filter { it.first != null && it.second != null }
+            .filterIsInstance<Pair<Int, IntArray>>()
+            .toMap()
+    }
 
     /**
      * Gets the custom lifecycle for ViewModels.
@@ -107,6 +125,11 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel {
 
     final override fun notifyPropertyChanged(fieldId: Int) {
         callbacks.notifyCallbacks(this, fieldId, null)
+        dependentFieldIds[fieldId]?.forEach { notifyPropertyChanged(it) }
+    }
+
+    final override fun notifyPropertyChanged(property: KProperty<*>) {
+        notifyPropertyChanged(property.resolveFieldId())
     }
 
     /**
@@ -129,13 +152,14 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel {
      * Is called when this instance is about to be destroyed.
      * Any references that could cause memory leaks should be cleared here.
      */
-    override fun onDestroy() { }
+    @CallSuper
+    override fun onDestroy() {
+        super.onCleared()
+        lifecycle.state = ViewModelLifecycleState.DESTROYED
+    }
 
     final override fun onCleared() {
-        super.onCleared()
-
         onDestroy()
-        lifecycle.state = ViewModelLifecycleState.DESTROYED
     }
 
     override fun getLifecycle() = lifecycle

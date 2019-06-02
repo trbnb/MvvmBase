@@ -1,16 +1,17 @@
 package de.trbnb.mvvmbase
 
-import android.arch.lifecycle.ViewModelProvider
-import android.databinding.DataBindingUtil
-import android.databinding.Observable
-import android.databinding.ViewDataBinding
 import android.os.Bundle
-import android.support.annotation.CallSuper
-import android.support.annotation.LayoutRes
-import android.support.v7.app.AppCompatActivity
-import de.trbnb.mvvmbase.commons.findGenericSuperclass
+import androidx.annotation.CallSuper
+import androidx.annotation.LayoutRes
+import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingComponent
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.Observable
+import androidx.databinding.ViewDataBinding
+import androidx.lifecycle.ViewModelProvider
 import de.trbnb.mvvmbase.events.Event
 import de.trbnb.mvvmbase.events.addListener
+import de.trbnb.mvvmbase.utils.findGenericSuperclass
 import javax.inject.Provider
 
 /**
@@ -28,7 +29,7 @@ import javax.inject.Provider
  * @param[B] The type of the specific [ViewDataBinding] implementation for this Activity.
  */
 abstract class MvvmBindingActivity<VM, B> : AppCompatActivity()
-    where VM : ViewModel, VM : android.arch.lifecycle.ViewModel, B : ViewDataBinding {
+    where VM : ViewModel, VM : androidx.lifecycle.ViewModel, B : ViewDataBinding {
 
     /**
      * The [ViewDataBinding] implementation for a specific layout.
@@ -87,7 +88,7 @@ abstract class MvvmBindingActivity<VM, B> : AppCompatActivity()
      */
     private val viewModelFactory = object : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
-        override fun <T : android.arch.lifecycle.ViewModel> create(modelClass: Class<T>): T {
+        override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
             return viewModelProvider.get() as T
         }
     }
@@ -101,6 +102,9 @@ abstract class MvvmBindingActivity<VM, B> : AppCompatActivity()
             onViewModelPropertyChanged(sender as VM, fieldId)
         }
     }
+
+    protected open val dataBindingComponent: DataBindingComponent?
+        get() = null
 
     /**
      * Called by the lifecycle.
@@ -126,9 +130,16 @@ abstract class MvvmBindingActivity<VM, B> : AppCompatActivity()
      *
      * @return The new [ViewDataBinding] instance that fits this Activity.
      */
-    private fun initBinding(): B = DataBindingUtil.setContentView<B>(this, layoutId).apply {
-        setVariable(viewModelBindingId, viewModel)
-        viewModel.onBind()
+    private fun initBinding(): B {
+        val binding: B = when (val dataBindingComponent = dataBindingComponent) {
+            null -> DataBindingUtil.setContentView(this, layoutId)
+            else -> DataBindingUtil.setContentView(this, layoutId, dataBindingComponent)
+        }
+        return binding.apply {
+            lifecycleOwner = this@MvvmBindingActivity
+            setVariable(viewModelBindingId, viewModel)
+            viewModel.onBind()
+        }
     }
 
     /**

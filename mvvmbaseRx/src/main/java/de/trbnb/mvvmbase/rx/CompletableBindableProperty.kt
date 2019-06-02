@@ -2,6 +2,7 @@ package de.trbnb.mvvmbase.rx
 
 import de.trbnb.mvvmbase.ViewModel
 import de.trbnb.mvvmbase.bindableproperty.BindablePropertyBase
+import de.trbnb.mvvmbase.utils.resolveFieldId
 import io.reactivex.Completable
 import io.reactivex.rxkotlin.subscribeBy
 import kotlin.reflect.KProperty
@@ -24,9 +25,6 @@ class CompletableBindableProperty internal constructor(
             afterSet?.invoke(value)
         }
 
-    override val isBoolean: Boolean
-        get() = true
-
     init {
         completable.subscribeBy(onError = onError, onComplete = { isCompleted = true })
             .autoDispose(viewModel.lifecycle)
@@ -34,7 +32,7 @@ class CompletableBindableProperty internal constructor(
 
     fun getValue(thisRef: Any?, property: KProperty<*>): Boolean {
         if (fieldId == null) {
-            fieldId = resolveFieldId(property)
+            fieldId = property.resolveFieldId()
         }
 
         return isCompleted

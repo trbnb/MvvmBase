@@ -1,22 +1,23 @@
 package de.trbnb.mvvmbase.conductor
 
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelStore
-import android.arch.lifecycle.ViewModelStoreOwner
-import android.databinding.DataBindingUtil
-import android.databinding.Observable
-import android.databinding.ViewDataBinding
 import android.os.Bundle
-import android.support.annotation.CallSuper
-import android.support.annotation.LayoutRes
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.CallSuper
+import androidx.annotation.LayoutRes
+import androidx.databinding.DataBindingComponent
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.Observable
+import androidx.databinding.ViewDataBinding
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStore
+import androidx.lifecycle.ViewModelStoreOwner
 import com.bluelinelabs.conductor.archlifecycle.LifecycleController
 import de.trbnb.mvvmbase.BR
 import de.trbnb.mvvmbase.ViewModel
-import de.trbnb.mvvmbase.commons.findGenericSuperclass
 import de.trbnb.mvvmbase.events.Event
+import de.trbnb.mvvmbase.utils.findGenericSuperclass
 import javax.inject.Provider
 
 /**
@@ -33,7 +34,7 @@ import javax.inject.Provider
  * @param[B] The type of the specific [ViewDataBinding] implementation for this Controller.
  */
 abstract class MvvmBindingController<VM, B> : LifecycleController, ViewModelStoreOwner
-        where VM : ViewModel, VM : android.arch.lifecycle.ViewModel, B : ViewDataBinding {
+        where VM : ViewModel, VM : androidx.lifecycle.ViewModel, B : ViewDataBinding {
 
     constructor() : super()
     constructor(bundle: Bundle? = null) : super(bundle)
@@ -67,7 +68,7 @@ abstract class MvvmBindingController<VM, B> : LifecycleController, ViewModelStor
      */
     private val viewModelFactory = object : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
-        override fun <T : android.arch.lifecycle.ViewModel> create(modelClass: Class<T>): T {
+        override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
             return viewModelProvider.get() as T
         }
     }
@@ -111,6 +112,13 @@ abstract class MvvmBindingController<VM, B> : LifecycleController, ViewModelStor
         onEvent(event)
     }
 
+    /**
+     * Gets the binding component that will be used when the binding is created.
+     * A `null` value will result infalling back to [DataBindingUtil.getDefaultComponent].
+     */
+    protected open val dataBindingComponent: DataBindingComponent?
+        get() = null
+
     private val viewModelStore = ViewModelStore()
 
     override fun getViewModelStore() = viewModelStore
@@ -124,6 +132,7 @@ abstract class MvvmBindingController<VM, B> : LifecycleController, ViewModelStor
         return initBinding(inflater, container).also { binding ->
             this.binding = binding
 
+            binding.lifecycleOwner = this
             binding.setVariable(viewModelBindingId, viewModel)
             viewModel.onBind()
             onViewModelLoaded(viewModel)
@@ -138,7 +147,10 @@ abstract class MvvmBindingController<VM, B> : LifecycleController, ViewModelStor
      * @return The new [ViewDataBinding] instance that fits this Fragment.
      */
     private fun initBinding(inflater: LayoutInflater, container: ViewGroup?): B {
-        return DataBindingUtil.inflate(inflater, layoutId, container, false)
+        return when (val dataBindingComponent = dataBindingComponent) {
+            null -> DataBindingUtil.inflate(inflater, layoutId, container, false)
+            else -> DataBindingUtil.inflate(inflater, layoutId, container, false, dataBindingComponent)
+        }
     }
 
     protected open fun onBindingCreated(binding: B) { }

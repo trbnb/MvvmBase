@@ -3,7 +3,7 @@ package de.trbnb.apptemplate.app
 import android.app.Application
 import android.content.Context
 import de.trbnb.apptemplate.BR
-import de.trbnb.mvvmbase.bindableproperty.BindableProperty
+import de.trbnb.mvvmbase.MvvmBase
 
 class App : Application() {
     val appComponent: AppComponent by lazy {
@@ -15,7 +15,7 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        BindableProperty.init<BR>()
+        MvvmBase.init<BR>()
     }
 
 }

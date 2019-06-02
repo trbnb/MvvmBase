@@ -1,8 +1,10 @@
 package de.trbnb.mvvmbase.bindableproperty
 
-import android.databinding.BaseObservable
+import androidx.databinding.BaseObservable
 import de.trbnb.mvvmbase.BR
+import de.trbnb.mvvmbase.MvvmBase
 import de.trbnb.mvvmbase.ViewModel
+import de.trbnb.mvvmbase.utils.resolveFieldId
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
@@ -13,30 +15,35 @@ import kotlin.reflect.KProperty
  * @param T Type of the stored value.
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  * @param defaultValue Value that will be used at start.
- * @param isBoolean Indicates if this delegate property is for a property that has the type Boolean.
  */
 class BindableProperty<T> (
         private var fieldId: Int?,
-        defaultValue: T,
-        override val isBoolean: Boolean = defaultValue is Boolean
+        defaultValue: T
 ) : BindablePropertyBase(), ReadWriteProperty<ViewModel, T> {
 
     companion object {
-        internal var brClass: Class<*>? = null
-            private set
-
         /**
          * Initializes the automatic field ID detection by providing the class inside BR.java.
          */
+        @Deprecated(
+            message = "Use MvvmBase.init() instead",
+            replaceWith = ReplaceWith("MvvmBase.init(brClass)", "de.trbnb.mvvmbase.MvvmBase"),
+            level = DeprecationLevel.WARNING
+        )
         fun init(brClass: Class<*>) {
-            this.brClass = brClass
+            MvvmBase.init(brClass)
         }
 
 
         /**
          * Initializes the automatic field ID detection by providing the class inside BR.java.
          */
-        inline fun <reified BR> init() = init(BR::class.java)
+        @Deprecated(
+            message = "Use MvvmBase.init() instead",
+            replaceWith = ReplaceWith("MvvmBase.init<BR>()", "de.trbnb.mvvmbase.MvvmBase"),
+            level = DeprecationLevel.WARNING
+        )
+        inline fun <reified BR> init() = MvvmBase.init<BR>()
     }
 
     /**
@@ -73,7 +80,7 @@ class BindableProperty<T> (
 
     override fun setValue(thisRef: ViewModel, property: KProperty<*>, value: T) {
         if (fieldId == null) {
-            fieldId = resolveFieldId(property)
+            fieldId = property.resolveFieldId()
         }
 
         if (distinct && this.value == value) {
@@ -94,7 +101,7 @@ class BindableProperty<T> (
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  */
 inline fun <reified T> ViewModel.bindable(defaultValue: T, fieldId: Int? = null): BindableProperty<T> {
-    return BindableProperty(fieldId, defaultValue, T::class == Boolean::class)
+    return BindableProperty(fieldId, defaultValue)
 }
 
 /**

@@ -1,9 +1,12 @@
 package de.trbnb.mvvmbase
 
-import android.arch.lifecycle.LifecycleOwner
-import android.databinding.Bindable
-import android.databinding.Observable
+import androidx.databinding.Observable
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.OnLifecycleEvent
 import de.trbnb.mvvmbase.events.EventChannel
+import kotlin.reflect.KProperty
 
 /**
  * Base interface that defines basic functionality for all view models.
@@ -12,8 +15,8 @@ import de.trbnb.mvvmbase.events.EventChannel
  * throughout the lifecycle of these by the Architecture Components.
  *
  * It extends the [Observable] interface provided by the Android data binding library. This means
- * that implementations have to handle [android.databinding.Observable.OnPropertyChangedCallback]s.
- * This is done the easiest way by extending [android.databinding.BaseObservable].
+ * that implementations have to handle [androidx.databinding.Observable.OnPropertyChangedCallback]s.
+ * This is done the easiest way by extending [androidx.databinding.BaseObservable].
  */
 interface ViewModel : Observable, LifecycleOwner {
 
@@ -35,6 +38,17 @@ interface ViewModel : Observable, LifecycleOwner {
      * @param fieldId The generated BR id for the Bindable field.
      */
     fun notifyPropertyChanged(fieldId: Int)
+
+    /**
+     * Notifies listeners that a specific property has changed. The getter for the property
+     * that changes should be marked with [Bindable] to generate a field in
+     * `BR` to be used as `fieldId`.
+     *
+     * @see notifyPropertyChanged
+     *
+     * @param property The property whose BR field ID will be detected via reflection.
+     */
+    fun notifyPropertyChanged(property: KProperty<*>)
 
     /**
      * Registers a property changed callback.
@@ -63,4 +77,17 @@ interface ViewModel : Observable, LifecycleOwner {
      * Implementations should use this method to deregister from callbacks, etc.
      */
     fun onDestroy()
+
+    /**
+     * Destroys all ViewModels in that list when the containing ViewModel is destroyed.
+     */
+    fun <VM : ViewModel> List<VM>.autoDestroy() {
+        lifecycle.addObserver(object : LifecycleObserver {
+            @Suppress("unused")
+            @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+            fun onDestroy() {
+                forEach { it.onDestroy() }
+            }
+        })
+    }
 }

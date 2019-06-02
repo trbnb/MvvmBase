@@ -1,19 +1,20 @@
 package de.trbnb.mvvmbase
 
-import android.arch.lifecycle.ViewModelProvider
 import android.content.Context
-import android.databinding.DataBindingUtil
-import android.databinding.Observable
-import android.databinding.ViewDataBinding
 import android.os.Bundle
-import android.support.annotation.CallSuper
-import android.support.annotation.LayoutRes
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import de.trbnb.mvvmbase.commons.findGenericSuperclass
+import androidx.annotation.CallSuper
+import androidx.annotation.LayoutRes
+import androidx.databinding.DataBindingComponent
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.Observable
+import androidx.databinding.ViewDataBinding
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import de.trbnb.mvvmbase.events.Event
+import de.trbnb.mvvmbase.utils.findGenericSuperclass
 import javax.inject.Provider
 
 /**
@@ -30,7 +31,7 @@ import javax.inject.Provider
  * @param[B] The type of the specific [ViewDataBinding] implementation for this Fragment.
  */
 abstract class MvvmBindingFragment<VM, B> : Fragment()
-    where VM : ViewModel, VM : android.arch.lifecycle.ViewModel, B : ViewDataBinding{
+    where VM : ViewModel, VM : androidx.lifecycle.ViewModel, B : ViewDataBinding {
 
     /**
      * The [ViewDataBinding] implementation for a specific layout.
@@ -61,7 +62,7 @@ abstract class MvvmBindingFragment<VM, B> : Fragment()
      */
     private val viewModelFactory = object : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
-        override fun <T : android.arch.lifecycle.ViewModel> create(modelClass: Class<T>): T {
+        override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
             return viewModelProvider.get() as T
         }
     }
@@ -105,10 +106,13 @@ abstract class MvvmBindingFragment<VM, B> : Fragment()
         onEvent(event)
     }
 
+    protected open val dataBindingComponent: DataBindingComponent?
+        get() = null
+
     /**
      * Gets the view model with the Architecture Components.
      */
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
 
         viewModel = ViewModelProvider(viewModelStore, viewModelFactory)[viewModelClass]
@@ -121,6 +125,7 @@ abstract class MvvmBindingFragment<VM, B> : Fragment()
      */
     final override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return initBinding(inflater, container).also {
+            it.lifecycleOwner = viewLifecycleOwner
             binding = it
         }.root
     }
@@ -148,7 +153,10 @@ abstract class MvvmBindingFragment<VM, B> : Fragment()
      * @return The new [ViewDataBinding] instance that fits this Fragment.
      */
     private fun initBinding(inflater: LayoutInflater, container: ViewGroup?): B {
-        return DataBindingUtil.inflate(inflater, layoutId, container, false)
+        return when (val dataBindingComponent = dataBindingComponent) {
+            null -> DataBindingUtil.inflate(inflater, layoutId, container, false)
+            else -> DataBindingUtil.inflate(inflater, layoutId, container, false, dataBindingComponent)
+        }
     }
 
     /**

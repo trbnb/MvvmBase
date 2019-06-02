@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
         <variable
             name="vm"
-            type="de.trbnb.apptemplate.main.MainViewModel"/>
+            type="de.trbnb.apptemplate.main.MainViewModel" />
     </data>
     
     <LinearLayout
@@ -27,14 +26,14 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Show Dialog"
-            android:clickCommand="@{vm.showDialogCommand}"/>
+            android:clickCommand="@{vm.showDialogCommand}"
+            android:text="Show Dialog" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Show Snackbar"
-            android:clickCommand="@{vm.showSnackbarCommand}"/>
+            android:clickCommand="@{vm.showSnackbarCommand}"
+            android:text="Show Snackbar" />
 
         <Button
             android:layout_width="wrap_content"
@@ -45,8 +44,8 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Show Fragment example"
-            android:clickCommand="@{vm.showFragmentExampleCommand}"/>
+            android:clickCommand="@{vm.showFragmentExampleCommand}"
+            android:text="Show Fragment example" />
 
         <Button
             android:layout_width="wrap_content"
@@ -57,9 +56,9 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Show this activity again!"
             android:clickCommand="@{vm.showMainActivityAgain}"
-            style="@style/Widget.AppCompat.Button.Colored"/>
+            android:text="Show this activity again!"
+            style="@style/Widget.AppCompat.Button.Colored" />
 
     </LinearLayout>
 </layout>

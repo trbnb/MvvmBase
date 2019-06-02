@@ -1,7 +1,7 @@
 package de.trbnb.apptemplate.main
 
 import android.annotation.SuppressLint
-import android.databinding.Bindable
+import androidx.databinding.Bindable
 import de.trbnb.mvvmbase.BaseViewModel
 import de.trbnb.mvvmbase.bindableproperty.afterSet
 import de.trbnb.mvvmbase.bindableproperty.bindableBoolean

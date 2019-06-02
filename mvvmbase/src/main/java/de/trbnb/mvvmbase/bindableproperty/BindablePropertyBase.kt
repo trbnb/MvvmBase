@@ -1,9 +1,5 @@
 package de.trbnb.mvvmbase.bindableproperty
 
-import android.util.Log
-import de.trbnb.mvvmbase.BR
-import kotlin.reflect.KProperty
-
 /**
  * Base class for all BindableProperty implementations.
  */
@@ -20,29 +16,6 @@ abstract class BindablePropertyBase {
      */
     internal fun setDistinct(distinct: Boolean) {
         this.distinct = distinct
-    }
-
-    /**
-     * Gets if this delegate property is for a property that has the type Boolean.
-     */
-    protected abstract val isBoolean: Boolean
-
-    /**
-     * Finds the field ID of the given property.
-     */
-    protected fun resolveFieldId(property: KProperty<*>): Int {
-        val brClass = BindableProperty.brClass ?: return BR._all
-
-        val checkedPropertyName = property.brFieldName(isBoolean)
-
-        Log.d("BindableProperty", "$checkedPropertyName dectected")
-
-        return try {
-            brClass.getField(checkedPropertyName).getInt(null)
-        } catch (e: NoSuchFieldException) {
-            Log.d("BindableProperty", "Automatic field ID detection failed for ${property.name}. Defaulting to BR._all...")
-            BR._all
-        }
     }
 }
 

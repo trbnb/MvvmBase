@@ -1,6 +1,6 @@
 package de.trbnb.mvvmbase.conductor
 
-import android.databinding.ViewDataBinding
+import androidx.databinding.ViewDataBinding
 import de.trbnb.mvvmbase.ViewModel
 
 /**

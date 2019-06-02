@@ -45,25 +45,22 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     // Support library
-    implementation "com.android.support:appcompat-v7:$supportLibVersion"
+    implementation "androidx.appcompat:appcompat:1.0.2"
 
     // Testing
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    androidTestImplementation 'androidx.test:runner:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
 
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    testImplementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
     // Lifecycle architecture components
-    def lifecycle_version = "1.1.1"
-    implementation "android.arch.lifecycle:viewmodel:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel:2.0.0"
 
     // Java inject API for dependency injection
     api 'javax.inject:javax.inject:1'
-
-    implementation project(":mvvmbaseCommons")
 }
 
 repositories {

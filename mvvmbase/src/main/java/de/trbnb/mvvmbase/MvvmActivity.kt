@@ -1,6 +1,6 @@
 package de.trbnb.mvvmbase
 
-import android.databinding.ViewDataBinding
+import androidx.databinding.ViewDataBinding
 
 /**
  * Typealias for Activities that don't need to specify the specific [ViewDataBinding] implementation.
