@@ -125,7 +125,11 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel {
 
     final override fun notifyPropertyChanged(fieldId: Int) {
         callbacks.notifyCallbacks(this, fieldId, null)
-        dependentFieldIds[fieldId]?.forEach { notifyPropertyChanged(it) }
+        dependentFieldIds.forEach { (property, dependentIds) ->
+            if (fieldId in dependentIds) {
+                notifyPropertyChanged(property)
+            }
+        }
     }
 
     final override fun notifyPropertyChanged(property: KProperty<*>) {
