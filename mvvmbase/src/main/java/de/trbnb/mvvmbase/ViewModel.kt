@@ -1,7 +1,10 @@
 package de.trbnb.mvvmbase
 
 import androidx.databinding.Observable
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.OnLifecycleEvent
 import de.trbnb.mvvmbase.events.EventChannel
 import kotlin.reflect.KProperty
 
@@ -74,4 +77,17 @@ interface ViewModel : Observable, LifecycleOwner {
      * Implementations should use this method to deregister from callbacks, etc.
      */
     fun onDestroy()
+
+    /**
+     * Destroys all ViewModels in that list when the containing ViewModel is destroyed.
+     */
+    fun <VM : ViewModel> List<VM>.autoDestroy() {
+        lifecycle.addObserver(object : LifecycleObserver {
+            @Suppress("unused")
+            @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+            fun onDestroy() {
+                forEach { it.onDestroy() }
+            }
+        })
+    }
 }
