@@ -35,7 +35,8 @@ object MvvmBase {
     }
 
     private fun retrieveFieldIds(brClass: Class<*>) {
-        brFieldIds = brClass.fields
+        brFieldIds = brClass.fields.asSequence()
+            .filter { it.type == Int::class.java }
             .map { it.name to it.getInt(null) }
             .toMap()
     }
