@@ -13,7 +13,12 @@ import kotlin.reflect.KProperty
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  * @param defaultValue Value that will be used at start.
  */
-class BindableBooleanProperty(private var fieldId: Int?, defaultValue: Boolean) : BindablePropertyBase() {
+class BindableBooleanProperty(
+    viewModel: ViewModel,
+    private var fieldId: Int?,
+    defaultValue: Boolean,
+    private val savedStateKey: String? = null
+) : BindablePropertyBase() {
     /**
      * Gets or sets the stored value.
      */
@@ -44,6 +49,16 @@ class BindableBooleanProperty(private var fieldId: Int?, defaultValue: Boolean) 
      */
     internal var afterSet: ((new: Boolean) -> Unit)? = null
 
+    init {
+        if (savedStateKey != null) {
+            viewModel.onRestore { savedStateHandle ->
+                if (savedStateKey in savedStateHandle) {
+                    this.value = savedStateHandle.get(savedStateKey) ?: return@onRestore
+                }
+            }
+        }
+    }
+
     operator fun getValue(thisRef: ViewModel, property: KProperty<*>) = value
 
     operator fun setValue(thisRef: ViewModel, property: KProperty<*>, value: Boolean) {
@@ -58,6 +73,7 @@ class BindableBooleanProperty(private var fieldId: Int?, defaultValue: Boolean) 
         beforeSet?.invoke(this.value, value)
         this.value = validate?.invoke(this.value, value) ?: value
         thisRef.notifyPropertyChanged(fieldId ?: BR._all)
+        savedStateKey?.let { thisRef.savedStateHandle?.set(savedStateKey, this.value) }
         afterSet?.invoke(this.value)
     }
 }
@@ -68,9 +84,11 @@ class BindableBooleanProperty(private var fieldId: Int?, defaultValue: Boolean) 
  * @param defaultValue Value of the property from the start.
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  */
-fun ViewModel.bindableBoolean(defaultValue: Boolean = false, fieldId: Int? = null): BindableBooleanProperty {
-    return BindableBooleanProperty(fieldId, defaultValue)
-}
+fun ViewModel.bindableBoolean(
+    defaultValue: Boolean = false,
+    savedStateKey: String? = null,
+    fieldId: Int? = null
+) = BindableBooleanProperty(this, fieldId, defaultValue, savedStateKey)
 
 /**
  * Sets [BindableBooleanProperty.beforeSet] of a [BindableBooleanProperty] instance to a given function and

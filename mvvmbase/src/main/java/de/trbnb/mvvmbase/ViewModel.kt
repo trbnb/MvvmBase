@@ -25,6 +25,8 @@ interface ViewModel : Observable, LifecycleOwner {
      */
     val eventChannel: EventChannel
 
+    val savedStateHandle: SavedStateHandle?
+
     /**
      * Notifies listeners that all properties of this instance have changed.
      */
@@ -79,6 +81,8 @@ interface ViewModel : Observable, LifecycleOwner {
     fun onDestroy()
 
     fun setSavedStateHandle(savedStateHandle: SavedStateHandle)
+
+    fun onRestore(action: (savedStateHandle: SavedStateHandle) -> Unit)
 
     /**
      * Destroys all ViewModels in that list when the containing ViewModel is destroyed.

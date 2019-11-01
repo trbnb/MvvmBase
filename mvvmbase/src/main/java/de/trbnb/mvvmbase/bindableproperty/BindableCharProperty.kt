@@ -13,7 +13,12 @@ import kotlin.reflect.KProperty
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  * @param defaultValue Value that will be used at start.
  */
-class BindableCharProperty(private var fieldId: Int?, defaultValue: Char) : BindablePropertyBase() {
+class BindableCharProperty(
+    viewModel: ViewModel,
+    private var fieldId: Int?,
+    defaultValue: Char,
+    private val savedStateKey: String? = null
+) : BindablePropertyBase() {
     /**
      * Gets or sets the stored value.
      */
@@ -44,6 +49,16 @@ class BindableCharProperty(private var fieldId: Int?, defaultValue: Char) : Bind
      */
     internal var afterSet: ((new: Char) -> Unit)? = null
 
+    init {
+        if (savedStateKey != null) {
+            viewModel.onRestore { savedStateHandle ->
+                if (savedStateKey in savedStateHandle) {
+                    this.value = savedStateHandle.get(savedStateKey) ?: return@onRestore
+                }
+            }
+        }
+    }
+
     operator fun getValue(thisRef: ViewModel, property: KProperty<*>) = value
 
     operator fun setValue(thisRef: ViewModel, property: KProperty<*>, value: Char) {
@@ -58,6 +73,7 @@ class BindableCharProperty(private var fieldId: Int?, defaultValue: Char) : Bind
         beforeSet?.invoke(this.value, value)
         this.value = validate?.invoke(this.value, value) ?: value
         thisRef.notifyPropertyChanged(fieldId ?: BR._all)
+        savedStateKey?.let { thisRef.savedStateHandle?.set(savedStateKey, this.value) }
         afterSet?.invoke(this.value)
     }
 }
@@ -68,9 +84,11 @@ class BindableCharProperty(private var fieldId: Int?, defaultValue: Char) : Bind
  * @param defaultValue Value of the property from the start.
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  */
-fun ViewModel.bindableChar(defaultValue: Char, fieldId: Int? = null): BindableCharProperty {
-    return BindableCharProperty(fieldId, defaultValue)
-}
+fun ViewModel.bindableChar(
+    defaultValue: Char,
+    savedStateKey: String? = null,
+    fieldId: Int? = null
+) = BindableCharProperty(this, fieldId, defaultValue, savedStateKey)
 
 /**
  * Sets [BindableCharProperty.beforeSet] of a [BindableCharProperty] instance to a given function and

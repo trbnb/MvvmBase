@@ -41,8 +41,10 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel {
 
     private val dependentFieldIds: Map<Int, IntArray>
 
-    protected var savedStateHandle: SavedStateHandle? = null
+    final override var savedStateHandle: SavedStateHandle? = null
         private set
+
+    private var savedStateHandleListeners: MutableList<(SavedStateHandle) -> Unit>? = null
 
     init {
         dependentFieldIds = this::class.memberProperties.asSequence()
@@ -175,10 +177,21 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel {
         if (this.savedStateHandle != null) return
 
         this.savedStateHandle = savedStateHandle
+        savedStateHandleListeners?.forEach { it(savedStateHandle) }
         onRestore(savedStateHandle)
     }
 
     open fun onRestore(savedStateHandle: SavedStateHandle) {}
+
+    final override fun onRestore(action: (savedStateHandle: SavedStateHandle) -> Unit) {
+        when (val savedStateHandle = savedStateHandle) {
+            null -> when (val savedStateHandleListeners = savedStateHandleListeners) {
+                null -> this.savedStateHandleListeners = mutableListOf(action)
+                else -> savedStateHandleListeners.add(action)
+            }
+            else -> action(savedStateHandle)
+        }
+    }
 
     /**
      * Enum for the specific Lifecycle of ViewModels.

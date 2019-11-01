@@ -13,7 +13,12 @@ import kotlin.reflect.KProperty
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  * @param defaultValue Value that will be used at start.
  */
-class BindableShortProperty (private var fieldId: Int?, defaultValue: Short) : BindablePropertyBase() {
+class BindableShortProperty (
+    viewModel: ViewModel,
+    private var fieldId: Int?,
+    defaultValue: Short,
+    private val savedStateKey: String? = null
+) : BindablePropertyBase() {
     /**
      * Gets or sets the stored value.
      */
@@ -44,6 +49,16 @@ class BindableShortProperty (private var fieldId: Int?, defaultValue: Short) : B
      */
     internal var afterSet: ((new: Short) -> Unit)? = null
 
+    init {
+        if (savedStateKey != null) {
+            viewModel.onRestore { savedStateHandle ->
+                if (savedStateHandle.contains(savedStateKey)) {
+                    this.value = savedStateHandle.get(savedStateKey) ?: return@onRestore
+                }
+            }
+        }
+    }
+
     operator fun getValue(thisRef: ViewModel, property: KProperty<*>) = value
 
     operator fun setValue(thisRef: ViewModel, property: KProperty<*>, value: Short) {
@@ -58,6 +73,7 @@ class BindableShortProperty (private var fieldId: Int?, defaultValue: Short) : B
         beforeSet?.invoke(this.value, value)
         this.value = validate?.invoke(this.value, value) ?: value
         thisRef.notifyPropertyChanged(fieldId ?: BR._all)
+        savedStateKey?.let { thisRef.savedStateHandle?.set(savedStateKey, this.value) }
         afterSet?.invoke(this.value)
     }
 }
@@ -68,9 +84,11 @@ class BindableShortProperty (private var fieldId: Int?, defaultValue: Short) : B
  * @param defaultValue Value of the property from the start.
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  */
-fun ViewModel.bindableShort(defaultValue: Short = 0, fieldId: Int? = null): BindableShortProperty {
-    return BindableShortProperty(fieldId, defaultValue)
-}
+fun ViewModel.bindableShort(
+    defaultValue: Short = 0,
+    savedStateKey: String? = null,
+    fieldId: Int? = null
+) = BindableShortProperty(this, fieldId, defaultValue, savedStateKey)
 
 /**
  * Sets [BindableShortProperty.beforeSet] of a [BindableShortProperty] instance to a given function and

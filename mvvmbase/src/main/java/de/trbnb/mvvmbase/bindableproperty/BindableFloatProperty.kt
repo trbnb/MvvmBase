@@ -13,7 +13,12 @@ import kotlin.reflect.KProperty
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  * @param defaultValue Value that will be used at start.
  */
-class BindableFloatProperty(private var fieldId: Int?, defaultValue: Float) : BindablePropertyBase() {
+class BindableFloatProperty(
+    viewModel: ViewModel,
+    private var fieldId: Int?,
+    defaultValue: Float,
+    private val savedStateKey: String? = null
+) : BindablePropertyBase() {
     /**
      * Gets or sets the stored value.
      */
@@ -44,6 +49,16 @@ class BindableFloatProperty(private var fieldId: Int?, defaultValue: Float) : Bi
      */
     internal var afterSet: ((new: Float) -> Unit)? = null
 
+    init {
+        if (savedStateKey != null) {
+            viewModel.onRestore { savedStateHandle ->
+                if (savedStateKey in savedStateHandle) {
+                    this.value = savedStateHandle.get(savedStateKey) ?: return@onRestore
+                }
+            }
+        }
+    }
+
     operator fun getValue(thisRef: ViewModel, property: KProperty<*>) = value
 
     operator fun setValue(thisRef: ViewModel, property: KProperty<*>, value: Float) {
@@ -58,6 +73,7 @@ class BindableFloatProperty(private var fieldId: Int?, defaultValue: Float) : Bi
         beforeSet?.invoke(this.value, value)
         this.value = validate?.invoke(this.value, value) ?: value
         thisRef.notifyPropertyChanged(fieldId ?: BR._all)
+        savedStateKey?.let { thisRef.savedStateHandle?.set(savedStateKey, this.value) }
         afterSet?.invoke(this.value)
     }
 }
@@ -68,9 +84,11 @@ class BindableFloatProperty(private var fieldId: Int?, defaultValue: Float) : Bi
  * @param defaultValue Value of the property from the start.
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  */
-fun ViewModel.bindableFloat(defaultValue: Float = 0f, fieldId: Int? = null): BindableFloatProperty {
-    return BindableFloatProperty(fieldId, defaultValue)
-}
+fun ViewModel.bindableFloat(
+    defaultValue: Float = 0f,
+    savedStateKey: String? = null,
+    fieldId: Int? = null
+) = BindableFloatProperty(this, fieldId, defaultValue, savedStateKey)
 
 /**
  * Sets [BindableFloatProperty.beforeSet] of a [BindableFloatProperty] instance to a given function and

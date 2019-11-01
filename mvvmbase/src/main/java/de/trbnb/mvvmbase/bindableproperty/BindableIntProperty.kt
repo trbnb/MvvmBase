@@ -13,7 +13,12 @@ import kotlin.reflect.KProperty
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  * @param defaultValue Value that will be used at start.
  */
-class BindableIntProperty(private var fieldId: Int?, defaultValue: Int) : BindablePropertyBase() {
+class BindableIntProperty(
+    viewModel: ViewModel,
+    private var fieldId: Int?,
+    defaultValue: Int,
+    private val savedStateKey: String? = null
+) : BindablePropertyBase() {
     /**
      * Gets or sets the stored value.
      */
@@ -44,6 +49,16 @@ class BindableIntProperty(private var fieldId: Int?, defaultValue: Int) : Bindab
      */
     internal var afterSet: ((new: Int) -> Unit)? = null
 
+    init {
+        if (savedStateKey != null) {
+            viewModel.onRestore { savedStateHandle ->
+                if (savedStateKey in savedStateHandle) {
+                    this.value = savedStateHandle.get(savedStateKey) ?: return@onRestore
+                }
+            }
+        }
+    }
+
     operator fun getValue(thisRef: ViewModel, property: KProperty<*>) = value
 
     operator fun setValue(thisRef: ViewModel, property: KProperty<*>, value: Int) {
@@ -58,6 +73,7 @@ class BindableIntProperty(private var fieldId: Int?, defaultValue: Int) : Bindab
         beforeSet?.invoke(this.value, value)
         this.value = validate?.invoke(this.value, value) ?: value
         thisRef.notifyPropertyChanged(fieldId ?: BR._all)
+        savedStateKey?.let { thisRef.savedStateHandle?.set(savedStateKey, this.value) }
         afterSet?.invoke(this.value)
     }
 }
@@ -68,9 +84,11 @@ class BindableIntProperty(private var fieldId: Int?, defaultValue: Int) : Bindab
  * @param defaultValue Value of the property from the start.
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  */
-fun ViewModel.bindableInt(defaultValue: Int = 0, fieldId: Int? = null): BindableIntProperty {
-    return BindableIntProperty(fieldId, defaultValue)
-}
+fun ViewModel.bindableInt(
+    defaultValue: Int = 0,
+    savedStateKey: String? = null,
+    fieldId: Int? = null
+) = BindableIntProperty(this, fieldId, defaultValue, savedStateKey)
 
 /**
  * Sets [BindableIntProperty.beforeSet] of a [BindableIntProperty] instance to a given function and
