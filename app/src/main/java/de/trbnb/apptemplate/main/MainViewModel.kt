@@ -2,6 +2,7 @@ package de.trbnb.apptemplate.main
 
 import android.annotation.SuppressLint
 import androidx.databinding.Bindable
+import androidx.lifecycle.viewModelScope
 import de.trbnb.mvvmbase.BaseViewModel
 import de.trbnb.mvvmbase.bindableproperty.afterSet
 import de.trbnb.mvvmbase.bindableproperty.bindableBoolean
@@ -10,7 +11,6 @@ import de.trbnb.mvvmbase.commands.simpleCommand
 import de.trbnb.mvvmbase.events.Event
 import de.trbnb.mvvmbase.rx.RxViewModel
 import io.reactivex.Observable
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,10 +19,10 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor() : BaseViewModel(), RxViewModel {
 
     @get:Bindable
-    var isShowingDialog by bindableBoolean(false)
+    var isShowingDialog by bindableBoolean(false, "isShowingDialog")
 
     @get:Bindable
-    var showSnackbar: Boolean by bindableBoolean( false)
+    var showSnackbar: Boolean by bindableBoolean(false, "showSnackbar")
         .afterSet {
             showSnackbarCommand.onEnabledChanged()
         }
@@ -30,7 +30,7 @@ class MainViewModel @Inject constructor() : BaseViewModel(), RxViewModel {
     @get:Bindable
     val title by Observable.create<String> {
         it.onNext("Foo")
-        GlobalScope.launch {
+        viewModelScope.launch {
             delay(5000)
             it.onNext("bar")
         }

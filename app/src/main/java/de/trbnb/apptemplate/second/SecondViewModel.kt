@@ -7,12 +7,11 @@ import de.trbnb.mvvmbase.bindableproperty.distinct
 import de.trbnb.mvvmbase.bindableproperty.validate
 
 class SecondViewModel : BaseViewModel() {
-
     val text = "This is a fragment!"
 
     @get:Bindable
-    var progress by bindableInt()
-            .distinct()
-            .validate { _, new -> Math.min(new, 100) }
+    var progress by bindableInt(savedStateKey = "progress")
+        .distinct()
+        .validate { _, new -> new.coerceAtMost(100) }
 
 }
