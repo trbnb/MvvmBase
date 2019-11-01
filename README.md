@@ -151,16 +151,16 @@ The BindableProperty also can be customized to react to value changes, etc. Thes
 ```kotlin
 @get:Bindable
 var foo by bindable("")
-        .distinct()
-        .beforeSet { old, new ->
-            Log.d(TAG, "Value is about to be changed from $old to $new")
-        }
-        .validate { old, new ->
-            return@validate if (new.length > old.length) new else old
-        }
-        .afterSet {
-            Log.d(TAG, "Value changed: $it")
-        }
+    .distinct()
+    .beforeSet { old, new ->
+        Log.d(TAG, "Value is about to be changed from $old to $new")
+    }
+    .validate { old, new ->
+        return@validate if (new.length > old.length) new else old
+    }
+    .afterSet {
+        Log.d(TAG, "Value changed: $it")
+    }
 ```
 
 This is what those extensions do:
@@ -191,6 +191,18 @@ There are also BindableProperties for primitive JVM types:
 | `Int`     | `BindableIntProperty`         | `bindableInt()`       | `0`
 | `Long`    | `BindableLongProperty`        | `bindableLong()`      | `0`
 | `Short`   | `BindableShortProperty`       | `bindableShort()`     | `0`
+
+## Saving state
+
+Android X provides a way to save state of ViewModels via a SavedStateHandle. While offical examples show this being done with the handle being given to the ViewModel as a constructor parameter this library will not support this implementation to allow for constructor dependency injection. Instead the handle is being given right after initialization. It can then be accessed with `ViewModel.savedStateHandle` and `ViewModel.withSavedStateHandle { }`.
+
+BindableProperties also support this mechanism. To enable this a key simply has to be defined.  
+Example:
+
+```kotlin
+@get:Bindable
+var progress by bindableInt(savedStateKey = "progress")
+```
 
 ## EventChannel
 
