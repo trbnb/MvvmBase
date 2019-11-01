@@ -86,12 +86,8 @@ abstract class MvvmBindingActivity<VM, B> : AppCompatActivity()
     /**
      * Creates a new view model via [viewModelProvider].
      */
-    private val viewModelFactory = object : ViewModelProvider.Factory {
-        @Suppress("UNCHECKED_CAST")
-        override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
-            return viewModelProvider.get() as T
-        }
-    }
+    private val viewModelFactory: ViewModelProvider.Factory
+        get() = SavedStateViewModelFactory(viewModelProvider, this, defaultViewModelArgs)
 
     /**
      * Callback implementation that delegates the parametes to [onViewModelPropertyChanged].
@@ -105,6 +101,9 @@ abstract class MvvmBindingActivity<VM, B> : AppCompatActivity()
 
     protected open val dataBindingComponent: DataBindingComponent?
         get() = null
+
+    protected open val defaultViewModelArgs: Bundle?
+        get() = intent.extras
 
     /**
      * Called by the lifecycle.

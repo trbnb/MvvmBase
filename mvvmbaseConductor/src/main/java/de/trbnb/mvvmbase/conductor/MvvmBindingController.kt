@@ -1,5 +1,6 @@
 package de.trbnb.mvvmbase.conductor
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,8 +14,11 @@ import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
+import androidx.savedstate.SavedStateRegistryController
+import androidx.savedstate.SavedStateRegistryOwner
 import com.bluelinelabs.conductor.archlifecycle.LifecycleController
 import de.trbnb.mvvmbase.BR
+import de.trbnb.mvvmbase.SavedStateViewModelFactory
 import de.trbnb.mvvmbase.ViewModel
 import de.trbnb.mvvmbase.events.Event
 import de.trbnb.mvvmbase.utils.findGenericSuperclass
@@ -33,12 +37,8 @@ import javax.inject.Provider
  * @param[VM] The type of the specific [ViewModel] implementation for this Controller.
  * @param[B] The type of the specific [ViewDataBinding] implementation for this Controller.
  */
-abstract class MvvmBindingController<VM, B> : LifecycleController, ViewModelStoreOwner
+abstract class MvvmBindingController<VM, B>(bundle: Bundle? = null) : LifecycleController(bundle), ViewModelStoreOwner, SavedStateRegistryOwner
         where VM : ViewModel, VM : androidx.lifecycle.ViewModel, B : ViewDataBinding {
-
-    constructor() : super()
-    constructor(bundle: Bundle? = null) : super(bundle)
-
     /**
      * The [ViewDataBinding] implementation for a specific layout.
      * Will only be set in [onCreateView].
@@ -66,12 +66,16 @@ abstract class MvvmBindingController<VM, B> : LifecycleController, ViewModelStor
     /**
      * Creates a new view model via [viewModelProvider].
      */
-    private val viewModelFactory = object : ViewModelProvider.Factory {
-        @Suppress("UNCHECKED_CAST")
-        override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
-            return viewModelProvider.get() as T
+    private val viewModelFactory: ViewModelProvider.Factory
+        get() = when (false) {
+            true -> object : ViewModelProvider.Factory {
+                @Suppress("UNCHECKED_CAST")
+                override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
+                    return viewModelProvider.get() as T
+                }
+            }
+            false -> SavedStateViewModelFactory(viewModelProvider, this, defaultViewModelArgs)
         }
-    }
 
     /**
      * The [de.trbnb.mvvmbase.BR] value that is used as parameter for the view model in the binding.
@@ -119,9 +123,27 @@ abstract class MvvmBindingController<VM, B> : LifecycleController, ViewModelStor
     protected open val dataBindingComponent: DataBindingComponent?
         get() = null
 
+    protected open val defaultViewModelArgs: Bundle?
+        get() = args
+
     private val viewModelStore = ViewModelStore()
 
+    @Suppress("LeakingThis")
+    private val savedStateRegistryController = SavedStateRegistryController.create(this)
+
+    private var onRestoreInstanceStateCalled = false
+
     override fun getViewModelStore() = viewModelStore
+
+    override fun getSavedStateRegistry() = savedStateRegistryController.savedStateRegistry
+
+    override fun onContextAvailable(context: Context) {
+        super.onContextAvailable(context)
+        if (!onRestoreInstanceStateCalled) {
+            savedStateRegistryController.performRestore(null)
+        }
+        onRestoreInstanceStateCalled = false
+    }
 
     /**
      * Called by the lifecycle.
@@ -189,5 +211,16 @@ abstract class MvvmBindingController<VM, B> : LifecycleController, ViewModelStor
         viewModel.removeOnPropertyChangedCallback(viewModelObserver)
 
         binding = null
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        savedStateRegistryController.performSave(outState)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        savedStateRegistryController.performRestore(savedInstanceState)
+        onRestoreInstanceStateCalled = true
     }
 }

@@ -5,6 +5,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.SavedStateHandle
 import de.trbnb.mvvmbase.events.EventChannel
 import kotlin.reflect.KProperty
 
@@ -19,7 +20,6 @@ import kotlin.reflect.KProperty
  * This is done the easiest way by extending [androidx.databinding.BaseObservable].
  */
 interface ViewModel : Observable, LifecycleOwner {
-
     /**
      * Object that can be used to send one-time or not-state information to the UI.
      */
@@ -77,6 +77,8 @@ interface ViewModel : Observable, LifecycleOwner {
      * Implementations should use this method to deregister from callbacks, etc.
      */
     fun onDestroy()
+
+    fun setSavedStateHandle(savedStateHandle: SavedStateHandle)
 
     /**
      * Destroys all ViewModels in that list when the containing ViewModel is destroyed.

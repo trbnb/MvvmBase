@@ -1,6 +1,5 @@
 package de.trbnb.mvvmbase
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -32,7 +31,6 @@ import javax.inject.Provider
  */
 abstract class MvvmBindingFragment<VM, B> : Fragment()
     where VM : ViewModel, VM : androidx.lifecycle.ViewModel, B : ViewDataBinding {
-
     /**
      * The [ViewDataBinding] implementation for a specific layout.
      * Will only be set in [onCreateView].
@@ -53,19 +51,15 @@ abstract class MvvmBindingFragment<VM, B> : Fragment()
     protected open val viewModelClass: Class<VM>
         @Suppress("UNCHECKED_CAST")
         get() {
-            val superClass = findGenericSuperclass<MvvmBindingFragment<VM, B>>()?: throw IllegalStateException()
+            val superClass = findGenericSuperclass<MvvmBindingFragment<VM, B>>() ?: throw IllegalStateException()
             return superClass.actualTypeArguments[0] as Class<VM>
         }
 
     /**
      * Creates a new view model via [viewModelProvider].
      */
-    private val viewModelFactory = object : ViewModelProvider.Factory {
-        @Suppress("UNCHECKED_CAST")
-        override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
-            return viewModelProvider.get() as T
-        }
-    }
+    private val viewModelFactory: ViewModelProvider.Factory
+        get() = SavedStateViewModelFactory(viewModelProvider, this, defaultViewModelArgs)
 
     /**
      * The [de.trbnb.mvvmbase.BR] value that is used as parameter for the view model in the binding.
@@ -109,11 +103,14 @@ abstract class MvvmBindingFragment<VM, B> : Fragment()
     protected open val dataBindingComponent: DataBindingComponent?
         get() = null
 
+    protected open val defaultViewModelArgs: Bundle?
+        get() = arguments
+
     /**
      * Gets the view model with the Architecture Components.
      */
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
         viewModel = ViewModelProvider(viewModelStore, viewModelFactory)[viewModelClass]
     }

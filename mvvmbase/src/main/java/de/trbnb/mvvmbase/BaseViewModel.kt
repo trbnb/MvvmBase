@@ -9,6 +9,7 @@ import androidx.lifecycle.GenericLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.SavedStateHandle
 import de.trbnb.mvvmbase.annotations.DependsOn
 import de.trbnb.mvvmbase.events.EventChannel
 import de.trbnb.mvvmbase.events.EventChannelImpl
@@ -21,7 +22,6 @@ import androidx.lifecycle.ViewModel as ArchitectureViewModel
  * Simple base implementation of the [ViewModel] interface based on [BaseObservable].
  */
 abstract class BaseViewModel : ArchitectureViewModel(), ViewModel {
-
     /**
      * Callback registry for [Observable].
      */
@@ -40,6 +40,9 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel {
         get() = true
 
     private val dependentFieldIds: Map<Int, IntArray>
+
+    protected var savedStateHandle: SavedStateHandle? = null
+        private set
 
     init {
         dependentFieldIds = this::class.memberProperties.asSequence()
@@ -167,6 +170,15 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel {
     }
 
     override fun getLifecycle() = lifecycle
+
+    final override fun setSavedStateHandle(savedStateHandle: SavedStateHandle) {
+        if (this.savedStateHandle != null) return
+
+        this.savedStateHandle = savedStateHandle
+        onRestore(savedStateHandle)
+    }
+
+    open fun onRestore(savedStateHandle: SavedStateHandle) {}
 
     /**
      * Enum for the specific Lifecycle of ViewModels.
