@@ -12,6 +12,7 @@ import kotlin.reflect.KProperty
  *
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  * @param defaultValue Value that will be used at start.
+ * @param savedStateKey Key to be used to write to/read from [ViewModel.savedStateHandle].
  */
 class BindableCharProperty(
     viewModel: ViewModel,
@@ -82,6 +83,7 @@ class BindableCharProperty(
  * Creates a new [BindableCharProperty] instance.
  *
  * @param defaultValue Value of the property from the start.
+ * @param savedStateKey Key to be used to write to/read from [ViewModel.savedStateHandle].
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  */
 fun ViewModel.bindableChar(

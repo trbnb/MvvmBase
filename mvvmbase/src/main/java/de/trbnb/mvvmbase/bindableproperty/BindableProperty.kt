@@ -15,6 +15,7 @@ import kotlin.reflect.KProperty
  * @param T Type of the stored value.
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  * @param defaultValue Value that will be used at start.
+ * @param savedStateKey Key to be used to write to/read from [ViewModel.savedStateHandle].
  */
 class BindableProperty<T> (
     viewModel: ViewModel,
@@ -111,6 +112,7 @@ class BindableProperty<T> (
  * Creates a new BindableProperty instance.
  *
  * @param defaultValue Value of the property from the start.
+ * @param savedStateKey Key to be used to write to/read from [ViewModel.savedStateHandle].
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  */
 fun <T> ViewModel.bindable(
@@ -122,6 +124,7 @@ fun <T> ViewModel.bindable(
 /**
  * Creates a new BindableProperty instance with `null` as default value.
  *
+ * @param savedStateKey Key to be used to write to/read from [ViewModel.savedStateHandle].
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  */
 fun <T> ViewModel.bindable(savedStateKey: String? = null, fieldId: Int? = null): BindableProperty<T?> {

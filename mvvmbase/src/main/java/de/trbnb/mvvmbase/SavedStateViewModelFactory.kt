@@ -7,6 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.savedstate.SavedStateRegistryOwner
 import javax.inject.Provider
 
+/**
+ * [androidx.lifecycle.ViewModelProvider.Factory] implementation that calls [de.trbnb.mvvmbase.ViewModel.setSavedStateHandle]
+ * immediately after initialization.
+ */
 class SavedStateViewModelFactory<VM : de.trbnb.mvvmbase.ViewModel>(
     private val provider: Provider<VM>,
     owner: SavedStateRegistryOwner,

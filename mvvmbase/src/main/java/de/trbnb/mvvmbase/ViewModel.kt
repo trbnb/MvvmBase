@@ -25,6 +25,9 @@ interface ViewModel : Observable, LifecycleOwner {
      */
     val eventChannel: EventChannel
 
+    /**
+     * Used to store/read values if a new instance has to be created.
+     */
     val savedStateHandle: SavedStateHandle?
 
     /**
@@ -80,8 +83,15 @@ interface ViewModel : Observable, LifecycleOwner {
      */
     fun onDestroy()
 
+    /**
+     * Called after initialization by [SavedStateViewModelFactory].
+     */
     fun setSavedStateHandle(savedStateHandle: SavedStateHandle)
 
+    /**
+     * Calls [action] after [savedStateHandle] has been given an instance.
+     * [action] will be invoked immediately if [savedStateHandle] already has an instance.
+     */
     fun onRestore(action: (savedStateHandle: SavedStateHandle) -> Unit)
 
     /**

@@ -67,15 +67,7 @@ abstract class MvvmBindingController<VM, B>(bundle: Bundle? = null) : LifecycleC
      * Creates a new view model via [viewModelProvider].
      */
     private val viewModelFactory: ViewModelProvider.Factory
-        get() = when (false) {
-            true -> object : ViewModelProvider.Factory {
-                @Suppress("UNCHECKED_CAST")
-                override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
-                    return viewModelProvider.get() as T
-                }
-            }
-            false -> SavedStateViewModelFactory(viewModelProvider, this, defaultViewModelArgs)
-        }
+        get() = SavedStateViewModelFactory(viewModelProvider, this, defaultViewModelArgs)
 
     /**
      * The [de.trbnb.mvvmbase.BR] value that is used as parameter for the view model in the binding.
@@ -117,12 +109,16 @@ abstract class MvvmBindingController<VM, B>(bundle: Bundle? = null) : LifecycleC
     }
 
     /**
-     * Gets the binding component that will be used when the binding is created.
-     * A `null` value will result infalling back to [DataBindingUtil.getDefaultComponent].
+     * Defines which [DataBindingComponent] will be used with [DataBindingUtil.inflate].
+     * Default is `null` and will lead to usage of [DataBindingUtil.getDefaultComponent].
      */
     protected open val dataBindingComponent: DataBindingComponent?
         get() = null
 
+    /**
+     * Defines which Bundle will be used as defaultArgs with [SavedStateViewModelFactory].
+     * Default is [getArgs].
+     */
     protected open val defaultViewModelArgs: Bundle?
         get() = args
 
@@ -131,6 +127,13 @@ abstract class MvvmBindingController<VM, B>(bundle: Bundle? = null) : LifecycleC
     @Suppress("LeakingThis")
     private val savedStateRegistryController = SavedStateRegistryController.create(this)
 
+    /**
+     * Necessary memory if [onRestoreInstanceState] has been invoked.
+     * If not it means [SavedStateRegistryController.performRestore] has to be invoked with `null` manually.
+     *
+     * @see onContextAvailable
+     * @see onRestoreInstanceState
+     */
     private var onRestoreInstanceStateCalled = false
 
     override fun getViewModelStore() = viewModelStore

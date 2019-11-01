@@ -100,9 +100,17 @@ abstract class MvvmBindingFragment<VM, B> : Fragment()
         onEvent(event)
     }
 
+    /**
+     * Defines which [DataBindingComponent] will be used with [DataBindingUtil.inflate].
+     * Default is `null` and will lead to usage of [DataBindingUtil.getDefaultComponent].
+     */
     protected open val dataBindingComponent: DataBindingComponent?
         get() = null
 
+    /**
+     * Defines which Bundle will be used as defaultArgs with [SavedStateViewModelFactory].
+     * Default is [getArguments].
+     */
     protected open val defaultViewModelArgs: Bundle?
         get() = arguments
 

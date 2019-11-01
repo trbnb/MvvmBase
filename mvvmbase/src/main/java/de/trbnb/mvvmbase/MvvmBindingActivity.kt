@@ -99,9 +99,17 @@ abstract class MvvmBindingActivity<VM, B> : AppCompatActivity()
         }
     }
 
+    /**
+     * Defines which [DataBindingComponent] will be used with [DataBindingUtil.inflate].
+     * Default is `null` and will lead to usage of [DataBindingUtil.getDefaultComponent].
+     */
     protected open val dataBindingComponent: DataBindingComponent?
         get() = null
 
+    /**
+     * Defines which Bundle will be used as defaultArgs with [SavedStateViewModelFactory].
+     * Default is [android.content.Intent.getExtras] from [getIntent].
+     */
     protected open val defaultViewModelArgs: Bundle?
         get() = intent.extras
 
