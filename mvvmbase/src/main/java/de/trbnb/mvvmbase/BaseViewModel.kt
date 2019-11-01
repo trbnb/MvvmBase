@@ -178,12 +178,13 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel {
 
         this.savedStateHandle = savedStateHandle
         savedStateHandleListeners?.forEach { it(savedStateHandle) }
+        savedStateHandleListeners = null
         onRestore(savedStateHandle)
     }
 
     open fun onRestore(savedStateHandle: SavedStateHandle) {}
 
-    final override fun onRestore(action: (savedStateHandle: SavedStateHandle) -> Unit) {
+    final override fun withSavedStateHandle(action: (savedStateHandle: SavedStateHandle) -> Unit) {
         when (val savedStateHandle = savedStateHandle) {
             null -> when (val savedStateHandleListeners = savedStateHandleListeners) {
                 null -> this.savedStateHandleListeners = mutableListOf(action)

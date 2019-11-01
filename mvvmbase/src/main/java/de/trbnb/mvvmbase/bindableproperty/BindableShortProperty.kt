@@ -52,9 +52,9 @@ class BindableShortProperty (
 
     init {
         if (savedStateKey != null) {
-            viewModel.onRestore { savedStateHandle ->
+            viewModel.withSavedStateHandle { savedStateHandle ->
                 if (savedStateHandle.contains(savedStateKey)) {
-                    this.value = savedStateHandle.get(savedStateKey) ?: return@onRestore
+                    this.value = savedStateHandle.get(savedStateKey) ?: return@withSavedStateHandle
                 }
             }
         }

@@ -52,9 +52,9 @@ class BindableCharProperty(
 
     init {
         if (savedStateKey != null) {
-            viewModel.onRestore { savedStateHandle ->
+            viewModel.withSavedStateHandle { savedStateHandle ->
                 if (savedStateKey in savedStateHandle) {
-                    this.value = savedStateHandle.get(savedStateKey) ?: return@onRestore
+                    this.value = savedStateHandle.get(savedStateKey) ?: return@withSavedStateHandle
                 }
             }
         }

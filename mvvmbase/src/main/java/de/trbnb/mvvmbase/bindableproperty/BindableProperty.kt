@@ -80,7 +80,7 @@ class BindableProperty<T> (
 
     init {
         if (savedStateKey != null) {
-            viewModel.onRestore { savedStateHandle ->
+            viewModel.withSavedStateHandle { savedStateHandle ->
                 if (savedStateKey in savedStateHandle) {
                     @Suppress("UNCHECKED_CAST", "RemoveExplicitTypeArguments")
                     this.value = savedStateHandle.get<T>(savedStateKey) as T

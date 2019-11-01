@@ -92,7 +92,7 @@ interface ViewModel : Observable, LifecycleOwner {
      * Calls [action] after [savedStateHandle] has been given an instance.
      * [action] will be invoked immediately if [savedStateHandle] already has an instance.
      */
-    fun onRestore(action: (savedStateHandle: SavedStateHandle) -> Unit)
+    fun withSavedStateHandle(action: (savedStateHandle: SavedStateHandle) -> Unit)
 
     /**
      * Destroys all ViewModels in that list when the containing ViewModel is destroyed.
