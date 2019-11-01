@@ -7,58 +7,65 @@
             name="vm"
             type="de.trbnb.apptemplate.main.MainViewModel" />
     </data>
-    
-    <LinearLayout
+
+    <FrameLayout
+        android:id="@+id/main_frame"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center"
-        tools:context=".main.MainActivity">
-    
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
             android:gravity="center"
-            android:text="@{vm.title}"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"
-            tools:text="Foo bar"/>
+            tools:context=".main.MainActivity">
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickCommand="@{vm.showDialogCommand}"
-            android:text="Show Dialog" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@{vm.title}"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                tools:text="Foo bar"/>
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickCommand="@{vm.showSnackbarCommand}"
-            android:text="Show Snackbar" />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickCommand="@{vm.showDialogCommand}"
+                android:text="Show Dialog" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Toast example"
-            android:clickCommand="@{vm.showToastCommand}"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickCommand="@{vm.showSnackbarCommand}"
+                android:text="Show Snackbar" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickCommand="@{vm.showFragmentExampleCommand}"
-            android:text="Show Fragment example" />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Toast example"
+                android:clickCommand="@{vm.showToastCommand}"/>
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Show Conductor example"
-            android:clickCommand="@{vm.showConductorEvent}"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickCommand="@{vm.showFragmentExampleCommand}"
+                android:text="Show Fragment example" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickCommand="@{vm.showMainActivityAgain}"
-            android:text="Show this activity again!"
-            style="@style/Widget.AppCompat.Button.Colored" />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Show Conductor example"
+                android:clickCommand="@{vm.showConductorEvent}"/>
 
-    </LinearLayout>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickCommand="@{vm.showMainActivityAgain}"
+                android:text="Show this activity again!"
+                style="@style/Widget.AppCompat.Button.Colored" />
+
+        </LinearLayout>
+
+    </FrameLayout>
 </layout>

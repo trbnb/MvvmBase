@@ -3,11 +3,11 @@ package de.trbnb.apptemplate.main
 import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
+import androidx.databinding.library.baseAdapters.BR
 import com.bluelinelabs.conductor.Conductor
 import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
 import com.google.android.material.snackbar.Snackbar
-import de.trbnb.apptemplate.BR
 import de.trbnb.apptemplate.R
 import de.trbnb.apptemplate.app.appComponent
 import de.trbnb.apptemplate.second.SecondActivity
@@ -36,7 +36,7 @@ class MainActivity : MvvmActivity<MainViewModel>() {
         appComponent.inject(this)
         super.onCreate(savedInstanceState)
 
-        router = Conductor.attachRouter(this, findViewById(android.R.id.content), savedInstanceState)
+        router = Conductor.attachRouter(this, findViewById(R.id.main_frame), savedInstanceState)
     }
 
     override fun onViewModelLoaded(viewModel: MainViewModel) {
