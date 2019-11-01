@@ -17,8 +17,10 @@ import kotlin.reflect.KProperty
  * @param defaultValue Value that will be used at start.
  */
 class BindableProperty<T> (
-        private var fieldId: Int?,
-        defaultValue: T
+    viewModel: ViewModel,
+    private var fieldId: Int?,
+    defaultValue: T,
+    private val savedStateKey: String? = null
 ) : BindablePropertyBase(), ReadWriteProperty<ViewModel, T> {
 
     companion object {
@@ -33,7 +35,6 @@ class BindableProperty<T> (
         fun init(brClass: Class<*>) {
             MvvmBase.init(brClass)
         }
-
 
         /**
          * Initializes the automatic field ID detection by providing the class inside BR.java.
@@ -76,6 +77,17 @@ class BindableProperty<T> (
      */
     internal var afterSet: ((new: T) -> Unit)? = null
 
+    init {
+        if (savedStateKey != null) {
+            viewModel.onRestore { savedStateHandle ->
+                if (savedStateKey in savedStateHandle) {
+                    @Suppress("UNCHECKED_CAST", "RemoveExplicitTypeArguments")
+                    this.value = savedStateHandle.get<T>(savedStateKey) as T
+                }
+            }
+        }
+    }
+
     override fun getValue(thisRef: ViewModel, property: KProperty<*>) = value
 
     override fun setValue(thisRef: ViewModel, property: KProperty<*>, value: T) {
@@ -90,6 +102,7 @@ class BindableProperty<T> (
         beforeSet?.invoke(this.value, value)
         this.value = validate?.invoke(this.value, value) ?: value
         thisRef.notifyPropertyChanged(fieldId ?: BR._all)
+        savedStateKey?.let { thisRef.savedStateHandle?.set(savedStateKey, this.value) }
         afterSet?.invoke(this.value)
     }
 }
@@ -100,17 +113,19 @@ class BindableProperty<T> (
  * @param defaultValue Value of the property from the start.
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  */
-inline fun <reified T> ViewModel.bindable(defaultValue: T, fieldId: Int? = null): BindableProperty<T> {
-    return BindableProperty(fieldId, defaultValue)
-}
+fun <T> ViewModel.bindable(
+    defaultValue: T,
+    savedStateKey: String? = null,
+    fieldId: Int? = null
+) = BindableProperty(this, fieldId, defaultValue, savedStateKey)
 
 /**
  * Creates a new BindableProperty instance with `null` as default value.
  *
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  */
-inline fun <reified T> ViewModel.bindable(fieldId: Int? = null): BindableProperty<T?> {
-    return bindable(null, fieldId)
+fun <T> ViewModel.bindable(savedStateKey: String? = null, fieldId: Int? = null): BindableProperty<T?> {
+    return bindable(null, savedStateKey, fieldId)
 }
 
 /**
