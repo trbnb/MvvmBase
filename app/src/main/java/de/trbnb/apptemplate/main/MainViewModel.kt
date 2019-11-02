@@ -19,10 +19,10 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor() : BaseViewModel(), RxViewModel {
 
     @get:Bindable
-    var isShowingDialog by bindableBoolean(false, "isShowingDialog")
+    var isShowingDialog by bindableBoolean(false)
 
     @get:Bindable
-    var showSnackbar: Boolean by bindableBoolean(false, "showSnackbar")
+    var showSnackbar: Boolean by bindableBoolean(false)
         .afterSet {
             showSnackbarCommand.onEnabledChanged()
         }
