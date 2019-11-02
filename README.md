@@ -8,11 +8,7 @@ MvvmBase is available via JCenter. To use it put this in your `build.gradle`:
 ```gradle
 dependencies {
     [...]
-    // With old support libraries:
-    implementation 'de.trbnb.mvvmbase:mvvmbase:1.2.0'
-
-    // With androidx:
-    implementation 'de.trbnb.mvvmbase:mvvmbase:1.2.0-androidx'
+    implementation 'de.trbnb.mvvmbase:mvvmbase:1.4.2'
 }
 ```
 
@@ -131,7 +127,7 @@ Its state is:
 As said before this is a delegate property which calls `notifyPropertyChanged` itself if its value has changed. It can also detect the field ID from the BR.java file automatically (specifying the field ID manually is also possible). So to use this feature first the property needs to know what `BR` class should be used. This should be done as early as possible, e.g. in the Applications `onCreate()`:
 
 ```kotlin
-BindableProperty.init<com.example.BR>()
+MvvmBase.init<com.example.BR>()
 ``` 
 
 It can then be used like this:
