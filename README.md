@@ -196,12 +196,25 @@ There are also BindableProperties for primitive JVM types:
 
 Android X provides a way to save state of ViewModels via a SavedStateHandle. While offical examples show this being done with the handle being given to the ViewModel as a constructor parameter this library will not support this implementation to allow for constructor dependency injection. Instead the handle is being given right after initialization. It can then be accessed with `ViewModel.savedStateHandle` and `ViewModel.withSavedStateHandle { }`.
 
-BindableProperties also support this mechanism. To enable this a key simply has to be defined.  
+BindableProperties also support this mechanism. By default the library tries to automatically derive a key from the property name. A key can also be defined manually or saving state can be disabled.
 Example:
 
 ```kotlin
+// defaults to StateSaveOption.Automatic
 @get:Bindable
-var progress by bindableInt(savedStateKey = "progress")
+var progress1 by bindableInt()
+
+// derives the key automatically
+@get:Bindable
+var progress2 by bindableInt(stateSaveOption = StateSaveOption.Automatic)
+
+// key is specified manually
+@get:Bindable
+var progress3 by bindableInt(stateSaveOption = StateSaveOption.Manual("progress"))
+
+// no state saving for this property
+@get:Bindable
+var progress4 by bindableInt(stateSaveOption = StateSaveOption.None)
 ```
 
 ## EventChannel
