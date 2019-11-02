@@ -16,6 +16,18 @@ dependencies {
 }
 ```
 
+The library also uses some Kotlin reflection features. Experience shows that the following proguard rules are necessary in release builds:
+
+```proguard
+-keep class de.trbnb.mvvmbase.** { *; }
+-keep @interface kotlin.Metadata { *; }
+-keep class kotlin.reflect.jvm.internal.** { *; }
+
+-keep class androidx.lifecycle.ViewModel
+-keep interface androidx.databinding.Observable
+-keep interface androidx.lifecycle.LifecycleOwner
+```
+
 # Features
 This library comes with two major features:
 * `MvvmActivity<VM>` / `MvvmFragment<VM>`  

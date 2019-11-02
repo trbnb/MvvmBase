@@ -1,14 +1,10 @@
 package de.trbnb.mvvmbase
 
-import android.annotation.SuppressLint
 import androidx.annotation.CallSuper
 import androidx.databinding.BaseObservable
 import androidx.databinding.Observable
 import androidx.databinding.PropertyChangeRegistry
-import androidx.lifecycle.GenericLifecycleObserver
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.OnLifecycleEvent
 import de.trbnb.mvvmbase.annotations.DependsOn
 import de.trbnb.mvvmbase.events.EventChannel
 import de.trbnb.mvvmbase.events.EventChannelImpl
@@ -54,62 +50,10 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel {
     }
 
     /**
-     * Gets the custom lifecycle for ViewModels.
-     *
-     * Its state is:
-     * - After initialization & being unbound: [Lifecycle.State.STARTED].
-     * - After being bound: [Lifecycle.State.RESUMED].
-     * - After being unbound: [Lifecycle.State.STARTED].
-     * - After being destroyed: [Lifecycle.State.DESTROYED].
+     * @see ViewModelLifecycle
      */
-    private val lifecycle = object : Lifecycle() {
-        private val observers = mutableListOf<LifecycleObserver>()
-
-        @set:SuppressLint("RestrictedApi")
-        var state = ViewModelLifecycleState.INITIALIZED
-            set(value) {
-                field = value
-                val event = when (value) {
-                    ViewModelLifecycleState.INITIALIZED -> Event.ON_START
-                    ViewModelLifecycleState.BOUND -> Event.ON_RESUME
-                    ViewModelLifecycleState.UNBOUND -> Event.ON_PAUSE
-                    ViewModelLifecycleState.DESTROYED -> Event.ON_DESTROY
-                }
-
-                // Copy the observers as some might unregister themselves and could cause a java.util.ConcurrentModificationException
-                val observers = List(observers.size) { observers[it] }
-                observers.forEach { observer ->
-                    when (observer) {
-                        is GenericLifecycleObserver -> observer.onStateChanged(this@BaseViewModel, event)
-                        else -> {
-                            // LifecycleObservers that are not a GenericLifecycleObserver will be triggered
-                            // via reflection. See OnLifecycleEvent annotation.
-                            observer.javaClass.declaredMethods.filter {
-                                it.annotations.any { annotation ->
-                                    val annotationValue = (annotation as? OnLifecycleEvent)?.value ?: return@any false
-                                    annotationValue == event || annotationValue == Event.ON_ANY
-                                }
-                            }.forEach { it.invoke(observer) }
-                        }
-                    }
-                }
-            }
-
-        override fun addObserver(observer: LifecycleObserver) {
-            observers += observer
-        }
-
-        override fun removeObserver(observer: LifecycleObserver) {
-            observers -= observer
-        }
-
-        override fun getCurrentState(): State = when (state) {
-            ViewModelLifecycleState.INITIALIZED -> State.STARTED
-            ViewModelLifecycleState.BOUND -> State.RESUMED
-            ViewModelLifecycleState.UNBOUND -> State.STARTED
-            ViewModelLifecycleState.DESTROYED -> State.DESTROYED
-        }
-    }
+    @Suppress("LeakingThis")
+    private val lifecycle = ViewModelLifecycle(this)
 
     final override fun addOnPropertyChangedCallback(callback: Observable.OnPropertyChangedCallback) {
         callbacks.add(callback)
@@ -141,7 +85,7 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel {
      */
     @CallSuper
     override fun onBind() {
-        lifecycle.state = ViewModelLifecycleState.BOUND
+        lifecycle.state = ViewModelLifecycle.State.BOUND
     }
 
     /**
@@ -149,7 +93,7 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel {
      */
     @CallSuper
     override fun onUnbind() {
-        lifecycle.state = ViewModelLifecycleState.UNBOUND
+        lifecycle.state = ViewModelLifecycle.State.UNBOUND
     }
 
     /**
@@ -159,23 +103,12 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel {
     @CallSuper
     override fun onDestroy() {
         super.onCleared()
-        lifecycle.state = ViewModelLifecycleState.DESTROYED
+        lifecycle.state = ViewModelLifecycle.State.DESTROYED
     }
 
     final override fun onCleared() {
         onDestroy()
     }
 
-    override fun getLifecycle() = lifecycle
-
-    /**
-     * Enum for the specific Lifecycle of ViewModels.
-     */
-    private enum class ViewModelLifecycleState {
-        INITIALIZED,
-        BOUND,
-        UNBOUND,
-        DESTROYED
-    }
-
+    override fun getLifecycle(): Lifecycle = lifecycle
 }

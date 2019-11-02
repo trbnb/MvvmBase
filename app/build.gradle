@@ -12,10 +12,21 @@ android {
         versionCode 1
         versionName "1.0"
     }
+
+    signingConfigs {
+        releaseConfig {
+            keyAlias 'androiddebugkey'
+            keyPassword "android"
+            storeFile file('/Users/thorben/.android/debug.keystore')
+            storePassword "android"
+        }
+    }
+
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.releaseConfig
         }
     }
 
@@ -62,7 +73,7 @@ dependencies {
     implementation "com.google.dagger:dagger:$daggerVersion"
     compileOnly 'javax.annotation:jsr250-api:1.0'
 
-    implementation 'io.reactivex.rxjava2:rxkotlin:2.3.0'
+    implementation 'io.reactivex.rxjava2:rxkotlin:2.4.0'
 
     implementation 'com.bluelinelabs:conductor:2.1.5'
     implementation 'com.bluelinelabs:conductor-archlifecycle:2.1.5'
