@@ -127,13 +127,13 @@ class BindableProperty<T> (
 inline fun <reified T> ViewModel.bindable(
     defaultValue: T,
     fieldId: Int? = null,
-    stateSaveOption: StateSaveOption = StateSaveOption.Automatic
+    stateSaveOption: StateSaveOption? = null
 ) = BindableProperty(fieldId, defaultValue, when (stateSaveOption) {
-    StateSaveOption.None -> StateSaveOption.None
-    else -> when (savingStateInBindableSupports<T>(Build.VERSION.SDK_INT)) {
-        true -> stateSaveOption
+    null -> when (savingStateInBindableSupports<T>(Build.VERSION.SDK_INT)) {
+        true -> StateSaveOption.Automatic
         false -> StateSaveOption.None
     }
+    else -> stateSaveOption
 })
 
 /**
@@ -144,7 +144,7 @@ inline fun <reified T> ViewModel.bindable(
  */
 inline fun <reified T> ViewModel.bindable(
     fieldId: Int? = null,
-    stateSaveOption: StateSaveOption = StateSaveOption.Automatic
+    stateSaveOption: StateSaveOption? = null
 ): BindableProperty<T?> = bindable(null, fieldId, stateSaveOption)
 
 /**

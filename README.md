@@ -197,14 +197,15 @@ There are also BindableProperties for primitive JVM types:
 Android X provides a way to save state of ViewModels via a SavedStateHandle. While offical examples show this being done with the handle being given to the ViewModel as a constructor parameter this library will not support this implementation to allow for constructor dependency injection. Instead the handle is being given right after initialization. It can then be accessed with `ViewModel.savedStateHandle` and `ViewModel.withSavedStateHandle { }`.
 
 BindableProperties also support this mechanism. By default the library tries to automatically derive a key from the property name. A key can also be defined manually or saving state can be disabled.
+
 Example:
 
 ```kotlin
-// defaults to StateSaveOption.Automatic
+// defaults to StateSaveOption.Automatic for supported types (see below), otherwise StateSaveOption.None
 @get:Bindable
 var progress1 by bindableInt()
 
-// derives the key automatically
+// key is derived automatically
 @get:Bindable
 var progress2 by bindableInt(stateSaveOption = StateSaveOption.Automatic)
 
@@ -216,6 +217,39 @@ var progress3 by bindableInt(stateSaveOption = StateSaveOption.Manual("progress"
 @get:Bindable
 var progress4 by bindableInt(stateSaveOption = StateSaveOption.None)
 ```
+
+### Supported types
+
+As mentioned above StateSaveOption.Automatic is applied implicitly to most types. This includes all primitive types and the following:
+- `java.lang.Boolean`
+- `BooleanArray`
+- `java.lang.Byte`
+- `ByteArray`
+- `java.lang.Character`
+- `CharArray`
+- `CharSequence`
+- `Array<CharSequence>`
+- `java.lang.Double`
+- `DoubleArray`
+- `java.lang.Float`
+- `FloatArray`
+- `java.lang.Integer`
+- `IntArray`
+- `java.lang.Long`
+- `LongArray`
+- `java.lang.Short`
+- `ShortArray`
+- `String`
+- `Array<String>`
+- `Binder`
+- `Bundle`
+- `Parcelable`
+- `Array<Parcelable>`
+- `Serializable`
+- `Size` (only API 21+)
+- `SizeF` (only API 21+)
+
+Note that this excludes `ArrayList` and `SparseArray` which _are_ supported by `SavedStateHandle` but that is dependent on the type they are containing. Type erasure makes it dificult to check for this so the default for those types is `StateSaveOption.None` (`StateSaveOption.Automatic` can still be applied manually for the right types).
 
 ## EventChannel
 
