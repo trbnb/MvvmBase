@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
 import androidx.databinding.library.baseAdapters.BR
+import androidx.lifecycle.SavedStateHandle
 import com.bluelinelabs.conductor.Conductor
 import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
@@ -20,15 +21,18 @@ import javax.inject.Inject
 import javax.inject.Provider
 
 class MainActivity : MvvmActivity<MainViewModel>() {
-
     private var dialog: Dialog? = null
     private var snackbar: Snackbar? = null
 
     override val layoutId: Int
         get() = R.layout.activity_main
 
+    override fun createViewModel(savedStateHandle: SavedStateHandle): MainViewModel {
+        return viewModelProvider.get()
+    }
+
     @Inject
-    override lateinit var viewModelProvider: Provider<MainViewModel>
+    lateinit var viewModelProvider: Provider<MainViewModel>
 
     private lateinit var router: Router
 
