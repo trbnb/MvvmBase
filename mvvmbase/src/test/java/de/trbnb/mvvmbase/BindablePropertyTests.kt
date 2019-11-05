@@ -36,6 +36,7 @@ class BindablePropertyTests {
         assert(savingStateInBindableSupports<Short?>(1))
         assert(savingStateInBindableSupports<Array<String>>(1))
         assert(!savingStateInBindableSupports<List<Any>>(1))
+        assert(savingStateInBindableSupports<Enum<*>>(1))
 
         assert(!savingStateInBindableSupports<Size>(19))
         assert(!savingStateInBindableSupports<SizeF>(19))

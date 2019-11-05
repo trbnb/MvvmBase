@@ -11,33 +11,26 @@ import java.io.Serializable
  * Function that specifies which types allow for saving state in [de.trbnb.mvvmbase.bindableproperty.BindableProperty].
  */
 inline fun <reified T> savingStateInBindableSupports(sdk: Int): Boolean {
-    return when (val clazz = T::class.java) {
-        java.lang.Boolean::class.java,
-        BooleanArray::class.java,
-        java.lang.Byte::class.java,
-        ByteArray::class.java,
-        java.lang.Character::class.java,
-        CharArray::class.java,
-        CharSequence::class.java,
-        Array<CharSequence>::class.java,
-        java.lang.Double::class.java,
-        DoubleArray::class.java,
-        java.lang.Float::class.java,
-        FloatArray::class.java,
-        java.lang.Integer::class.java,
-        IntArray::class.java,
-        java.lang.Long::class.java,
-        LongArray::class.java,
-        java.lang.Short::class.java,
-        ShortArray::class.java,
-        String::class.java,
-        Array<String>::class.java,
-        Binder::class.java,
-        Bundle::class.java,
-        Parcelable::class.java,
-        Array<Parcelable>::class.java,
-        Serializable::class.java -> true
+    val clazz = T::class.java
+    return when {
+        BooleanArray::class.java.isAssignableFrom(clazz) ||
+        ByteArray::class.java.isAssignableFrom(clazz) ||
+        CharArray::class.java.isAssignableFrom(clazz) ||
+        CharSequence::class.java.isAssignableFrom(clazz) ||
+        Array<CharSequence>::class.java.isAssignableFrom(clazz) ||
+        DoubleArray::class.java.isAssignableFrom(clazz) ||
+        FloatArray::class.java.isAssignableFrom(clazz) ||
+        IntArray::class.java.isAssignableFrom(clazz) ||
+        LongArray::class.java.isAssignableFrom(clazz) ||
+        ShortArray::class.java.isAssignableFrom(clazz) ||
+        String::class.java.isAssignableFrom(clazz) ||
+        Array<String>::class.java.isAssignableFrom(clazz) ||
+        Binder::class.java.isAssignableFrom(clazz) ||
+        Bundle::class.java.isAssignableFrom(clazz) ||
+        Parcelable::class.java.isAssignableFrom(clazz) ||
+        Array<Parcelable>::class.java.isAssignableFrom(clazz) ||
+        Serializable::class.java.isAssignableFrom(clazz) -> true
 
-        else -> sdk >= 21 && (clazz == Size::class.java || clazz == SizeF::class.java)
+        else -> sdk >= 21 && (Size::class.java.isAssignableFrom(clazz) || SizeF::class.java.isAssignableFrom(clazz))
     }
 }
