@@ -5,7 +5,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.OnLifecycleEvent
-import androidx.lifecycle.SavedStateHandle
 import de.trbnb.mvvmbase.events.EventChannel
 import kotlin.reflect.KProperty
 
@@ -26,18 +25,13 @@ interface ViewModel : Observable, LifecycleOwner {
     val eventChannel: EventChannel
 
     /**
-     * Used to store/read values if a new instance has to be created.
-     */
-    val savedStateHandle: SavedStateHandle?
-
-    /**
      * Notifies listeners that all properties of this instance have changed.
      */
     fun notifyChange()
 
     /**
      * Notifies listeners that a specific property has changed. The getter for the property
-     * that changes should be marked with [Bindable] to generate a field in
+     * that changes should be marked with [androidx.databinding.Bindable] to generate a field in
      * `BR` to be used as `fieldId`.
      *
      * @param fieldId The generated BR id for the Bindable field.
@@ -46,7 +40,7 @@ interface ViewModel : Observable, LifecycleOwner {
 
     /**
      * Notifies listeners that a specific property has changed. The getter for the property
-     * that changes should be marked with [Bindable] to generate a field in
+     * that changes should be marked with [androidx.databinding.Bindable] to generate a field in
      * `BR` to be used as `fieldId`.
      *
      * @see notifyPropertyChanged
@@ -82,17 +76,6 @@ interface ViewModel : Observable, LifecycleOwner {
      * Implementations should use this method to deregister from callbacks, etc.
      */
     fun onDestroy()
-
-    /**
-     * Called after initialization by [SavedStateViewModelFactory].
-     */
-    fun setSavedStateHandle(savedStateHandle: SavedStateHandle)
-
-    /**
-     * Calls [action] after [savedStateHandle] has been given an instance.
-     * [action] will be invoked immediately if [savedStateHandle] already has an instance.
-     */
-    fun withSavedStateHandle(action: (savedStateHandle: SavedStateHandle) -> Unit)
 
     /**
      * Destroys all ViewModels in that list when the containing ViewModel is destroyed.

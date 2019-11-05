@@ -3,32 +3,38 @@ package de.trbnb.mvvmbase.bindableproperty
 import androidx.databinding.BaseObservable
 import de.trbnb.mvvmbase.BR
 import de.trbnb.mvvmbase.ViewModel
-import de.trbnb.mvvmbase.utils.brFieldName
+import de.trbnb.mvvmbase.savedstate.StateSavingViewModel
 import de.trbnb.mvvmbase.utils.resolveFieldId
 import kotlin.reflect.KProperty
 
 /**
- * Delegate property that invokes [BaseObservable.notifyPropertyChanged] and saves state via the ViewModels
- * [androidx.lifecycle.SavedStateHandle].
+ * Delegate property that invokes [BaseObservable.notifyPropertyChanged] and saves state
+ * via [StateSavingViewModel.savedStateHandle].
  *
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  * @param defaultValue Value that will be used at start.
- * @param stateSaveOption Specifies if the state of the property should be saved with a [androidx.lifecycle.SavedStateHandle] and with which key.
+ * @param stateSaveOption Specifies if the state of the property should be saved and with which key.
  */
 class BindableShortProperty (
+    viewModel: ViewModel,
     private var fieldId: Int?,
     defaultValue: Short,
     private val stateSaveOption: StateSaveOption
 ) : BindablePropertyBase() {
     /**
-     * The key that will be used to save the state of the property.
-     */
-    private var savedStateKey: String? = (stateSaveOption as? StateSaveOption.Manual)?.key
-
-    /**
      * Gets or sets the stored value.
      */
-    private var value = defaultValue
+    private var value: Short = when {
+        stateSaveOption is StateSaveOption.Manual && viewModel is StateSavingViewModel && stateSaveOption.key in viewModel.savedStateHandle -> {
+            viewModel.savedStateHandle[stateSaveOption.key] ?: defaultValue
+        }
+        else -> defaultValue
+    }
+
+    /**
+     * The key that will be used to save the state of the property.
+     */
+    private var stateSavingKey: String? = (stateSaveOption as? StateSaveOption.Manual)?.key
 
     /**
      * Gets or sets a function that will be invoked if a new value is about to be set.
@@ -56,19 +62,13 @@ class BindableShortProperty (
     internal var afterSet: ((new: Short) -> Unit)? = null
 
     operator fun getValue(thisRef: ViewModel, property: KProperty<*>): Short {
-        if (stateSaveOption is StateSaveOption.Automatic && savedStateKey == null) {
-            val savedStateKey = property.brFieldName().also { this.savedStateKey = it }
-
-            thisRef.withSavedStateHandle { savedStateHandle ->
-                if (savedStateKey in savedStateHandle) {
-                    this.value = savedStateHandle.get(savedStateKey) ?: return@withSavedStateHandle
-                }
-            }
-        }
+        detectStateSavingKey(thisRef, property)
         return value
     }
 
     operator fun setValue(thisRef: ViewModel, property: KProperty<*>, value: Short) {
+        detectStateSavingKey(thisRef, property)
+
         if (fieldId == null) {
             fieldId = property.resolveFieldId()
         }
@@ -80,10 +80,19 @@ class BindableShortProperty (
         beforeSet?.invoke(this.value, value)
         this.value = validate?.invoke(this.value, value) ?: value
         thisRef.notifyPropertyChanged(fieldId ?: BR._all)
-        if (stateSaveOption !is StateSaveOption.None) {
-            savedStateKey?.let { thisRef.savedStateHandle?.set(it, this.value) }
+        if (thisRef is StateSavingViewModel) {
+            stateSavingKey?.let { thisRef.savedStateHandle[it] = this.value }
         }
         afterSet?.invoke(this.value)
+    }
+
+    private fun detectStateSavingKey(thisRef: ViewModel, property: KProperty<*>) {
+        if (stateSaveOption is StateSaveOption.Automatic && stateSavingKey == null && thisRef is StateSavingViewModel) {
+            val newStateSavingKey = property.name.also { this.stateSavingKey = it }
+            if (newStateSavingKey in thisRef.savedStateHandle) {
+                this.value = thisRef.savedStateHandle[newStateSavingKey] ?: return
+            }
+        }
     }
 }
 
@@ -92,13 +101,16 @@ class BindableShortProperty (
  *
  * @param defaultValue Value of the property from the start.
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
- * @param stateSaveOption Specifies if the state of the property should be saved with a [androidx.lifecycle.SavedStateHandle] and with which key.
+ * @param stateSaveOption Specifies if the state of the property should be saved and with which key.
  */
 fun ViewModel.bindableShort(
     defaultValue: Short = 0,
     fieldId: Int? = null,
     stateSaveOption: StateSaveOption = StateSaveOption.Automatic
-) = BindableShortProperty(fieldId, defaultValue, stateSaveOption)
+) = BindableShortProperty(this, fieldId, defaultValue, when (this) {
+    is StateSavingViewModel -> stateSaveOption
+    else -> StateSaveOption.None
+})
 
 /**
  * Sets [BindableShortProperty.beforeSet] of a [BindableShortProperty] instance to a given function and

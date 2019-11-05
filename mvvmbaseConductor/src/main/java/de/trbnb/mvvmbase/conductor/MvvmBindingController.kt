@@ -6,97 +6,38 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
-import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
-import androidx.databinding.Observable
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
-import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryController
-import androidx.savedstate.SavedStateRegistryOwner
 import com.bluelinelabs.conductor.archlifecycle.LifecycleController
-import de.trbnb.mvvmbase.BR
-import de.trbnb.mvvmbase.SavedStateViewModelFactory
+import de.trbnb.mvvmbase.MvvmView
 import de.trbnb.mvvmbase.ViewModel
+import de.trbnb.mvvmbase.ViewModelPropertyChangedCallback
 import de.trbnb.mvvmbase.events.Event
+import de.trbnb.mvvmbase.savedstate.SavedStateViewModelFactory
 import de.trbnb.mvvmbase.utils.findGenericSuperclass
-import javax.inject.Provider
 
 /**
- * Base class for Controllers that serve as view within an MVVM structure.
+ * Reference implementation of an [MvvmView] with [com.bluelinelabs.conductor.Controller].
  *
- * It automatically creates the binding and sets the view model as that bindings parameter.
- * Note that the parameter has to have to name "vm".
- *
- * The view model will be kept in memory with the Architecture Components.
- * The view model will be instantiated via the [viewModelProvider].
- * This [Provider] can either be implemented manually or injected with DI.
- *
- * @param[VM] The type of the specific [ViewModel] implementation for this Controller.
- * @param[B] The type of the specific [ViewDataBinding] implementation for this Controller.
- */
-abstract class MvvmBindingController<VM, B>(bundle: Bundle? = null) : LifecycleController(bundle), ViewModelStoreOwner, SavedStateRegistryOwner
+ * This creates the binding in [onCreateView] and the ViewModel lazily.
+*/
+abstract class MvvmBindingController<VM, B>(
+    bundle: Bundle? = null
+) : LifecycleController(bundle), MvvmView<VM, B>
         where VM : ViewModel, VM : androidx.lifecycle.ViewModel, B : ViewDataBinding {
-    /**
-     * The [ViewDataBinding] implementation for a specific layout.
-     * Will only be set in [onCreateView].
-     */
-    @Suppress("MemberVisibilityCanBePrivate")
-    protected var binding: B? = null
-        private set
+    override var binding: B? = null
 
-    /**
-     * The [ViewModel] that is used for data binding.
-     */
-    @Suppress("MemberVisibilityCanBePrivate")
-    protected val viewModel: VM by lazy { ViewModelProvider(this, viewModelFactory)[viewModelClass] }
-
-    /**
-     * Gets the class of the view model that an implementation uses.
-     */
-    protected open val viewModelClass: Class<VM>
-        @Suppress("UNCHECKED_CAST")
-        get() {
-            val superClass = findGenericSuperclass<MvvmBindingController<VM, B>>() ?: throw IllegalStateException()
-            return superClass.actualTypeArguments[0] as Class<VM>
-        }
-
-    /**
-     * Creates a new view model via [viewModelProvider].
-     */
-    private val viewModelFactory: ViewModelProvider.Factory
-        get() = SavedStateViewModelFactory(viewModelProvider, this, defaultViewModelArgs)
-
-    /**
-     * The [de.trbnb.mvvmbase.BR] value that is used as parameter for the view model in the binding.
-     * Is always [de.trbnb.mvvmbase.BR.vm].
-     */
-    private val viewModelBindingId: Int
-        get() = BR.vm
-
-    /**
-     * The layout resource ID for this Fragment.
-     * Is used in [onCreateView] to create the [ViewDataBinding].
-     */
-    @get:LayoutRes
-    protected abstract val layoutId: Int
-
-    /**
-     * The [Provider] implementation that is used if a new view model has to be instantiated.
-     */
-    abstract val viewModelProvider: Provider<VM>
+    override val viewModel: VM by lazy { ViewModelProvider(this, viewModelFactory)[viewModelClass] }
 
     /**
      * Callback implementation that delegates the parametes to [onViewModelPropertyChanged].
      */
-    private val viewModelObserver = object : Observable.OnPropertyChangedCallback() {
-        @Suppress("UNCHECKED_CAST")
-        override fun onPropertyChanged(sender: Observable, fieldId: Int) {
-            onViewModelPropertyChanged(sender as VM, fieldId)
-        }
-    }
+    @Suppress("LeakingThis")
+    private val viewModelObserver = ViewModelPropertyChangedCallback(this)
 
     /**
      * Is called when the ViewModel sends an [Event].
@@ -104,23 +45,24 @@ abstract class MvvmBindingController<VM, B>(bundle: Bundle? = null) : LifecycleC
      *
      * @see onEvent
      */
-    private val eventListener = { event: Event ->
-        onEvent(event)
-    }
+    private val eventListener = { event: Event -> onEvent(event) }
 
-    /**
-     * Defines which [DataBindingComponent] will be used with [DataBindingUtil.inflate].
-     * Default is `null` and will lead to usage of [DataBindingUtil.getDefaultComponent].
-     */
-    protected open val dataBindingComponent: DataBindingComponent?
-        get() = null
+    @Suppress("UNCHECKED_CAST")
+    override val viewModelClass: Class<VM>
+        get() = findGenericSuperclass<MvvmBindingController<VM, B>>()
+            ?.actualTypeArguments
+            ?.firstOrNull() as? Class<VM>
+            ?: throw IllegalStateException("viewModelClass does not equal Class<VM>")
 
     /**
      * Defines which Bundle will be used as defaultArgs with [SavedStateViewModelFactory].
      * Default is [getArgs].
      */
-    protected open val defaultViewModelArgs: Bundle?
+    override val defaultViewModelArgs: Bundle?
         get() = args
+
+    override val dataBindingComponent: DataBindingComponent?
+        get() = null
 
     private val viewModelStore = ViewModelStore()
 
@@ -180,30 +122,16 @@ abstract class MvvmBindingController<VM, B>(bundle: Bundle? = null) : LifecycleC
 
     protected open fun onBindingCreated(binding: B) { }
 
-    /**
-     * Called when the view model is loaded and is set as [viewModel].
-     *
-     * @param[viewModel] The [ViewModel] instance that was loaded.
-     */
     @CallSuper
-    protected open fun onViewModelLoaded(viewModel: VM) {
+    override fun onViewModelLoaded(viewModel: VM) {
         viewModel.addOnPropertyChangedCallback(viewModelObserver)
         viewModel.eventChannel.addListener(eventListener)
     }
 
-    /**
-     * Called when the view model notifies listeners that a property has changed.
-     *
-     * @param[viewModel] The [ViewModel] instance whose property has changed.
-     * @param[fieldId] The ID of the field in the BR file that indicates which property in the view model has changed.
-     */
-    protected open fun onViewModelPropertyChanged(viewModel: VM, fieldId: Int) { }
+    override fun onViewModelPropertyChanged(viewModel: VM, fieldId: Int) { }
 
-    /**
-     * Is called when the ViewModel sends an [Event].
-     */
     @CallSuper
-    protected open fun onEvent(event: Event) { }
+    override fun onEvent(event: Event) { }
 
     override fun onDestroyView(view: View) {
         super.onDestroyView(view)

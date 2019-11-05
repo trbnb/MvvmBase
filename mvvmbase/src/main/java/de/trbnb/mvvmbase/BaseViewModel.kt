@@ -9,7 +9,6 @@ import androidx.lifecycle.GenericLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
-import androidx.lifecycle.SavedStateHandle
 import de.trbnb.mvvmbase.annotations.DependsOn
 import de.trbnb.mvvmbase.events.EventChannel
 import de.trbnb.mvvmbase.events.EventChannelImpl
@@ -40,11 +39,6 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel {
         get() = true
 
     private val dependentFieldIds: Map<Int, IntArray>
-
-    final override var savedStateHandle: SavedStateHandle? = null
-        private set
-
-    private var savedStateHandleListeners: MutableList<(SavedStateHandle) -> Unit>? = null
 
     init {
         dependentFieldIds = this::class.memberProperties.asSequence()
@@ -172,27 +166,6 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel {
     }
 
     override fun getLifecycle() = lifecycle
-
-    final override fun setSavedStateHandle(savedStateHandle: SavedStateHandle) {
-        if (this.savedStateHandle != null) return
-
-        this.savedStateHandle = savedStateHandle
-        savedStateHandleListeners?.forEach { it(savedStateHandle) }
-        savedStateHandleListeners = null
-        onRestore(savedStateHandle)
-    }
-
-    open fun onRestore(savedStateHandle: SavedStateHandle) {}
-
-    final override fun withSavedStateHandle(action: (savedStateHandle: SavedStateHandle) -> Unit) {
-        when (val savedStateHandle = savedStateHandle) {
-            null -> when (val savedStateHandleListeners = savedStateHandleListeners) {
-                null -> this.savedStateHandleListeners = mutableListOf(action)
-                else -> savedStateHandleListeners.add(action)
-            }
-            else -> action(savedStateHandle)
-        }
-    }
 
     /**
      * Enum for the specific Lifecycle of ViewModels.

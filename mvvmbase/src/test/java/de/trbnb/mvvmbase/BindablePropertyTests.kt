@@ -2,15 +2,16 @@ package de.trbnb.mvvmbase
 
 import android.util.Size
 import android.util.SizeF
+import androidx.lifecycle.SavedStateHandle
 import de.trbnb.mvvmbase.bindableproperty.bindable
 import de.trbnb.mvvmbase.bindableproperty.bindableBoolean
+import de.trbnb.mvvmbase.savedstate.BaseStateSavingViewModel
 import de.trbnb.mvvmbase.utils.brFieldName
 import de.trbnb.mvvmbase.utils.savingStateInBindableSupports
 import org.junit.Test
 
 class BindablePropertyTests {
-
-    class TestViewModel : BaseViewModel() {
+    class TestViewModel(savedStateHandle: SavedStateHandle = SavedStateHandle()) : BaseStateSavingViewModel(savedStateHandle) {
         var text: String by bindable("foo")
         var userSetting: Boolean by bindable(false)
         var isLoading: Boolean? by bindable()
@@ -42,4 +43,19 @@ class BindablePropertyTests {
         assert(savingStateInBindableSupports<SizeF>(21))
     }
 
+    @Test
+    fun `saved state integration in bindable properties`() {
+        val handle = SavedStateHandle().apply {
+            set("text", "Meh")
+            set("isLoading", false)
+            set("isDone", true)
+        }
+
+        val viewModel = TestViewModel(handle)
+        assert(viewModel.text == "Meh")
+        assert(viewModel.userSetting.not())
+        assert(viewModel.isLoading == false)
+        assert(viewModel.isDone)
+        assert(viewModel.isDoneTwo.not())
+    }
 }
