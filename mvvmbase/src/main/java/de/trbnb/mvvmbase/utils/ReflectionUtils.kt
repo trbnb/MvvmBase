@@ -6,6 +6,10 @@ import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 import kotlin.reflect.KProperty
 
+/**
+ * Searches for a given parameterized class type in the receivers type hierachy and returns it if it was found.
+ * Returns `null` otherwise.
+ */
 inline fun <reified T> Any.findGenericSuperclass(): ParameterizedType? {
     val genericSuperClass = javaClass.genericSuperclass
 
@@ -16,6 +20,10 @@ inline fun <reified T> Any.findGenericSuperclass(): ParameterizedType? {
     return genericSuperClass?.findGenericSuperclass(T::class.java)
 }
 
+/**
+ * Searches for a given parameterized class type in the receivers hierachy and returns it if it was found.
+ * Returns `null` otherwise.
+ */
 tailrec fun <T> Type.findGenericSuperclass(targetType: Class<T>): ParameterizedType? {
     if (this !is Class<*>) return null
     val genericSuperClass = this.genericSuperclass ?: return null
