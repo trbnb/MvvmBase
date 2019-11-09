@@ -8,13 +8,13 @@ MvvmBase is available via JCenter. To use it put this in your `build.gradle`:
 ```gradle
 dependencies {
     [...]
-    implementation 'de.trbnb.mvvmbase:mvvmbase:1.4.2'
+    implementation 'de.trbnb.mvvmbase:mvvmbase:2.0.0-beta1'
 
     // RxJava extensions
-    implementation 'de.trbnb.mvvmbase:mvvmbaseRx:1.4.2'
+    implementation 'de.trbnb.mvvmbase:mvvmbaseRx:2.0.0-beta1'
 
     // Conductor support
-    implementation 'de.trbnb.mvvmbase:mvvmbaseConductor:1.4.2'
+    implementation 'de.trbnb.mvvmbase:mvvmbaseConductor:2.0.0-beta1'
 }
 ```
 
