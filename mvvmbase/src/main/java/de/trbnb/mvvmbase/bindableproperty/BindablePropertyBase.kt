@@ -4,7 +4,6 @@ package de.trbnb.mvvmbase.bindableproperty
  * Base class for all BindableProperty implementations.
  */
 abstract class BindablePropertyBase {
-
     /**
      * Gets or sets whether the setter should check if a new value is not equal to the old value.
      * If true and a value is about to be set that is equal to the old one the setter will do nothing.

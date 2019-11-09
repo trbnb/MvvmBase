@@ -1,15 +1,13 @@
 package de.trbnb.apptemplate.second
 
+import androidx.lifecycle.SavedStateHandle
 import de.trbnb.apptemplate.R
+import de.trbnb.apptemplate.app.appComponent
 import de.trbnb.mvvmbase.MvvmFragment
-import javax.inject.Provider
 
 class SecondFragment : MvvmFragment<SecondViewModel>(){
-
-    override val layoutId: Int
-        get() = R.layout.fragment_second
-
-    override val viewModelProvider: Provider<SecondViewModel>
-        get() = Provider(::SecondViewModel)
-
+    override val layoutId: Int = R.layout.fragment_second
+    override fun createViewModel(savedStateHandle: SavedStateHandle): SecondViewModel {
+        return appComponent.secondViewModelFactory(savedStateHandle)
+    }
 }

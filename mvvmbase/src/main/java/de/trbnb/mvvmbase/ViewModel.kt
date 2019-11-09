@@ -19,7 +19,6 @@ import kotlin.reflect.KProperty
  * This is done the easiest way by extending [androidx.databinding.BaseObservable].
  */
 interface ViewModel : Observable, LifecycleOwner {
-
     /**
      * Object that can be used to send one-time or not-state information to the UI.
      */
@@ -32,7 +31,7 @@ interface ViewModel : Observable, LifecycleOwner {
 
     /**
      * Notifies listeners that a specific property has changed. The getter for the property
-     * that changes should be marked with [Bindable] to generate a field in
+     * that changes should be marked with [androidx.databinding.Bindable] to generate a field in
      * `BR` to be used as `fieldId`.
      *
      * @param fieldId The generated BR id for the Bindable field.
@@ -41,7 +40,7 @@ interface ViewModel : Observable, LifecycleOwner {
 
     /**
      * Notifies listeners that a specific property has changed. The getter for the property
-     * that changes should be marked with [Bindable] to generate a field in
+     * that changes should be marked with [androidx.databinding.Bindable] to generate a field in
      * `BR` to be used as `fieldId`.
      *
      * @see notifyPropertyChanged

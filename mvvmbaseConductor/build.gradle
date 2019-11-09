@@ -15,11 +15,11 @@ group = libGroupId
 def projectVersionName = projectVersionName
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode = projectVersionCodeNr
         versionName = projectVersionName
 
@@ -41,16 +41,17 @@ android {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
-    implementation 'androidx.lifecycle:lifecycle-viewmodel:2.0.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel:2.1.0'
+    implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:1.0.0-rc01"
 
     implementation project(":mvvmbase")
 
-    implementation 'com.bluelinelabs:conductor:2.1.5'
-    implementation 'com.bluelinelabs:conductor-archlifecycle:2.1.5'
+    api 'com.bluelinelabs:conductor:2.1.5'
+    api 'com.bluelinelabs:conductor-archlifecycle:2.1.5'
 
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
 
 

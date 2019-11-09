@@ -3,21 +3,38 @@ package de.trbnb.mvvmbase.bindableproperty
 import androidx.databinding.BaseObservable
 import de.trbnb.mvvmbase.BR
 import de.trbnb.mvvmbase.ViewModel
+import de.trbnb.mvvmbase.savedstate.StateSavingViewModel
 import de.trbnb.mvvmbase.utils.resolveFieldId
 import kotlin.reflect.KProperty
 
 /**
- * Delegate property that invokes [BaseObservable.notifyPropertyChanged] after a value is set.
- * The getter is not affected.
+ * Delegate property that invokes [BaseObservable.notifyPropertyChanged] and saves state
+ * via [StateSavingViewModel.savedStateHandle].
  *
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  * @param defaultValue Value that will be used at start.
+ * @param stateSaveOption Specifies if the state of the property should be saved and with which key.
  */
-class BindableBooleanProperty(private var fieldId: Int?, defaultValue: Boolean) : BindablePropertyBase() {
+class BindableBooleanProperty(
+    viewModel: ViewModel,
+    private var fieldId: Int?,
+    defaultValue: Boolean,
+    private val stateSaveOption: StateSaveOption
+) : BindablePropertyBase() {
     /**
      * Gets or sets the stored value.
      */
-    private var value = defaultValue
+    private var value: Boolean = when {
+        stateSaveOption is StateSaveOption.Manual && viewModel is StateSavingViewModel && stateSaveOption.key in viewModel.savedStateHandle -> {
+            viewModel.savedStateHandle[stateSaveOption.key] ?: defaultValue
+        }
+        else -> defaultValue
+    }
+
+    /**
+     * The key that will be used to save the state of the property.
+     */
+    private var stateSavingKey: String? = (stateSaveOption as? StateSaveOption.Manual)?.key
 
     /**
      * Gets or sets a function that will be invoked if a new value is about to be set.
@@ -44,9 +61,14 @@ class BindableBooleanProperty(private var fieldId: Int?, defaultValue: Boolean) 
      */
     internal var afterSet: ((new: Boolean) -> Unit)? = null
 
-    operator fun getValue(thisRef: ViewModel, property: KProperty<*>) = value
+    operator fun getValue(thisRef: ViewModel, property: KProperty<*>): Boolean {
+        detectStateSavingKey(thisRef, property)
+        return value
+    }
 
     operator fun setValue(thisRef: ViewModel, property: KProperty<*>, value: Boolean) {
+        detectStateSavingKey(thisRef, property)
+
         if (fieldId == null) {
             fieldId = property.resolveFieldId()
         }
@@ -58,7 +80,19 @@ class BindableBooleanProperty(private var fieldId: Int?, defaultValue: Boolean) 
         beforeSet?.invoke(this.value, value)
         this.value = validate?.invoke(this.value, value) ?: value
         thisRef.notifyPropertyChanged(fieldId ?: BR._all)
+        if (thisRef is StateSavingViewModel) {
+            stateSavingKey?.let { thisRef.savedStateHandle[it] = this.value }
+        }
         afterSet?.invoke(this.value)
+    }
+
+    private fun detectStateSavingKey(thisRef: ViewModel, property: KProperty<*>) {
+        if (stateSaveOption is StateSaveOption.Automatic && stateSavingKey == null && thisRef is StateSavingViewModel) {
+            val newStateSavingKey = property.name.also { this.stateSavingKey = it }
+            if (newStateSavingKey in thisRef.savedStateHandle) {
+                this.value = thisRef.savedStateHandle[newStateSavingKey] ?: return
+            }
+        }
     }
 }
 
@@ -67,10 +101,16 @@ class BindableBooleanProperty(private var fieldId: Int?, defaultValue: Boolean) 
  *
  * @param defaultValue Value of the property from the start.
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
+ * @param stateSaveOption Specifies if the state of the property should be saved and with which key.
  */
-fun ViewModel.bindableBoolean(defaultValue: Boolean = false, fieldId: Int? = null): BindableBooleanProperty {
-    return BindableBooleanProperty(fieldId, defaultValue)
-}
+fun ViewModel.bindableBoolean(
+    defaultValue: Boolean = false,
+    fieldId: Int? = null,
+    stateSaveOption: StateSaveOption = StateSaveOption.Automatic
+) = BindableBooleanProperty(this, fieldId, defaultValue, when (this) {
+    is StateSavingViewModel -> stateSaveOption
+    else -> StateSaveOption.None
+})
 
 /**
  * Sets [BindableBooleanProperty.beforeSet] of a [BindableBooleanProperty] instance to a given function and

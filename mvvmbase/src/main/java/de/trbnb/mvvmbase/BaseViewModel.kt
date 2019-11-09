@@ -17,7 +17,6 @@ import androidx.lifecycle.ViewModel as ArchitectureViewModel
  * Simple base implementation of the [ViewModel] interface based on [BaseObservable].
  */
 abstract class BaseViewModel : ArchitectureViewModel(), ViewModel {
-
     /**
      * Callback registry for [Observable].
      */

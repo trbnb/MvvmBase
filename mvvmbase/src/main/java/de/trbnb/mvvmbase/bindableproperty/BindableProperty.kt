@@ -1,24 +1,30 @@
 package de.trbnb.mvvmbase.bindableproperty
 
+import android.os.Build
 import androidx.databinding.BaseObservable
 import de.trbnb.mvvmbase.BR
 import de.trbnb.mvvmbase.MvvmBase
 import de.trbnb.mvvmbase.ViewModel
+import de.trbnb.mvvmbase.savedstate.StateSavingViewModel
 import de.trbnb.mvvmbase.utils.resolveFieldId
+import de.trbnb.mvvmbase.utils.savingStateInBindableSupports
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
 /**
- * Delegate property that invokes [BaseObservable.notifyPropertyChanged] after a value is set.
- * The getter is not affected.
+ * Delegate property that invokes [BaseObservable.notifyPropertyChanged] and saves state
+ * via [StateSavingViewModel.savedStateHandle].
  *
  * @param T Type of the stored value.
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  * @param defaultValue Value that will be used at start.
+ * @param stateSaveOption Specifies if the state of the property should be saved and with which key.
  */
-class BindableProperty<T> (
-        private var fieldId: Int?,
-        defaultValue: T
+class BindableProperty<T>(
+    viewModel: ViewModel,
+    private var fieldId: Int?,
+    defaultValue: T,
+    private val stateSaveOption: StateSaveOption
 ) : BindablePropertyBase(), ReadWriteProperty<ViewModel, T> {
 
     companion object {
@@ -34,7 +40,6 @@ class BindableProperty<T> (
             MvvmBase.init(brClass)
         }
 
-
         /**
          * Initializes the automatic field ID detection by providing the class inside BR.java.
          */
@@ -49,7 +54,18 @@ class BindableProperty<T> (
     /**
      * Gets or sets the stored value.
      */
-    private var value = defaultValue
+    @Suppress("RemoveExplicitTypeArguments", "UNCHECKED_CAST")
+    private var value: T = when {
+        stateSaveOption is StateSaveOption.Manual && viewModel is StateSavingViewModel && stateSaveOption.key in viewModel.savedStateHandle -> {
+            viewModel.savedStateHandle.get<T>(stateSaveOption.key) as T
+        }
+        else -> defaultValue
+    }
+
+    /**
+     * The key that will be used to save the state of the property.
+     */
+    private var stateSavingKey: String? = (stateSaveOption as? StateSaveOption.Manual)?.key
 
     /**
      * Gets or sets a function that will be invoked if a new value is about to be set.
@@ -76,9 +92,14 @@ class BindableProperty<T> (
      */
     internal var afterSet: ((new: T) -> Unit)? = null
 
-    override fun getValue(thisRef: ViewModel, property: KProperty<*>) = value
+    override operator fun getValue(thisRef: ViewModel, property: KProperty<*>): T {
+        detectStateSavingKey(thisRef, property)
+        return value
+    }
 
     override fun setValue(thisRef: ViewModel, property: KProperty<*>, value: T) {
+        detectStateSavingKey(thisRef, property)
+
         if (fieldId == null) {
             fieldId = property.resolveFieldId()
         }
@@ -90,7 +111,20 @@ class BindableProperty<T> (
         beforeSet?.invoke(this.value, value)
         this.value = validate?.invoke(this.value, value) ?: value
         thisRef.notifyPropertyChanged(fieldId ?: BR._all)
+        if (thisRef is StateSavingViewModel) {
+            stateSavingKey?.let { thisRef.savedStateHandle[it] = this.value }
+        }
         afterSet?.invoke(this.value)
+    }
+
+    @Suppress("RemoveExplicitTypeArguments", "UNCHECKED_CAST")
+    private fun detectStateSavingKey(thisRef: ViewModel, property: KProperty<*>) {
+        if (stateSaveOption is StateSaveOption.Automatic && stateSavingKey == null && thisRef is StateSavingViewModel) {
+            val newStateSavingKey = property.name.also { this.stateSavingKey = it }
+            if (newStateSavingKey in thisRef.savedStateHandle) {
+                this.value = thisRef.savedStateHandle.get<T>(newStateSavingKey) as T
+            }
+        }
     }
 }
 
@@ -99,19 +133,33 @@ class BindableProperty<T> (
  *
  * @param defaultValue Value of the property from the start.
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
+ * @param stateSaveOption Specifies if the state of the property should be saved and with which key.
  */
-inline fun <reified T> ViewModel.bindable(defaultValue: T, fieldId: Int? = null): BindableProperty<T> {
-    return BindableProperty(fieldId, defaultValue)
-}
+inline fun <reified T> ViewModel.bindable(
+    defaultValue: T,
+    fieldId: Int? = null,
+    stateSaveOption: StateSaveOption? = null
+) = BindableProperty(this, fieldId, defaultValue, when (this) {
+    is StateSavingViewModel -> when (stateSaveOption) {
+        null -> when (savingStateInBindableSupports<T>(Build.VERSION.SDK_INT)) {
+            true -> StateSaveOption.Automatic
+            false -> StateSaveOption.None
+        }
+        else -> stateSaveOption
+    }
+    else -> StateSaveOption.None
+})
 
 /**
  * Creates a new BindableProperty instance with `null` as default value.
  *
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
+ * @param stateSaveOption Specifies if the state of the property should be saved and with which key.
  */
-inline fun <reified T> ViewModel.bindable(fieldId: Int? = null): BindableProperty<T?> {
-    return bindable(null, fieldId)
-}
+inline fun <reified T> ViewModel.bindable(
+    fieldId: Int? = null,
+    stateSaveOption: StateSaveOption? = null
+): BindableProperty<T?> = bindable(null, fieldId, stateSaveOption)
 
 /**
  * Sets [BindableProperty.beforeSet] of a [BindableProperty] instance to a given function and
