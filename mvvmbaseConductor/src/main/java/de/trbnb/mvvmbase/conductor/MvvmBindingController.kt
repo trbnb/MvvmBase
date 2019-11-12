@@ -9,6 +9,7 @@ import androidx.annotation.CallSuper
 import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
 import androidx.savedstate.SavedStateRegistryController
@@ -84,7 +85,7 @@ abstract class MvvmBindingController<VM, B>(
 
     override fun onContextAvailable(context: Context) {
         super.onContextAvailable(context)
-        if (!onRestoreInstanceStateCalled) {
+        if (lifecycle.currentState == Lifecycle.State.INITIALIZED && !onRestoreInstanceStateCalled) {
             savedStateRegistryController.performRestore(null)
         }
         onRestoreInstanceStateCalled = false
