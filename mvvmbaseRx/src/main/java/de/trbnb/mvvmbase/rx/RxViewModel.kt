@@ -98,11 +98,13 @@ interface RxViewModel : ViewModel {
     ): CompletableBindableProperty = CompletableBindableProperty(this@RxViewModel, fieldId, this, onError)
 
     /**
-     * Automatically disposes a [Disposable] with the ViewModels lifecycle.
+     * Automatically disposes a [Disposable] in the ViewModels [onDestroy].
      *
-     * @see getLifecycle
+     * @see ViewModel.compositeDisposable
      */
-    fun Disposable.autoDispose() = autoDispose(lifecycle)
+    fun Disposable.autoDispose() {
+        compositeDisposable.add(this)
+    }
 }
 
 private val onErrorStub: (Throwable) -> Unit
