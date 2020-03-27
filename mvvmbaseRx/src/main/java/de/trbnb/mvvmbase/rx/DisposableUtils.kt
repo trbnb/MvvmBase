@@ -13,6 +13,7 @@ fun Disposable.autoDispose(lifecycle: Lifecycle) {
     lifecycle.addObserver(object : LifecycleObserver {
         @OnLifecycleEvent(ON_DESTROY)
         fun onDestroy() {
+            lifecycle.removeObserver(this)
             dispose()
         }
     })
