@@ -5,18 +5,17 @@ import androidx.databinding.BaseObservable
 import androidx.databinding.Observable
 import androidx.databinding.PropertyChangeRegistry
 import androidx.lifecycle.Lifecycle
-import de.trbnb.mvvmbase.annotations.DependsOn
+import androidx.lifecycle.LifecycleOwner
 import de.trbnb.mvvmbase.events.EventChannel
 import de.trbnb.mvvmbase.events.EventChannelImpl
 import de.trbnb.mvvmbase.utils.resolveFieldId
 import kotlin.reflect.KProperty
-import kotlin.reflect.full.memberProperties
 import androidx.lifecycle.ViewModel as ArchitectureViewModel
 
 /**
  * Simple base implementation of the [ViewModel] interface based on [BaseObservable].
  */
-abstract class BaseViewModel : ArchitectureViewModel(), ViewModel {
+abstract class BaseViewModel : ArchitectureViewModel(), ViewModel, LifecycleOwner {
     /**
      * Callback registry for [Observable].
      */
@@ -35,10 +34,9 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel {
         get() = true
 
     /**
-     * @see ViewModelLifecycle
+     * @see ViewModelLifecycleOwner
      */
-    @Suppress("LeakingThis")
-    private val lifecycle = ViewModelLifecycle(this)
+    private val lifecycleOwner = ViewModelLifecycleOwner()
 
     final override fun addOnPropertyChangedCallback(callback: Observable.OnPropertyChangedCallback) {
         callbacks.add(callback)
@@ -65,7 +63,7 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel {
      */
     @CallSuper
     override fun onBind() {
-        lifecycle.state = ViewModelLifecycle.State.BOUND
+        lifecycleOwner.state = ViewModelLifecycleOwner.State.BOUND
     }
 
     /**
@@ -73,7 +71,7 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel {
      */
     @CallSuper
     override fun onUnbind() {
-        lifecycle.state = ViewModelLifecycle.State.UNBOUND
+        lifecycleOwner.state = ViewModelLifecycleOwner.State.UNBOUND
     }
 
     /**
@@ -83,12 +81,12 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel {
     @CallSuper
     override fun onDestroy() {
         super.onCleared()
-        lifecycle.state = ViewModelLifecycle.State.DESTROYED
+        lifecycleOwner.state = ViewModelLifecycleOwner.State.DESTROYED
     }
 
     final override fun onCleared() {
         onDestroy()
     }
 
-    override fun getLifecycle(): Lifecycle = lifecycle
+    override fun getLifecycle(): Lifecycle = lifecycleOwner.lifecycle
 }
