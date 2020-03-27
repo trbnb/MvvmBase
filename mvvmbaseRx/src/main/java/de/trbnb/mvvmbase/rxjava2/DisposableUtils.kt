@@ -1,4 +1,4 @@
-package de.trbnb.mvvmbase.rx
+package de.trbnb.mvvmbase.rxjava2
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Lifecycle.Event.ON_DESTROY

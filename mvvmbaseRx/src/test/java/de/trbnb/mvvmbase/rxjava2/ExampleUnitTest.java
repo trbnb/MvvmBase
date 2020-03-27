@@ -1,4 +1,4 @@
-package de.trbnb.mvvmbase.rx;
+package de.trbnb.mvvmbase.rxjava2;
 
 import org.junit.Test;
 

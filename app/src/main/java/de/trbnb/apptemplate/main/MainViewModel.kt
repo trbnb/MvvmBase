@@ -8,7 +8,7 @@ import de.trbnb.mvvmbase.bindableproperty.bindableBoolean
 import de.trbnb.mvvmbase.commands.ruleCommand
 import de.trbnb.mvvmbase.commands.simpleCommand
 import de.trbnb.mvvmbase.events.Event
-import de.trbnb.mvvmbase.rx.RxViewModel
+import de.trbnb.mvvmbase.rxjava2.RxViewModel
 import io.reactivex.Observable
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

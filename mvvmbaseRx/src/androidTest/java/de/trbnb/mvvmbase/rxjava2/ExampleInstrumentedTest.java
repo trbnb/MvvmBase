@@ -1,4 +1,4 @@
-package de.trbnb.mvvmbase.rx;
+package de.trbnb.mvvmbase.rxjava2;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

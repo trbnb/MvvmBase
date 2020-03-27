@@ -1,4 +1,4 @@
-package de.trbnb.mvvmbase.rx
+package de.trbnb.mvvmbase.rxjava2
 
 import de.trbnb.mvvmbase.ViewModel
 import io.reactivex.Maybe
