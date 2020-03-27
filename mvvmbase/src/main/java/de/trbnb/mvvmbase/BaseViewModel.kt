@@ -34,20 +34,6 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel {
     protected open val memorizeNotReceivedEvents: Boolean
         get() = true
 
-    private val dependentFieldIds: Map<Int, IntArray>
-
-    init {
-        dependentFieldIds = this::class.memberProperties.asSequence()
-            .filter { it.annotations.any { annotation -> annotation is DependsOn } }
-            .map {
-                it.resolveFieldId().takeUnless { id -> id == BR._all } to
-                it.annotations.filterIsInstance<DependsOn>().firstOrNull()?.value
-            }
-            .filter { it.first != null && it.second != null }
-            .filterIsInstance<Pair<Int, IntArray>>()
-            .toMap()
-    }
-
     /**
      * @see ViewModelLifecycle
      */
@@ -68,11 +54,6 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel {
 
     final override fun notifyPropertyChanged(fieldId: Int) {
         callbacks.notifyCallbacks(this, fieldId, null)
-        dependentFieldIds.forEach { (property, dependentIds) ->
-            if (fieldId in dependentIds) {
-                notifyPropertyChanged(property)
-            }
-        }
     }
 
     final override fun notifyPropertyChanged(property: KProperty<*>) {
