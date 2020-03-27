@@ -5,6 +5,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import de.trbnb.mvvmbase.events.EventChannel
+import de.trbnb.mvvmbase.events.addListener
 import kotlin.reflect.KProperty
 
 /**
@@ -104,5 +105,12 @@ interface ViewModel : Observable, LifecycleOwner {
                 }
             })
         }
+    }
+
+    /**
+     * Sends all the events of a given (receiver type) ViewModel through the ViewModels event channel where this function is called in.
+     */
+    fun <T : ViewModel> T.bindEvents() = apply {
+        this.eventChannel.addListener(this@ViewModel, { event -> this@ViewModel.eventChannel.invoke(event) })
     }
 }
