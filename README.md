@@ -364,7 +364,7 @@ The library includes some BindingAdapters for DataBinding XML that are used regu
 
 ## RxJava extensions
 
-The optional `mvvmbaseRx` dependency contains useful RxJava extensions for ViewModels. The ViewModel has to implement the `RxViewModel` interface to gain access to those extension functions (no property or function does actually have to manually be implemented).
+The optional `mvvmbaseRxJava2` & `mvvmbaseRxJava3` dependencies contain useful RxJava extensions for ViewModels. The ViewModel has to implement the `RxViewModel` interface to gain access to those extension functions (no property or function do actually have to manually be implemented).
 
 ### Disposable.autoDispose()
 
