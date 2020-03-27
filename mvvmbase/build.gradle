@@ -48,7 +48,7 @@ dependencies {
     implementation "androidx.appcompat:appcompat:1.1.0"
 
     // Testing
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
@@ -57,8 +57,8 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
     // Lifecycle architecture components
-    implementation "androidx.lifecycle:lifecycle-viewmodel:2.1.0"
-    api "androidx.lifecycle:lifecycle-viewmodel-savedstate:1.0.0-rc01"
+    implementation "androidx.lifecycle:lifecycle-viewmodel:2.2.0"
+    api "androidx.lifecycle:lifecycle-viewmodel-savedstate:2.2.0"
 
     // Java inject API for dependency injection
     api 'javax.inject:javax.inject:1'
