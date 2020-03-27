@@ -6,6 +6,8 @@ import androidx.databinding.Observable
 import androidx.databinding.PropertyChangeRegistry
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.getTagFromViewModel
+import androidx.lifecycle.setTagIfAbsentForViewModel
 import de.trbnb.mvvmbase.events.EventChannel
 import de.trbnb.mvvmbase.events.EventChannelImpl
 import de.trbnb.mvvmbase.utils.resolveFieldId
@@ -89,4 +91,8 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel, LifecycleOwne
     }
 
     override fun getLifecycle(): Lifecycle = lifecycleOwner.lifecycle
+
+    override fun <T : Any> getTag(key: String): T? = getTagFromViewModel(key)
+
+    override fun <T : Any> setTagIfAbsent(key: String, newValue: T): T = setTagIfAbsentForViewModel(key, newValue)
 }

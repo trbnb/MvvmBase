@@ -78,6 +78,16 @@ interface ViewModel : Observable, LifecycleOwner {
     fun onDestroy()
 
     /**
+     * @see [androidx.lifecycle.ViewModel.getTag]
+     */
+    fun <T : Any> getTag(key: String): T?
+
+    /**
+     * @see [androidx.lifecycle.ViewModel.setTagIfAbsent]
+     */
+    fun <T : Any> setTagIfAbsent(key: String, newValue: T): T
+
+    /**
      * Destroys all ViewModels in that list when the containing ViewModel is destroyed.
      */
     fun <VM : ViewModel> List<VM>.autoDestroy() {

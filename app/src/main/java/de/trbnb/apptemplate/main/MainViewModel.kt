@@ -1,6 +1,5 @@
 package de.trbnb.apptemplate.main
 
-import android.annotation.SuppressLint
 import androidx.databinding.Bindable
 import androidx.lifecycle.viewModelScope
 import de.trbnb.mvvmbase.BaseViewModel
@@ -15,7 +14,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@SuppressLint("StaticFieldLeak")
 class MainViewModel @Inject constructor() : BaseViewModel(), RxViewModel {
 
     @get:Bindable
@@ -28,13 +26,12 @@ class MainViewModel @Inject constructor() : BaseViewModel(), RxViewModel {
         }
 
     @get:Bindable
-    val title by Observable.create<String> {
-        it.onNext("Foo")
+    val title: String by Observable.create<String> {
         viewModelScope.launch {
             delay(5000)
             it.onNext("bar")
         }
-    }.toBindable()
+    }.toBindable(defaultValue = "foo")
 
     val showDialogCommand = simpleCommand {
         isShowingDialog = true

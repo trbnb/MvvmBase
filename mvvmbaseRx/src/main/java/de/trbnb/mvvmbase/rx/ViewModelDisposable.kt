@@ -1,8 +1,6 @@
 package de.trbnb.mvvmbase.rx
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.getTag
-import androidx.lifecycle.setTagIfAbsent
+import de.trbnb.mvvmbase.ViewModel
 import io.reactivex.disposables.CompositeDisposable
 import java.io.Closeable
 

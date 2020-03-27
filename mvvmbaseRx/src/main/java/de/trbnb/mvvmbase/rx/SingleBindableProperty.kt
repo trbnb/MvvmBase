@@ -2,17 +2,15 @@ package de.trbnb.mvvmbase.rx
 
 import de.trbnb.mvvmbase.ViewModel
 import io.reactivex.Single
-import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.rxkotlin.plusAssign
 
-class SingleBindableProperty<T : Any> internal constructor(
+class SingleBindableProperty<T> internal constructor(
     viewModel: ViewModel,
     fieldId: Int?,
     single: Single<T>,
     onError: (Throwable) -> Unit
-) : RxBindablePropertyBase<T>(viewModel, fieldId) {
+) : RxBindablePropertyBase<T?>(viewModel, null, fieldId) {
     init {
-        single.subscribeBy(onError = onError, onSuccess = { newValue ->
-            value = newValue
-        }).autoDispose(viewModel.lifecycle)
+        viewModel.compositeDisposable += single.subscribe({ value = it }, onError)
     }
 }
