@@ -370,15 +370,20 @@ The optional `mvvmbaseRx` dependency contains useful RxJava extensions for ViewM
 
 Calling this function will lead to the `Disposable` to be disposed when the ViewModels `onDestroy` is called.
 
+### ViewModel.compositeDisposable()
+
+The library also provides extension property for a `CompositeDisposable` that is disposed in the ViewModels `onDestroy`, similar to the `viewModelScope` extension property for coroutines.
+
 ### toBindable()
 
 The `RxViewModel` interface mostly consists of converter functions that will turn an RxJava object into a read-only delegate property that will call `notifyPropertyChanged` on value changes.
 
-For the types `Observable<T>`, `Flowable<T>`, `Single<T>`, `Maybe<T>` the delegated property will then of type `T?`. It is nullable because `null` will be the value until something is emitted. The functions for those type also allow to set a `onComplete` and `onError` callback.
+For the types `Observable<T>`, `Flowable<T>`, `Single<T>`, `Maybe<T>` the delegated property will then of type `T?`. It is nullable because `null` will be the value until something is emitted. The functions for those type also allow to set a `onComplete` and `onError` callback.  
+It is also possible to set a non-nullable default value for these delegates that will be used in case the Rx object hasn't emitted anything by the time the getter is called and the value has to be non-nullable.
 
 For `Completable` the delegated property will be of type `Boolean`. Its value will be `false` by default and then `true` when it is completed. Passing an `onError` callback is also allowed here.
 
-All `toBindable` functions will `autoDispose()` the given RxJava type.
+All `toBindable` functions will dispose automatically after `onDestroy` is called.
 
 ## Conductor support
 
