@@ -7,7 +7,7 @@ android {
 
     defaultConfig {
         applicationId "de.trbnb.apptemplate"
-        minSdkVersion 21
+        minSdkVersion 24
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -31,8 +31,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     sourceSets {
@@ -42,9 +42,13 @@ android {
     dataBinding {
         enabled = true
     }
+
+    packagingOptions {
+        exclude 'META-INF/rxkotlin.kotlin_module'
+    }
 }
 
-def daggerVersion = "2.14.1"
+def daggerVersion = "2.27"
 def ankoVersion = "0.10.4"
 
 dependencies {
@@ -53,7 +57,8 @@ dependencies {
 
     implementation project(":mvvmbase")
     implementation project(":mvvmbaseConductor")
-    implementation project(":mvvmbaseRx")
+    implementation project(":mvvmbaseRxJava2")
+    implementation project(":mvvmbaseRxJava3")
 
     // Support library
     implementation "androidx.appcompat:appcompat:1.1.0"

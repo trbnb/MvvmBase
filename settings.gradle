@@ -1,1 +1,1 @@
-include ':app', ':mvvmbase', ':mvvmbaseRx', ':mvvmbaseConductor'
+include ':app', ':mvvmbase', ':mvvmbaseRxJava2', ':mvvmbaseRxJava3', ':mvvmbaseConductor'

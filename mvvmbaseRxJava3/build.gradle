@@ -5,9 +5,9 @@ apply plugin: 'kotlin-android'
 def projectVersionCodeNr = Integer.parseInt(projectVersionCode)
 def libGit = libGit
 def libUrl = libUrl
-def libDescription = libRxDescription
+def libDescription = libRxJava3Description
 def libGroupId = libGroupId
-def libArtifactId = libRxArtifactId
+def libArtifactId = libRxJava3ArtifactId
 
 // for Maven
 group = libGroupId
@@ -17,7 +17,7 @@ android {
     compileSdkVersion 29
 
     defaultConfig {
-        minSdkVersion 14
+        minSdkVersion 24
         targetSdkVersion 29
         versionCode = projectVersionCodeNr
         versionName = projectVersionName
@@ -31,6 +31,15 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8" // required by safeargs plugin for "by navArgs()"
+    }
 }
 
 dependencies {
@@ -38,7 +47,7 @@ dependencies {
 
     implementation project(":mvvmbase")
 
-    implementation 'io.reactivex.rxjava2:rxkotlin:2.4.0'
+    implementation "io.reactivex.rxjava3:rxkotlin:3.0.0"
 
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test:runner:1.2.0'
