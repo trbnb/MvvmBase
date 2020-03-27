@@ -2,9 +2,8 @@ package de.trbnb.mvvmbase
 
 import androidx.databinding.Observable
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.OnLifecycleEvent
 import de.trbnb.mvvmbase.events.EventChannel
 import kotlin.reflect.KProperty
 
@@ -91,12 +90,19 @@ interface ViewModel : Observable, LifecycleOwner {
      * Destroys all ViewModels in that list when the containing ViewModel is destroyed.
      */
     fun <VM : ViewModel> List<VM>.autoDestroy() {
-        lifecycle.addObserver(object : LifecycleObserver {
-            @Suppress("unused")
-            @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-            fun onDestroy() {
-                forEach { it.onDestroy() }
-            }
-        })
+        forEach { child ->
+            val parentLifecycleObserver = LifecycleEventObserver { _, event ->
+                if (event == Lifecycle.Event.ON_DESTROY) {
+                    child.onDestroy()
+                }
+            }.also(lifecycle::addObserver)
+
+            // If the child is destroyed for any reason it's listener to the parents lifecycle is removed to avoid leaks.
+            child.lifecycle.addObserver(LifecycleEventObserver { _, event ->
+                if (event == Lifecycle.Event.ON_DESTROY) {
+                    lifecycle.removeObserver(parentLifecycleObserver)
+                }
+            })
+        }
     }
 }

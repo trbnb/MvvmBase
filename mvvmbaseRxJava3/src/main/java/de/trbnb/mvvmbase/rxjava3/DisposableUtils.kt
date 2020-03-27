@@ -2,19 +2,20 @@ package de.trbnb.mvvmbase.rxjava3
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Lifecycle.Event.ON_DESTROY
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
 import io.reactivex.rxjava3.disposables.Disposable
 
 /**
  * Disposes a [Disposable] when the given lifecycle has emitted the [ON_DESTROY] event.
  */
 fun Disposable.autoDispose(lifecycle: Lifecycle) {
-    lifecycle.addObserver(object : LifecycleObserver {
-        @OnLifecycleEvent(ON_DESTROY)
-        fun onDestroy() {
-            lifecycle.removeObserver(this)
-            dispose()
+    lifecycle.addObserver(object : LifecycleEventObserver {
+        override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+            if (event == ON_DESTROY) {
+                lifecycle.removeObserver(this)
+                dispose()
+            }
         }
     })
 }

@@ -2,6 +2,7 @@ package de.trbnb.mvvmbase
 
 import androidx.lifecycle.GenericLifecycleObserver
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
 import org.junit.Test
@@ -23,7 +24,7 @@ class ViewModelLifecycleTests {
     fun genericLifecycleObserver() {
         var lastEvent: Lifecycle.Event? = null
         val viewModel = TestViewModel().apply {
-            lifecycle.addObserver(GenericLifecycleObserver { _, event ->
+            lifecycle.addObserver(LifecycleEventObserver { _, event ->
                 lastEvent = event
             })
         }
