@@ -370,7 +370,7 @@ The optional `mvvmbaseRxJava2` & `mvvmbaseRxJava3` dependencies contain useful R
 
 Calling this function will lead to the `Disposable` to be disposed when the ViewModels `onDestroy` is called.
 
-### ViewModel.compositeDisposable()
+### ViewModel.compositeDisposable
 
 The library also provides extension property for a `CompositeDisposable` that is disposed in the ViewModels `onDestroy`, similar to the `viewModelScope` extension property for coroutines.
 
