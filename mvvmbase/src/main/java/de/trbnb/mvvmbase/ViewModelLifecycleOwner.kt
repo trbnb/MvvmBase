@@ -16,16 +16,18 @@ import androidx.lifecycle.LifecycleRegistry
 internal class ViewModelLifecycleOwner : LifecycleOwner {
     private val registry = LifecycleRegistry(this)
 
-    var state = State.INITIALIZED
-        set(value) {
-            field = value
-            registry.currentState = when (value) {
-                State.INITIALIZED -> Lifecycle.State.STARTED
-                State.BOUND -> Lifecycle.State.RESUMED
-                State.UNBOUND -> Lifecycle.State.STARTED
-                State.DESTROYED -> Lifecycle.State.DESTROYED
-            }
+    init {
+        setState(State.INITIALIZED)
+    }
+
+    fun setState(state: State) {
+        registry.currentState = when (state) {
+            State.INITIALIZED -> Lifecycle.State.STARTED
+            State.BOUND -> Lifecycle.State.RESUMED
+            State.UNBOUND -> Lifecycle.State.STARTED
+            State.DESTROYED -> Lifecycle.State.DESTROYED
         }
+    }
 
     override fun getLifecycle() = registry
 

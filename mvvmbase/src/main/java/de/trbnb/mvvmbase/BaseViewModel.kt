@@ -65,7 +65,7 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel, LifecycleOwne
      */
     @CallSuper
     override fun onBind() {
-        lifecycleOwner.state = ViewModelLifecycleOwner.State.BOUND
+        lifecycleOwner.setState(ViewModelLifecycleOwner.State.BOUND)
     }
 
     /**
@@ -73,7 +73,7 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel, LifecycleOwne
      */
     @CallSuper
     override fun onUnbind() {
-        lifecycleOwner.state = ViewModelLifecycleOwner.State.UNBOUND
+        lifecycleOwner.setState(ViewModelLifecycleOwner.State.UNBOUND)
     }
 
     /**
@@ -83,7 +83,7 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel, LifecycleOwne
     @CallSuper
     override fun onDestroy() {
         super.onCleared()
-        lifecycleOwner.state = ViewModelLifecycleOwner.State.DESTROYED
+        lifecycleOwner.setState(ViewModelLifecycleOwner.State.DESTROYED)
     }
 
     final override fun onCleared() {
