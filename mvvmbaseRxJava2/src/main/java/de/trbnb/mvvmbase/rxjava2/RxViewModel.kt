@@ -56,8 +56,7 @@ interface RxViewModel : ViewModel {
      */
     fun <T> Single<T?>.toBindable(
         fieldId: Int? = null,
-        onError: (Throwable) -> Unit = onErrorStub,
-        onComplete: () -> Unit = onCompleteStub
+        onError: (Throwable) -> Unit = onErrorStub
     ): SingleBindableProperty<T?> = SingleBindableProperty(this@RxViewModel, null, fieldId, this, onError)
 
     /**
@@ -66,8 +65,7 @@ interface RxViewModel : ViewModel {
     fun <T> Single<T>.toBindable(
         defaultValue: T,
         fieldId: Int? = null,
-        onError: (Throwable) -> Unit = onErrorStub,
-        onComplete: () -> Unit = onCompleteStub
+        onError: (Throwable) -> Unit = onErrorStub
     ): SingleBindableProperty<T> = SingleBindableProperty(this@RxViewModel, defaultValue, fieldId, this, onError)
 
     /**
