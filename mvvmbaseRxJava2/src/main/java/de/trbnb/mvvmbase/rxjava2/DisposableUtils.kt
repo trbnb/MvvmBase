@@ -9,13 +9,21 @@ import io.reactivex.disposables.Disposable
 /**
  * Disposes a [Disposable] when the given lifecycle has emitted the [ON_DESTROY] event.
  */
+@Deprecated(
+    message = "Use autoDispose(LifecycleOwner) instead",
+    replaceWith = ReplaceWith("autoDispose(lifecycleOwner)")
+)
 fun Disposable.autoDispose(lifecycle: Lifecycle) {
-    lifecycle.addObserver(object : LifecycleEventObserver {
-        override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
-            if (event == ON_DESTROY) {
-                lifecycle.removeObserver(this)
-                dispose()
-            }
+    autoDispose(LifecycleOwner { lifecycle })
+}
+
+/**
+ * Disposes a [Disposable] when the given lifecycle has emitted the [ON_DESTROY] event.
+ */
+fun Disposable.autoDispose(lifecycleOwner: LifecycleOwner) {
+    lifecycleOwner.lifecycle.addObserver(LifecycleEventObserver { _, event ->
+        if (event == ON_DESTROY) {
+            dispose()
         }
     })
 }
