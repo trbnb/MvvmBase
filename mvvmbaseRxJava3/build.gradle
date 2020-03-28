@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
 // for Bintray
 def projectVersionCodeNr = Integer.parseInt(projectVersionCode)
@@ -40,6 +41,15 @@ android {
     kotlinOptions {
         jvmTarget = "1.8" // required by safeargs plugin for "by navArgs()"
     }
+
+    dataBinding {
+        // This is necessary to allow the data binding annotation processor to generate
+        // the BR fields from Bindable annotations
+        getTestOptions().getUnitTests().setIncludeAndroidResources(true)
+
+        enabled = true
+        enabledForTests = true
+    }
 }
 
 dependencies {
@@ -48,6 +58,9 @@ dependencies {
     implementation project(":mvvmbase")
 
     implementation "io.reactivex.rxjava3:rxkotlin:3.0.0"
+
+    testAnnotationProcessor "androidx.databinding:databinding-compiler:$gradleToolsVersion"
+    kaptTest "androidx.databinding:databinding-compiler:$gradleToolsVersion"
 
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test:runner:1.2.0'
