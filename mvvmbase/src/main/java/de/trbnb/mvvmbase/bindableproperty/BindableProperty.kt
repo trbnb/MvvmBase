@@ -3,7 +3,6 @@ package de.trbnb.mvvmbase.bindableproperty
 import android.os.Build
 import androidx.databinding.BaseObservable
 import de.trbnb.mvvmbase.BR
-import de.trbnb.mvvmbase.MvvmBase
 import de.trbnb.mvvmbase.ViewModel
 import de.trbnb.mvvmbase.savedstate.StateSavingViewModel
 import de.trbnb.mvvmbase.utils.resolveFieldId
@@ -26,31 +25,6 @@ class BindableProperty<T>(
     defaultValue: T,
     private val stateSaveOption: StateSaveOption
 ) : BindablePropertyBase(), ReadWriteProperty<ViewModel, T> {
-
-    companion object {
-        /**
-         * Initializes the automatic field ID detection by providing the class inside BR.java.
-         */
-        @Deprecated(
-            message = "Use MvvmBase.init() instead",
-            replaceWith = ReplaceWith("MvvmBase.init(brClass)", "de.trbnb.mvvmbase.MvvmBase"),
-            level = DeprecationLevel.WARNING
-        )
-        fun init(brClass: Class<*>) {
-            MvvmBase.init(brClass)
-        }
-
-        /**
-         * Initializes the automatic field ID detection by providing the class inside BR.java.
-         */
-        @Deprecated(
-            message = "Use MvvmBase.init() instead",
-            replaceWith = ReplaceWith("MvvmBase.init<BR>()", "de.trbnb.mvvmbase.MvvmBase"),
-            level = DeprecationLevel.WARNING
-        )
-        inline fun <reified BR> init() = MvvmBase.init<BR>()
-    }
-
     /**
      * Gets or sets the stored value.
      */
@@ -97,7 +71,7 @@ class BindableProperty<T>(
         return value
     }
 
-    override fun setValue(thisRef: ViewModel, property: KProperty<*>, value: T) {
+    override operator fun setValue(thisRef: ViewModel, property: KProperty<*>, value: T) {
         detectStateSavingKey(thisRef, property)
 
         if (fieldId == null) {
