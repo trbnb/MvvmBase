@@ -8,5 +8,5 @@ import de.trbnb.mvvmbase.BaseViewModel
  * Receives the [SavedStateHandle] via construction parameter.
  */
 abstract class BaseStateSavingViewModel(
-    override val savedStateHandle: SavedStateHandle
+    final override val savedStateHandle: SavedStateHandle
 ) : BaseViewModel(), StateSavingViewModel

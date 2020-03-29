@@ -40,10 +40,7 @@ tailrec fun <T> Type.findGenericSuperclass(targetType: Class<T>): ParameterizedT
  *
  * @see MvvmBase.init
  */
-fun KProperty<*>.resolveFieldId(): Int = when (val detectedFieldId = MvvmBase.lookupFieldIdByName(brFieldName())) {
-    null -> BR._all
-    else -> detectedFieldId
-}
+fun KProperty<*>.resolveFieldId(): Int = MvvmBase.lookupFieldIdByName(brFieldName()) ?: BR._all
 
 /**
  * Converts a property name to a field name like the data binding compiler.

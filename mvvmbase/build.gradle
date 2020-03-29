@@ -37,7 +37,12 @@ android {
     }
 
     dataBinding {
+        // This is necessary to allow the data binding annotation processor to generate
+        // the BR fields from Bindable annotations
+        getTestOptions().getUnitTests().setIncludeAndroidResources(true)
+
         enabled = true
+        enabledForTests = true
     }
 }
 
@@ -46,6 +51,9 @@ dependencies {
 
     // Support library
     implementation "androidx.appcompat:appcompat:1.1.0"
+
+    testAnnotationProcessor "androidx.databinding:databinding-compiler:$gradleToolsVersion"
+    kaptTest "androidx.databinding:databinding-compiler:$gradleToolsVersion"
 
     // Testing
     testImplementation 'junit:junit:4.13'

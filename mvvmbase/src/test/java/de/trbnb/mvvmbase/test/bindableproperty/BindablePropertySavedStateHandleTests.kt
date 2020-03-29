@@ -1,33 +1,43 @@
-package de.trbnb.mvvmbase
+package de.trbnb.mvvmbase.test.bindableproperty
 
 import android.util.Size
 import android.util.SizeF
+import androidx.databinding.Bindable
 import androidx.lifecycle.SavedStateHandle
 import de.trbnb.mvvmbase.bindableproperty.bindable
 import de.trbnb.mvvmbase.bindableproperty.bindableBoolean
 import de.trbnb.mvvmbase.savedstate.BaseStateSavingViewModel
-import de.trbnb.mvvmbase.utils.brFieldName
 import de.trbnb.mvvmbase.utils.savingStateInBindableSupports
 import org.junit.Test
 
-class BindablePropertyTests {
+class BindablePropertySavedStateHandleTests {
     class TestViewModel(savedStateHandle: SavedStateHandle = SavedStateHandle()) : BaseStateSavingViewModel(savedStateHandle) {
+        @get:Bindable
         var text: String by bindable("foo")
+        @get:Bindable
         var userSetting: Boolean by bindable(false)
-        var isLoading: Boolean? by bindable()
+        @get:Bindable
+        var nullableBoolean: Boolean? by bindable()
+        @get:Bindable
         var isDone: Boolean by bindableBoolean()
+        @get:Bindable
         var isDoneTwo: Boolean by bindable(false)
+        var property: String? by bindable()
     }
 
     @Test
-    fun `field ID from property name & type detection`() {
-        val vm = TestViewModel()
+    fun `saved state integration in bindable properties`() {
+        val handle = SavedStateHandle().apply {
+            set("text", "Meh")
+            set("isDone", true)
+        }
 
-        assert(vm::text.brFieldName() == "text")
-        assert(vm::userSetting.brFieldName() == "userSetting")
-        assert(vm::isLoading.brFieldName() == "isLoading")
-        assert(vm::isDone.brFieldName() == "done")
-        assert(vm::isDoneTwo.brFieldName() == "doneTwo")
+        val viewModel = TestViewModel(handle)
+        assert(viewModel.text == "Meh")
+        assert(viewModel.userSetting.not())
+        assert(viewModel.nullableBoolean == null)
+        assert(viewModel.isDone)
+        assert(!viewModel.isDoneTwo)
     }
 
     @Test
@@ -42,21 +52,5 @@ class BindablePropertyTests {
         assert(!savingStateInBindableSupports<SizeF>(19))
         assert(savingStateInBindableSupports<Size>(21))
         assert(savingStateInBindableSupports<SizeF>(21))
-    }
-
-    @Test
-    fun `saved state integration in bindable properties`() {
-        val handle = SavedStateHandle().apply {
-            set("text", "Meh")
-            set("isLoading", false)
-            set("isDone", true)
-        }
-
-        val viewModel = TestViewModel(handle)
-        assert(viewModel.text == "Meh")
-        assert(viewModel.userSetting.not())
-        assert(viewModel.isLoading == false)
-        assert(viewModel.isDone)
-        assert(viewModel.isDoneTwo.not())
     }
 }

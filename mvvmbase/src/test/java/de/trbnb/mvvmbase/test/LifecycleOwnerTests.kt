@@ -1,6 +1,7 @@
-package de.trbnb.mvvmbase
+package de.trbnb.mvvmbase.test
 
 import androidx.lifecycle.Lifecycle
+import de.trbnb.mvvmbase.BaseViewModel
 import org.junit.Test
 
 class ViewModelLifecycleTests {
