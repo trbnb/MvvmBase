@@ -12,7 +12,7 @@ dependencies {
 }
 ```
 
-There is also a pre-release version of v2 (version name: `2.0.0-beta2`) if you want to try new features.  
+There is also a pre-release version of v2 (version name: `2.0.0-beta3`) if you want to try new features.  
 See the release tab for more information.
 
 The library also uses some Kotlin reflection features. Experience shows that the following proguard rules are necessary in release builds:
