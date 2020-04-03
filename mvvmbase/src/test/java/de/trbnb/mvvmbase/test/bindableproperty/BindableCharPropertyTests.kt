@@ -7,7 +7,7 @@ import de.trbnb.mvvmbase.MvvmBase
 import de.trbnb.mvvmbase.bindableproperty.StateSaveOption
 import de.trbnb.mvvmbase.bindableproperty.afterSet
 import de.trbnb.mvvmbase.bindableproperty.beforeSet
-import de.trbnb.mvvmbase.bindableproperty.bindable
+import de.trbnb.mvvmbase.bindableproperty.bindableChar
 import de.trbnb.mvvmbase.bindableproperty.distinct
 import de.trbnb.mvvmbase.bindableproperty.validate
 import de.trbnb.mvvmbase.savedstate.BaseStateSavingViewModel
@@ -15,23 +15,14 @@ import de.trbnb.mvvmbase.test.BR
 import de.trbnb.mvvmbase.test.TestPropertyChangedCallback
 import org.junit.Test
 
-class BindablePropertyTests {
-    @Test
-    fun `is null the default value without explicit assignment`() {
-        val viewModel = object : BaseViewModel() {
-            val property: String? by bindable()
-        }
-
-        assert(viewModel.property == null)
-    }
-
+class BindableCharPropertyTests {
     @Test
     fun `does value assignment work`() {
         val viewModel = object : BaseViewModel() {
-            var property: String by bindable("")
+            var property by bindableChar('A')
         }
 
-        val newValue = "Foo"
+        val newValue = 3.toChar()
         assert(viewModel.property != newValue)
 
         viewModel.property = newValue
@@ -40,9 +31,9 @@ class BindablePropertyTests {
 
     @Test
     fun `is afterSet() called`() {
-        val newValue = "Foo"
+        val newValue = 7.toChar()
         val viewModel = object : BaseViewModel() {
-            var property: String by bindable("")
+            var property by bindableChar('A')
                 .afterSet { new -> assert(newValue == new) }
         }
 
@@ -51,10 +42,10 @@ class BindablePropertyTests {
 
     @Test
     fun `is distinct() prohibting afterSet() invocation`() {
-        val value = "Foo"
+        val value = 4.toChar()
         var afterSetWasCalled = false
         val viewModel = object : BaseViewModel() {
-            var propery: String by bindable(value)
+            var propery by bindableChar(value)
                 .distinct()
                 .afterSet { afterSetWasCalled = true }
         }
@@ -65,12 +56,12 @@ class BindablePropertyTests {
 
     @Test
     fun `is beforeSet() called`() {
-        val oldValue = "Foo"
-        val newValue = "Bar"
+        val oldValue = 4.toChar()
+        val newValue = 9.toChar()
         assert(oldValue != newValue)
 
         val viewModel = object : BaseViewModel() {
-            var property: String by bindable(oldValue)
+            var property by bindableChar(oldValue)
                 .beforeSet { old, new ->
                     assert(old == oldValue)
                     assert(new == newValue)
@@ -83,13 +74,13 @@ class BindablePropertyTests {
 
     @Test
     fun `is validate() called`() {
-        val oldValue = 0
-        val newValue = 50
-        val maxValue = 25
+        val oldValue = 0.toChar()
+        val newValue = 50.toChar()
+        val maxValue = 25.toChar()
         assert(oldValue != newValue)
 
         val viewModel = object : BaseViewModel() {
-            var property: Int by bindable(defaultValue = oldValue)
+            var property by bindableChar(defaultValue = oldValue)
                 .validate { old, new ->
                     assert(old == oldValue)
                     assert(new == newValue)
@@ -110,19 +101,11 @@ class BindablePropertyTests {
         val viewModel = ViewModelWithBindable(manualFieldId)
         viewModel.addOnPropertyChangedCallback(propertyChangedCallback)
 
-        viewModel.stringProperty = ""
-        assert(BR.stringProperty in propertyChangedCallback.changedPropertyIds)
+        viewModel.property = 5.toChar()
+        assert(BR.property in propertyChangedCallback.changedPropertyIds)
         propertyChangedCallback.clear()
 
-        viewModel.booleanProperty = true
-        assert(BR.booleanProperty in propertyChangedCallback.changedPropertyIds)
-        propertyChangedCallback.clear()
-
-        viewModel.isSomething = true
-        assert(BR.something in propertyChangedCallback.changedPropertyIds)
-        propertyChangedCallback.clear()
-
-        viewModel.manualProperty = ""
+        viewModel.manualProperty = 7.toChar()
         assert(manualFieldId in propertyChangedCallback.changedPropertyIds)
         propertyChangedCallback.clear()
     }
@@ -137,35 +120,21 @@ class BindablePropertyTests {
         val viewModel = ViewModelWithBindable(manualFieldId)
         viewModel.addOnPropertyChangedCallback(propertyChangedCallback)
 
-        viewModel.stringProperty = ""
+        viewModel.property = 5.toChar()
         assert(BR._all in propertyChangedCallback.changedPropertyIds)
         propertyChangedCallback.clear()
 
-        viewModel.booleanProperty = true
-        assert(BR._all in propertyChangedCallback.changedPropertyIds)
-        propertyChangedCallback.clear()
-
-        viewModel.isSomething = true
-        assert(BR._all in propertyChangedCallback.changedPropertyIds)
-        propertyChangedCallback.clear()
-
-        viewModel.manualProperty = ""
+        viewModel.manualProperty = 2.toChar()
         assert(manualFieldId in propertyChangedCallback.changedPropertyIds)
         propertyChangedCallback.clear()
     }
 
     class ViewModelWithBindable(fieldId: Int) : BaseViewModel() {
         @get:Bindable
-        var stringProperty: String? by bindable()
+        var property by bindableChar('A')
 
         @get:Bindable
-        var booleanProperty: Boolean? by bindable()
-
-        @get:Bindable
-        var isSomething: Boolean by bindable(false)
-
-        @get:Bindable
-        var manualProperty: Any? by bindable(fieldId = fieldId)
+        var manualProperty by bindableChar(fieldId = fieldId, defaultValue = 'A')
     }
 
     @Test
@@ -173,21 +142,14 @@ class BindablePropertyTests {
         val savedStateHandle = SavedStateHandle()
         val viewModel = AutomaticSavedStateViewModel(savedStateHandle)
 
-        val newValue = "Foo"
+        val newValue = 6.toChar()
         viewModel.supportedAutomatic = newValue
-        assert(savedStateHandle.get<String>("supportedAutomatic") == newValue)
-
-        val newNotSupportedValue = listOf("Foo")
-        viewModel.notSupportedAutomatic = newNotSupportedValue
-        assert(!savedStateHandle.contains("notSupportedAutomatic"))
+        assert(savedStateHandle.get<Char>("supportedAutomatic") == newValue)
     }
 
     class AutomaticSavedStateViewModel(savedStateHandle: SavedStateHandle = SavedStateHandle()) : BaseStateSavingViewModel(savedStateHandle) {
         @get:Bindable
-        var supportedAutomatic by bindable("")
-
-        @get:Bindable
-        var notSupportedAutomatic: Any by bindable(Any())
+        var supportedAutomatic by bindableChar('A')
     }
 
     @Test
@@ -196,9 +158,9 @@ class BindablePropertyTests {
         val key = "Bar"
         val viewModel = ManualSavedStateViewModel(key, savedStateHandle)
 
-        val newValue = "Foo"
+        val newValue = 9.toChar()
         viewModel.property = newValue
-        assert(savedStateHandle.get<String>(key) == newValue)
+        assert(savedStateHandle.get<Char>(key) == newValue)
     }
 
     class ManualSavedStateViewModel(
@@ -206,7 +168,7 @@ class BindablePropertyTests {
         savedStateHandle: SavedStateHandle = SavedStateHandle()
     ) : BaseStateSavingViewModel(savedStateHandle) {
         @get:Bindable
-        var property by bindable("", stateSaveOption = StateSaveOption.Manual(key))
+        var property by bindableChar(stateSaveOption = StateSaveOption.Manual(key), defaultValue = 'A')
     }
 
     @Test
@@ -214,14 +176,14 @@ class BindablePropertyTests {
         val savedStateHandle = SavedStateHandle()
         val viewModel = NoneSavedStateViewModel(savedStateHandle)
 
-        val newValue = "Foo"
+        val newValue = 6.toChar()
         viewModel.property = newValue
         assert(savedStateHandle.keys().isEmpty())
     }
 
     class NoneSavedStateViewModel(savedStateHandle: SavedStateHandle = SavedStateHandle()) : BaseStateSavingViewModel(savedStateHandle) {
         @get:Bindable
-        var property by bindable("", stateSaveOption = StateSaveOption.None)
+        var property by bindableChar(stateSaveOption = StateSaveOption.None, defaultValue = 'A')
     }
 
     @Test
@@ -231,17 +193,17 @@ class BindablePropertyTests {
             addOnPropertyChangedCallback(propertyChangedCallback)
         }
 
-        viewModel.property = "Foo"
+        viewModel.property = 3.toChar()
         assert(BR.property in propertyChangedCallback.changedPropertyIds)
         propertyChangedCallback.clear()
 
-        viewModel.property = "Foo"
+        viewModel.property = 3.toChar()
         assert(BR.property !in propertyChangedCallback.changedPropertyIds)
     }
 
     class ViewModelWithDistinct : BaseViewModel() {
         @get:Bindable
-        var property by bindable("")
+        var property by bindableChar('A')
             .distinct()
     }
 }
