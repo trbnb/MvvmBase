@@ -108,9 +108,9 @@ interface ViewModel : Observable, LifecycleOwner {
     }
 
     /**
-     * Sends all the events of a given (receiver type) ViewModel through the ViewModels event channel where this function is called in.
+     * Sends all the events of a given list of (receiver type) ViewModels through the event channel of the ViewModel where this function is called in.
      */
-    fun <T : ViewModel> T.bindEvents() = apply {
-        this.eventChannel.addListener(this@ViewModel, { event -> this@ViewModel.eventChannel.invoke(event) })
+    fun <T : ViewModel> List<T>.bindEvents() = onEach { child ->
+        child.eventChannel.addListener(this@ViewModel, { event -> this@ViewModel.eventChannel.invoke(event) })
     }
 }
