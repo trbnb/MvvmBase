@@ -1,6 +1,5 @@
 package de.trbnb.mvvmbase.bindableproperty
 
-import android.os.Build
 import androidx.databinding.BaseObservable
 import de.trbnb.mvvmbase.BR
 import de.trbnb.mvvmbase.ViewModel
@@ -115,7 +114,7 @@ inline fun <reified T> ViewModel.bindable(
     stateSaveOption: StateSaveOption? = null
 ) = BindableProperty(this, fieldId, defaultValue, when (this) {
     is StateSavingViewModel -> when (stateSaveOption) {
-        null -> when (savingStateInBindableSupports<T>(Build.VERSION.SDK_INT)) {
+        null -> when (savingStateInBindableSupports<T>()) {
             true -> StateSaveOption.Automatic
             false -> StateSaveOption.None
         }

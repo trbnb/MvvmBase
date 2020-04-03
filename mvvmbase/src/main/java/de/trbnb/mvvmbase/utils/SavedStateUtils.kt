@@ -2,6 +2,7 @@ package de.trbnb.mvvmbase.utils
 
 import android.annotation.SuppressLint
 import android.os.Binder
+import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
 import android.util.Size
@@ -12,7 +13,7 @@ import java.io.Serializable
  * Function that specifies which types allow for saving state in [de.trbnb.mvvmbase.bindableproperty.BindableProperty].
  */
 @SuppressLint("NewApi")
-inline fun <reified T> savingStateInBindableSupports(sdk: Int): Boolean {
+inline fun <reified T> savingStateInBindableSupports(): Boolean {
     val clazz = T::class.java
     return when {
         BooleanArray::class.java.isAssignableFrom(clazz) ||
@@ -33,6 +34,6 @@ inline fun <reified T> savingStateInBindableSupports(sdk: Int): Boolean {
         Array<Parcelable>::class.java.isAssignableFrom(clazz) ||
         Serializable::class.java.isAssignableFrom(clazz) -> true
 
-        else -> sdk >= 21 && (Size::class.java.isAssignableFrom(clazz) || SizeF::class.java.isAssignableFrom(clazz))
+        else -> Build.VERSION.SDK_INT >= 21 && (Size::class.java.isAssignableFrom(clazz) || SizeF::class.java.isAssignableFrom(clazz))
     }
 }

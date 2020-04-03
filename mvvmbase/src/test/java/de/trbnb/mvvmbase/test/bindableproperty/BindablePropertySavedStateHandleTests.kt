@@ -7,6 +7,7 @@ import androidx.lifecycle.SavedStateHandle
 import de.trbnb.mvvmbase.bindableproperty.bindable
 import de.trbnb.mvvmbase.bindableproperty.bindableBoolean
 import de.trbnb.mvvmbase.savedstate.BaseStateSavingViewModel
+import de.trbnb.mvvmbase.test.setSdkVersion
 import de.trbnb.mvvmbase.utils.savingStateInBindableSupports
 import org.junit.Test
 
@@ -42,15 +43,17 @@ class BindablePropertySavedStateHandleTests {
 
     @Test
     fun `supported state saving types`() {
-        assert(savingStateInBindableSupports<Int>(1))
-        assert(savingStateInBindableSupports<Short?>(1))
-        assert(savingStateInBindableSupports<Array<String>>(1))
-        assert(!savingStateInBindableSupports<List<Any>>(1))
-        assert(savingStateInBindableSupports<Enum<*>>(1))
+        assert(savingStateInBindableSupports<Int>())
+        assert(savingStateInBindableSupports<Short?>())
+        assert(savingStateInBindableSupports<Array<String>>())
+        assert(!savingStateInBindableSupports<List<Any>>())
+        assert(savingStateInBindableSupports<Enum<*>>())
 
-        assert(!savingStateInBindableSupports<Size>(19))
-        assert(!savingStateInBindableSupports<SizeF>(19))
-        assert(savingStateInBindableSupports<Size>(21))
-        assert(savingStateInBindableSupports<SizeF>(21))
+        assert(!savingStateInBindableSupports<Size>())
+        assert(!savingStateInBindableSupports<SizeF>())
+
+        setSdkVersion(21)
+        assert(savingStateInBindableSupports<Size>())
+        assert(savingStateInBindableSupports<SizeF>())
     }
 }
