@@ -243,7 +243,7 @@ var text4 by bindable("", stateSaveOption = StateSaveOption.None)
 
 ### Supported types
 
-As mentioned above StateSaveOption.Automatic is applied implicitly to most types. This includes all primitive types and the following:
+As mentioned above StateSaveOption.Automatic is applied implicitly to most types. This includes all primitive types (unsigned ones too) and the following:
 - `BooleanArray`
 - `ByteArray`
 - `CharArray`
@@ -297,6 +297,29 @@ class MainActivity : MvvmBindingActivity<MainViewModel, ActivityMainBinding>() {
 
 Because of the Activity/Fragment lifecycle it can happen that events are called when no listener is registered. By default these events are kept in memory until a listener is registered. That listener will then be called with all those events in the same order in which they were raised.  
 This behavior can be turned off in the `BaseViewModel` by overriding `memorizeNotReceivedEvents` to let it return `false`.
+
+## Nested ViewModels
+
+Sometimes it can be useful to have multiple ViewModels inside another ViewModel (ViewModels for list items e.g.). In this case the "child" ViewModels must be destroyed when the "parent" is destroyed. For this purpose the function `autoDestroy()` can be used.
+
+It can also be quite handy to send events from a "child" ViewModel and to have the "parent" emit them as well. This can be achieved via `bindEvents()`.
+
+Example:
+
+```kotlin
+class MainViewModel : BaseViewModel() {
+    @get:Bindable
+    var items by bindable<List<ItemViewModel>>()
+        .beforeSet { old, _ -> old.forEach { it.onDestroy() } } // old list items have to be destroyed manually
+        
+    fun fetch() {
+        items = loadData()
+            .map { /* map data to ItemViewModel */ }
+            .bindEvents()
+            .autoDestroy()
+    }
+}
+```
 
 ## Commands
 
