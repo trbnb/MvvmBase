@@ -10,7 +10,7 @@ class NestedViewModelTests {
     fun `autoDestroy() destroys ViewModels in a "parent" ViewModel`() {
         val childViewModel = SimpleViewModel()
         val parentViewModel = object : BaseViewModel() {
-            val items = listOf(childViewModel).apply { autoDestroy() }
+            val items = listOf(childViewModel).autoDestroy()
         }
 
         parentViewModel.onDestroy()

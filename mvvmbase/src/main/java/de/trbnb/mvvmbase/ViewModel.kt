@@ -90,17 +90,22 @@ interface ViewModel : Observable, LifecycleOwner {
     /**
      * Destroys all ViewModels in that list when the containing ViewModel is destroyed.
      */
-    fun <VM : ViewModel> List<VM>.autoDestroy(): List<VM> = onEach { child ->
+    fun <VM : ViewModel> List<VM>.autoDestroy(): List<VM> = onEach { it.autoDestroy() }
+
+    /**
+     * Destroys the receiver ViewModel when the containing ViewModel is destroyed.
+     */
+    fun <VM : ViewModel> VM.autoDestroy(): VM = also { child ->
         val parentLifecycleObserver = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_DESTROY) {
                 child.onDestroy()
             }
-        }.also(lifecycle::addObserver)
+        }.also(this@ViewModel.lifecycle::addObserver)
 
         // If the child is destroyed for any reason it's listener to the parents lifecycle is removed to avoid leaks.
         child.lifecycle.addObserver(LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_DESTROY) {
-                lifecycle.removeObserver(parentLifecycleObserver)
+                this@ViewModel.lifecycle.removeObserver(parentLifecycleObserver)
             }
         })
     }
@@ -108,7 +113,12 @@ interface ViewModel : Observable, LifecycleOwner {
     /**
      * Sends all the events of a given list of (receiver type) ViewModels through the event channel of the ViewModel where this function is called in.
      */
-    fun <VM : ViewModel> List<VM>.bindEvents(): List<VM> = onEach { child ->
+    fun <VM : ViewModel> List<VM>.bindEvents(): List<VM> = onEach { it.bindEvents() }
+
+    /**
+     * Sends all the events of a given (receiver type) ViewModel through the event channel of the ViewModel where this function is called in.
+     */
+    fun <VM : ViewModel> VM.bindEvents(): VM = also { child ->
         child.eventChannel.addListener(this@ViewModel, { event -> this@ViewModel.eventChannel.invoke(event) })
     }
 }
