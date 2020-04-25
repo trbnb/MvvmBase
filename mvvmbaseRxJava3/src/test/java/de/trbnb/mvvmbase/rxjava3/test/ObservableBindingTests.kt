@@ -19,10 +19,10 @@ class ObservableBindingTests {
 
     @Test
     fun `is the given default value used`() {
-        val observable: PublishSubject<Int> = PublishSubject.create()
+        val observable: Observable<Int> = PublishSubject.create()
 
         val viewModel = object : BaseViewModel(), RxViewModel {
-            val property by observable.toBindable<Int>(defaultValue = 3)
+            val property by observable.toBindable(defaultValue = 3)
         }
 
         assert(viewModel.property == 3)
@@ -30,7 +30,7 @@ class ObservableBindingTests {
 
     @Test
     fun `is null the default default value`() {
-        val observable: PublishSubject<Int> = PublishSubject.create()
+        val observable: Observable<Int> = PublishSubject.create()
 
         val viewModel = object : BaseViewModel(), RxViewModel {
             val property by observable.toBindable()

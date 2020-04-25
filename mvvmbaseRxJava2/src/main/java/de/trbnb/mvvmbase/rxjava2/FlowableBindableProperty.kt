@@ -8,7 +8,7 @@ class FlowableBindableProperty<T> internal constructor(
     viewModel: ViewModel,
     defaultValue: T,
     fieldId: Int?,
-    flowable: Flowable<T>,
+    flowable: Flowable<out T>,
     onError: (Throwable) -> Unit,
     onComplete: () -> Unit
 ) : RxBindablePropertyBase<T>(viewModel, defaultValue, fieldId) {

@@ -19,10 +19,10 @@ class SingleBindingTests {
 
     @Test
     fun `is the given default value used`() {
-        val single: SingleSubject<Int> = SingleSubject.create()
+        val single: Single<Int> = SingleSubject.create()
 
         val viewModel = object : BaseViewModel(), RxViewModel {
-            val property by single.toBindable<Int>(defaultValue = 3)
+            val property by single.toBindable(defaultValue = 3)
         }
 
         assert(viewModel.property == 3)
@@ -30,7 +30,7 @@ class SingleBindingTests {
 
     @Test
     fun `is null the default default value`() {
-        val single: SingleSubject<Int> = SingleSubject.create()
+        val single: Single<Int> = SingleSubject.create()
 
         val viewModel = object : BaseViewModel(), RxViewModel {
             val property by single.toBindable()

@@ -8,7 +8,7 @@ class MaybeBindableProperty<T> internal constructor(
     viewModel: ViewModel,
     defaultValue: T,
     fieldId: Int?,
-    maybe: Maybe<T>,
+    maybe: Maybe<out T>,
     onError: (Throwable) -> Unit,
     onComplete: () -> Unit
 ) : RxBindablePropertyBase<T>(viewModel, defaultValue, fieldId) {

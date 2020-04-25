@@ -8,7 +8,7 @@ class SingleBindableProperty<T> internal constructor(
     viewModel: ViewModel,
     defaultValue: T,
     fieldId: Int?,
-    single: Single<T>,
+    single: Single<out T>,
     onError: (Throwable) -> Unit
 ) : RxBindablePropertyBase<T?>(viewModel, defaultValue, fieldId) {
     init {

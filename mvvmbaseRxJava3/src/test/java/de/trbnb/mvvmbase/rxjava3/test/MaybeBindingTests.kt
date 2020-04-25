@@ -19,10 +19,10 @@ class MaybeBindingTests {
 
     @Test
     fun `is the given default value used`() {
-        val maybe: MaybeSubject<Int> = MaybeSubject.create()
+        val maybe: Maybe<Int> = MaybeSubject.create()
 
         val viewModel = object : BaseViewModel(), RxViewModel {
-            val property by maybe.toBindable<Int>(defaultValue = 3)
+            val property by maybe.toBindable(defaultValue = 3)
         }
 
         assert(viewModel.property == 3)
@@ -30,7 +30,7 @@ class MaybeBindingTests {
 
     @Test
     fun `is null the default default value`() {
-        val maybe: MaybeSubject<Int> = MaybeSubject.create()
+        val maybe: Maybe<Int> = MaybeSubject.create()
 
         val viewModel = object : BaseViewModel(), RxViewModel {
             val property by maybe.toBindable()

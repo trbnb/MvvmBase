@@ -8,6 +8,7 @@ import de.trbnb.mvvmbase.MvvmBase
 import de.trbnb.mvvmbase.rxjava3.RxViewModel
 import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.core.Flowable
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Test
@@ -20,7 +21,7 @@ class FlowableBindingTests {
 
     @Test
     fun `is the given default value used`() {
-        val observable: PublishSubject<Int> = PublishSubject.create()
+        val observable: Observable<Int> = PublishSubject.create()
         val flowable = observable.toFlowable(BackpressureStrategy.LATEST)
 
         val viewModel = object : BaseViewModel(), RxViewModel {
@@ -32,7 +33,7 @@ class FlowableBindingTests {
 
     @Test
     fun `is null the default default value`() {
-        val observable: PublishSubject<Int> = PublishSubject.create()
+        val observable: Observable<Int> = PublishSubject.create()
         val flowable = observable.toFlowable(BackpressureStrategy.LATEST)
 
         val viewModel = object : BaseViewModel(), RxViewModel {

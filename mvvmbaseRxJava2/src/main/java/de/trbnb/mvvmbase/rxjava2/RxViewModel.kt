@@ -16,7 +16,7 @@ interface RxViewModel : ViewModel {
     /**
      * Converts an [Observable] of non-nullable type `T` into a bindable property of nullable type `T`.
      */
-    fun <T> Observable<T?>.toBindable(
+    fun <T> Observable<out T>.toBindable(
         fieldId: Int? = null,
         onError: (Throwable) -> Unit = onErrorStub,
         onComplete: () -> Unit = onCompleteStub
@@ -25,7 +25,7 @@ interface RxViewModel : ViewModel {
     /**
      * Converts an [Observable] of non-nullable type `T` into a bindable property.
      */
-    fun <T> Observable<T>.toBindable(
+    fun <T> Observable<out T>.toBindable(
         defaultValue: T,
         fieldId: Int? = null,
         onError: (Throwable) -> Unit = onErrorStub,
@@ -35,7 +35,7 @@ interface RxViewModel : ViewModel {
     /**
      * Converts a [Flowable] of non-nullable type `T` into a bindable property of nullable type `T`.
      */
-    fun <T> Flowable<T?>.toBindable(
+    fun <T> Flowable<out T>.toBindable(
         fieldId: Int? = null,
         onError: (Throwable) -> Unit = onErrorStub,
         onComplete: () -> Unit = onCompleteStub
@@ -44,7 +44,7 @@ interface RxViewModel : ViewModel {
     /**
      * Converts a [Flowable] of non-nullable type `T` into a bindable property.
      */
-    fun <T> Flowable<T>.toBindable(
+    fun <T> Flowable<out T>.toBindable(
         defaultValue: T,
         fieldId: Int? = null,
         onError: (Throwable) -> Unit = onErrorStub,
@@ -54,7 +54,7 @@ interface RxViewModel : ViewModel {
     /**
      * Converts a [Single] of non-nullable type `T` into a bindable property of nullable type `T`.
      */
-    fun <T> Single<T?>.toBindable(
+    fun <T> Single<out T>.toBindable(
         fieldId: Int? = null,
         onError: (Throwable) -> Unit = onErrorStub
     ): SingleBindableProperty<T?> = SingleBindableProperty(this@RxViewModel, null, fieldId, this, onError)
@@ -62,7 +62,7 @@ interface RxViewModel : ViewModel {
     /**
      * Converts a [Single] of non-nullable type `T` into a bindable property.
      */
-    fun <T> Single<T>.toBindable(
+    fun <T> Single<out T>.toBindable(
         defaultValue: T,
         fieldId: Int? = null,
         onError: (Throwable) -> Unit = onErrorStub
@@ -71,7 +71,7 @@ interface RxViewModel : ViewModel {
     /**
      * Converts a [Maybe] of non-nullable type `T` into a bindable property of nullable type `T`.
      */
-    fun <T> Maybe<T?>.toBindable(
+    fun <T> Maybe<out T>.toBindable(
         fieldId: Int? = null,
         onError: (Throwable) -> Unit = onErrorStub,
         onComplete: () -> Unit = onCompleteStub

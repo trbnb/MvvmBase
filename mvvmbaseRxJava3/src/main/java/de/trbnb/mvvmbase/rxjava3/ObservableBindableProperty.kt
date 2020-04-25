@@ -8,7 +8,7 @@ class ObservableBindableProperty<T> internal constructor(
     viewModel: ViewModel,
     defaultValue: T,
     fieldId: Int?,
-    observable: Observable<T>,
+    observable: Observable<out T>,
     onError: (Throwable) -> Unit,
     onComplete: () -> Unit
 ) : RxBindablePropertyBase<T>(viewModel, defaultValue, fieldId) {
