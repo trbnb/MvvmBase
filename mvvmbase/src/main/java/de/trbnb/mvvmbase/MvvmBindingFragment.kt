@@ -8,7 +8,7 @@ import androidx.annotation.CallSuper
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelLazy
 import de.trbnb.mvvmbase.events.Event
 import de.trbnb.mvvmbase.savedstate.SavedStateViewModelFactory
 import de.trbnb.mvvmbase.utils.findGenericSuperclass
@@ -22,7 +22,12 @@ abstract class MvvmBindingFragment<VM, B> : Fragment(), MvvmView<VM, B>
         where VM : ViewModel, VM : androidx.lifecycle.ViewModel, B : ViewDataBinding {
     override var binding: B? = null
 
-    override var viewModel: VM? = null
+    @Suppress("LeakingThis")
+    override val viewModel: VM by ViewModelLazy(
+        viewModelClass = viewModelClass.kotlin,
+        storeProducer = { viewModelStore },
+        factoryProducer = { viewModelFactory }
+    )
 
     /**
      * Callback implementation that delegates the parametes to [onViewModelPropertyChanged].
@@ -53,15 +58,6 @@ abstract class MvvmBindingFragment<VM, B> : Fragment(), MvvmView<VM, B>
         get() = arguments
 
     /**
-     * Gets the view model with the Architecture Components.
-     */
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        viewModel = ViewModelProvider(viewModelStore, viewModelFactory)[viewModelClass]
-    }
-
-    /**
      * Called by the lifecycle.
      *
      * Creates the [ViewDataBinding].
@@ -76,11 +72,9 @@ abstract class MvvmBindingFragment<VM, B> : Fragment(), MvvmView<VM, B>
     final override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel?.let { viewModel ->
-            binding?.setVariable(viewModelBindingId, viewModel)
-            viewModel.onBind()
-            onViewModelLoaded(viewModel)
-        }
+        binding?.setVariable(viewModelBindingId, viewModel)
+        viewModel.onBind()
+        onViewModelLoaded(viewModel)
 
         binding?.let(this::onBindingCreated)
     }
@@ -113,17 +107,11 @@ abstract class MvvmBindingFragment<VM, B> : Fragment(), MvvmView<VM, B>
         super.onDestroyView()
 
         binding?.setVariable(viewModelBindingId, null)
-        viewModel?.onUnbind()
-        viewModel?.eventChannel?.removeListener(eventListener)
-        viewModel?.removeOnPropertyChangedCallback(viewModelObserver)
+        viewModel.onUnbind()
+        viewModel.eventChannel.removeListener(eventListener)
+        viewModel.removeOnPropertyChangedCallback(viewModelObserver)
 
         binding = null
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-
-        viewModel = null
     }
 }
 
