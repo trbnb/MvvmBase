@@ -90,7 +90,7 @@ interface ViewModel : Observable, LifecycleOwner {
     /**
      * Destroys all ViewModels in that list when the containing ViewModel is destroyed.
      */
-    fun <VM : ViewModel> List<VM>.autoDestroy(): List<VM> = onEach { it.autoDestroy() }
+    fun <VM : ViewModel, C : Collection<VM>> C.autoDestroy(): C = onEach { it.autoDestroy() }
 
     /**
      * Destroys the receiver ViewModel when the containing ViewModel is destroyed.
@@ -113,7 +113,7 @@ interface ViewModel : Observable, LifecycleOwner {
     /**
      * Sends all the events of a given list of (receiver type) ViewModels through the event channel of the ViewModel where this function is called in.
      */
-    fun <VM : ViewModel> List<VM>.bindEvents(): List<VM> = onEach { it.bindEvents() }
+    fun <VM : ViewModel, C : Collection<VM>> C.bindEvents(): C = onEach { it.bindEvents() }
 
     /**
      * Sends all the events of a given (receiver type) ViewModel through the event channel of the ViewModel where this function is called in.
