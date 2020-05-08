@@ -6,6 +6,7 @@ import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModelLazy
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
@@ -23,7 +24,8 @@ import de.trbnb.mvvmbase.savedstate.SavedStateViewModelFactory
  * For this the function [createViewModel] will be called and has to be implemented.
  * A [SavedStateHandle] will be passed to it to support saving state.
  */
-interface MvvmView<VM : ViewModel, B : ViewDataBinding> : ViewModelStoreOwner, SavedStateRegistryOwner {
+interface MvvmView<VM, B : ViewDataBinding> : ViewModelStoreOwner, SavedStateRegistryOwner
+    where VM : ViewModel, VM : androidx.lifecycle.ViewModel {
     /**
      * The [ViewDataBinding] implementation for a specific layout.
      * Nullable due to possible lifecycle circumstances.
@@ -31,10 +33,25 @@ interface MvvmView<VM : ViewModel, B : ViewDataBinding> : ViewModelStoreOwner, S
     val binding: B?
 
     /**
-     * The [ViewModel] that is used for data binding.
-     * Nullable due to possible lifecycle circumstances.
+     * Delegate for [viewModel].
+     *
+     * Can be overridden to make use of `activityViewModels()` or `navGraphViewModels()`.
+     * These should then make use of [viewModelFactory].
      */
-    val viewModel: VM?
+    val viewModelDelegate: Lazy<VM>
+        get() = ViewModelLazy(
+            viewModelClass = viewModelClass.kotlin,
+            storeProducer = { viewModelStore },
+            factoryProducer = { viewModelFactory }
+        )
+
+    /**
+     * The [ViewModel] that is used for data binding.
+     *
+     * @see viewModelDelegate
+     */
+    val viewModel: VM
+        get() = viewModelDelegate.value
 
     /**
      * Gets the class of the view model that an implementation uses.

@@ -5,7 +5,6 @@ import androidx.annotation.CallSuper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import androidx.lifecycle.ViewModelLazy
 import de.trbnb.mvvmbase.events.Event
 import de.trbnb.mvvmbase.events.addListener
 import de.trbnb.mvvmbase.savedstate.SavedStateViewModelFactory
@@ -19,13 +18,6 @@ import de.trbnb.mvvmbase.utils.findGenericSuperclass
 abstract class MvvmBindingActivity<VM, B> : AppCompatActivity(), MvvmView<VM, B>
         where VM : ViewModel, VM : androidx.lifecycle.ViewModel, B : ViewDataBinding {
     override lateinit var binding: B
-
-    @Suppress("LeakingThis")
-    override val viewModel: VM by ViewModelLazy(
-        viewModelClass = viewModelClass.kotlin,
-        storeProducer = { viewModelStore },
-        factoryProducer = { viewModelFactory }
-    )
 
     /**
      * Is called when the ViewModel sends an [Event].

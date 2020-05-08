@@ -10,7 +10,6 @@ import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelLazy
 import androidx.lifecycle.ViewModelStore
 import androidx.savedstate.SavedStateRegistryController
 import com.bluelinelabs.conductor.archlifecycle.LifecycleController
@@ -31,13 +30,6 @@ abstract class MvvmBindingController<VM, B>(
 ) : LifecycleController(bundle), MvvmView<VM, B>
         where VM : ViewModel, VM : androidx.lifecycle.ViewModel, B : ViewDataBinding {
     override var binding: B? = null
-
-    @Suppress("LeakingThis")
-    override val viewModel: VM by ViewModelLazy(
-        viewModelClass = viewModelClass.kotlin,
-        storeProducer = { viewModelStore },
-        factoryProducer = { viewModelFactory }
-    )
 
     /**
      * Callback implementation that delegates the parametes to [onViewModelPropertyChanged].
