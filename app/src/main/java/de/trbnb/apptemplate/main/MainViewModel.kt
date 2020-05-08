@@ -1,21 +1,23 @@
 package de.trbnb.apptemplate.main
 
 import androidx.databinding.Bindable
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import de.trbnb.mvvmbase.BaseViewModel
+import com.squareup.inject.assisted.Assisted
+import com.squareup.inject.assisted.AssistedInject
 import de.trbnb.mvvmbase.bindableproperty.afterSet
 import de.trbnb.mvvmbase.bindableproperty.bindableBoolean
 import de.trbnb.mvvmbase.commands.ruleCommand
 import de.trbnb.mvvmbase.commands.simpleCommand
-import de.trbnb.mvvmbase.events.Event
 import de.trbnb.mvvmbase.rxjava2.RxViewModel
+import de.trbnb.mvvmbase.savedstate.BaseStateSavingViewModel
 import io.reactivex.Observable
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-class MainViewModel @Inject constructor() : BaseViewModel(), RxViewModel {
-
+class MainViewModel @AssistedInject constructor(
+    @Assisted savedStateHandle: SavedStateHandle
+) : BaseStateSavingViewModel(savedStateHandle), RxViewModel {
     @get:Bindable
     var isShowingDialog by bindableBoolean(false)
 
@@ -57,11 +59,9 @@ class MainViewModel @Inject constructor() : BaseViewModel(), RxViewModel {
     val showConductorEvent = simpleCommand {
         eventChannel(MainEvent.ShowConductorEvent)
     }
-}
 
-sealed class MainEvent : Event {
-    object ShowToast : MainEvent()
-    object ShowSecondActivityEvent : MainEvent()
-    object ShowMainActivityAgainEvent : MainEvent()
-    object ShowConductorEvent : MainEvent()
+    @AssistedInject.Factory
+    interface Factory {
+        operator fun invoke(savedStateHandle: SavedStateHandle): MainViewModel
+    }
 }

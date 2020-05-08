@@ -17,27 +17,20 @@ import de.trbnb.mvvmbase.MvvmActivity
 import de.trbnb.mvvmbase.events.Event
 import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.toast
-import javax.inject.Inject
-import javax.inject.Provider
 
 class MainActivity : MvvmActivity<MainViewModel>() {
     private var dialog: Dialog? = null
     private var snackbar: Snackbar? = null
 
-    override val layoutId: Int
-        get() = R.layout.activity_main
+    override val layoutId: Int = R.layout.activity_main
 
     override fun createViewModel(savedStateHandle: SavedStateHandle): MainViewModel {
-        return viewModelProvider.get()
+        return appComponent.mainViewModelFactory(savedStateHandle)
     }
-
-    @Inject
-    lateinit var viewModelProvider: Provider<MainViewModel>
 
     private lateinit var router: Router
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        appComponent.inject(this)
         super.onCreate(savedInstanceState)
 
         router = Conductor.attachRouter(this, findViewById(R.id.main_frame), savedInstanceState)
