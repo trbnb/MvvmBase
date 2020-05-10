@@ -15,8 +15,8 @@ internal fun Command<*, *>.observeLifecycle(lifecycleOwner: LifecycleOwner) {
     })
 }
 
-internal fun RuleCommand<*, *>.dependsOn(observable: Observable, dependentFieldIds: IntArray) {
-    if (dependentFieldIds.isEmpty()) return
+internal fun RuleCommand<*, *>.dependsOn(observable: Observable, dependentFieldIds: IntArray?) {
+    if (dependentFieldIds?.isEmpty() != false) return
     observable.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
         override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
             if (propertyId in dependentFieldIds) {

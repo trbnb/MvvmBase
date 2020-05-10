@@ -41,7 +41,7 @@ class RuleCommand<in P, out R> internal constructor(
 fun <P, R> ViewModel.ruleCommand(
     action: (P) -> R,
     enabledRule: () -> Boolean,
-    dependentFieldIds: IntArray
+    dependentFieldIds: IntArray? = null
 ): RuleCommand<P, R> = RuleCommand(action, enabledRule).apply {
     observeLifecycle(this@ruleCommand)
     dependsOn(this@ruleCommand, dependentFieldIds)
@@ -54,5 +54,5 @@ fun <P, R> ViewModel.ruleCommand(
 fun <R> ViewModel.ruleCommand(
     action: (Unit) -> R,
     enabledRule: () -> Boolean,
-    dependentFieldIds: IntArray
+    dependentFieldIds: IntArray? = null
 ): RuleCommand<Unit, R> = ruleCommand<Unit, R>(action, enabledRule, dependentFieldIds)
