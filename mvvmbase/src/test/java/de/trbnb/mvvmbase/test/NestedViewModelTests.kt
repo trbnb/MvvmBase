@@ -3,7 +3,7 @@ package de.trbnb.mvvmbase.test
 import androidx.lifecycle.Lifecycle
 import de.trbnb.mvvmbase.BaseViewModel
 import de.trbnb.mvvmbase.events.Event
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class NestedViewModelTests {
     @Test

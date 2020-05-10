@@ -9,7 +9,7 @@ import de.trbnb.mvvmbase.bindableproperty.bindableBoolean
 import de.trbnb.mvvmbase.savedstate.BaseStateSavingViewModel
 import de.trbnb.mvvmbase.test.setSdkVersion
 import de.trbnb.mvvmbase.utils.savingStateInBindableSupports
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class BindablePropertySavedStateHandleTests {
     class TestViewModel(savedStateHandle: SavedStateHandle = SavedStateHandle()) : BaseStateSavingViewModel(savedStateHandle) {

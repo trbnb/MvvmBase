@@ -13,7 +13,7 @@ import de.trbnb.mvvmbase.bindableproperty.validate
 import de.trbnb.mvvmbase.savedstate.BaseStateSavingViewModel
 import de.trbnb.mvvmbase.test.BR
 import de.trbnb.mvvmbase.test.TestPropertyChangedCallback
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 @ExperimentalUnsignedTypes
 class BindableUShortPropertyTests {

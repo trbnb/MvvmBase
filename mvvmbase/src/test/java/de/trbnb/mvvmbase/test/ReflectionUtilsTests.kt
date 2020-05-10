@@ -6,7 +6,7 @@ import de.trbnb.mvvmbase.MvvmBase
 import de.trbnb.mvvmbase.utils.brFieldName
 import de.trbnb.mvvmbase.utils.findGenericSuperclass
 import de.trbnb.mvvmbase.utils.resolveFieldId
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class ReflectionUtilsTests {
     open class A<T>

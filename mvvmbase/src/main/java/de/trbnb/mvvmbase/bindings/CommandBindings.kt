@@ -24,11 +24,11 @@ fun View.bindClickCommand(command: Command<Unit, *>?) {
 /**
  * Binds the [View.isEnabled] property to the [Command.isEnabled] property of the given instances.
  */
-private fun View.bindEnabled(command: Command<*, *>?) {
+fun View.bindEnabled(command: Command<*, *>?) {
     command ?: return
     isEnabled = command.isEnabled
 
-    command.addEnabledListener {
+    command.addEnabledListenerForView {
         post {
             isEnabled = it
         }
