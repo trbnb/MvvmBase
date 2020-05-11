@@ -10,6 +10,7 @@ import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelLazy
 import androidx.lifecycle.ViewModelStore
 import androidx.savedstate.SavedStateRegistryController
 import com.bluelinelabs.conductor.archlifecycle.LifecycleController
@@ -36,6 +37,13 @@ abstract class MvvmBindingController<VM, B>(
      */
     @Suppress("LeakingThis")
     private val viewModelObserver = ViewModelPropertyChangedCallback(this)
+
+    @Suppress("LeakingThis")
+    override val viewModelDelegate: Lazy<VM> = ViewModelLazy(
+        viewModelClass = viewModelClass.kotlin,
+        storeProducer = { viewModelStore },
+        factoryProducer = { viewModelFactory }
+    )
 
     /**
      * Is called when the ViewModel sends an [Event].

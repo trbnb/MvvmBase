@@ -5,6 +5,7 @@ import androidx.annotation.CallSuper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.lifecycle.ViewModelLazy
 import de.trbnb.mvvmbase.events.Event
 import de.trbnb.mvvmbase.events.addListener
 import de.trbnb.mvvmbase.savedstate.SavedStateViewModelFactory
@@ -26,6 +27,13 @@ abstract class MvvmBindingActivity<VM, B> : AppCompatActivity(), MvvmView<VM, B>
      * @see onEvent
      */
     private val eventListener = { event: Event -> onEvent(event) }
+
+    @Suppress("LeakingThis")
+    override val viewModelDelegate: Lazy<VM> = ViewModelLazy(
+        viewModelClass = viewModelClass.kotlin,
+        storeProducer = { viewModelStore },
+        factoryProducer = { viewModelFactory }
+    )
 
     @Suppress("UNCHECKED_CAST")
     override val viewModelClass: Class<VM>

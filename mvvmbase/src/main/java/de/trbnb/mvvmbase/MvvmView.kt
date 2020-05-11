@@ -6,7 +6,6 @@ import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModelLazy
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
@@ -39,11 +38,6 @@ interface MvvmView<VM, B : ViewDataBinding> : ViewModelStoreOwner, SavedStateReg
      * These should then make use of [viewModelFactory].
      */
     val viewModelDelegate: Lazy<VM>
-        get() = ViewModelLazy(
-            viewModelClass = viewModelClass.kotlin,
-            storeProducer = { viewModelStore },
-            factoryProducer = { viewModelFactory }
-        )
 
     /**
      * The [ViewModel] that is used for data binding.

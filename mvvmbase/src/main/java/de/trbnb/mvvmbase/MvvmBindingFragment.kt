@@ -8,6 +8,7 @@ import androidx.annotation.CallSuper
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelLazy
 import de.trbnb.mvvmbase.events.Event
 import de.trbnb.mvvmbase.savedstate.SavedStateViewModelFactory
 import de.trbnb.mvvmbase.utils.findGenericSuperclass
@@ -33,6 +34,13 @@ abstract class MvvmBindingFragment<VM, B> : Fragment(), MvvmView<VM, B>
             ?.actualTypeArguments
             ?.firstOrNull() as? Class<VM>
             ?: throw IllegalStateException("viewModelClass does not equal Class<VM>")
+
+    @Suppress("LeakingThis")
+    override val viewModelDelegate: Lazy<VM> = ViewModelLazy(
+        viewModelClass = viewModelClass.kotlin,
+        storeProducer = { viewModelStore },
+        factoryProducer = { viewModelFactory }
+    )
 
     /**
      * Is called when the ViewModel sends an [Event].

@@ -5,7 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
-import de.trbnb.mvvmbase.bindableproperty.afterSet
+import de.trbnb.mvvmbase.BR
 import de.trbnb.mvvmbase.bindableproperty.bindableBoolean
 import de.trbnb.mvvmbase.commands.ruleCommand
 import de.trbnb.mvvmbase.commands.simpleCommand
@@ -23,9 +23,6 @@ class MainViewModel @AssistedInject constructor(
 
     @get:Bindable
     var showSnackbar: Boolean by bindableBoolean(false)
-        .afterSet {
-            showSnackbarCommand.onEnabledChanged()
-        }
 
     @get:Bindable
     val title: String by Observable.create<String> {
@@ -35,13 +32,16 @@ class MainViewModel @AssistedInject constructor(
         }
     }.toBindable(defaultValue = "foo")
 
-    val showDialogCommand = simpleCommand {
-        isShowingDialog = true
-    }
+    val showDialogCommand = ruleCommand(
+        enabledRule = { !isShowingDialog },
+        action = { isShowingDialog = true },
+        dependentFieldIds = intArrayOf(BR.showingDialog)
+    )
 
     val showSnackbarCommand = ruleCommand(
         action = { showSnackbar = true },
-        enabledRule = { !showSnackbar }
+        enabledRule = { !showSnackbar },
+        dependentFieldIds = intArrayOf(BR.showSnackbar)
     )
 
     val showToastCommand = simpleCommand {
