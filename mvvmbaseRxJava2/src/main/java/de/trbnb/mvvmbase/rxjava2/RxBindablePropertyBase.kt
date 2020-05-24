@@ -24,14 +24,14 @@ open class RxBindablePropertyBase<T> protected constructor(
         set(value) {
             if (distinct && value === field) return
 
-            beforeSet?.invoke(this.value, value)
+            beforeSet?.invoke(field, value)
             field = when (val validate = validate) {
                 null -> value
-                else -> validate(this.value, value)
+                else -> validate(field, value)
             }
 
             viewModel.notifyPropertyChanged(fieldId)
-            afterSet?.invoke(this.value)
+            afterSet?.invoke(field)
         }
 
     final override operator fun getValue(thisRef: Any?, property: KProperty<*>): T = value
