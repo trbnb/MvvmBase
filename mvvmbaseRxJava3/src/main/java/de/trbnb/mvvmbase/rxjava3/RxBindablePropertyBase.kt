@@ -1,8 +1,10 @@
 package de.trbnb.mvvmbase.rxjava3
 
 import de.trbnb.mvvmbase.ViewModel
+import de.trbnb.mvvmbase.bindableproperty.AfterSet
+import de.trbnb.mvvmbase.bindableproperty.BeforeSet
 import de.trbnb.mvvmbase.bindableproperty.BindablePropertyBase
-import de.trbnb.mvvmbase.utils.resolveFieldId
+import de.trbnb.mvvmbase.bindableproperty.Validate
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
@@ -12,32 +14,25 @@ import kotlin.reflect.KProperty
 open class RxBindablePropertyBase<T> protected constructor(
     private val viewModel: ViewModel,
     defaultValue: T,
-    private var fieldId: Int?
-) : BindablePropertyBase(), ReadOnlyProperty<Any?, T> {
-    internal var afterSet: ((T) -> Unit)? = null
-
+    private var fieldId: Int,
+    distinct: Boolean,
+    afterSet: AfterSet<T>?,
+    beforeSet: BeforeSet<T>?,
+    validate: Validate<T>?
+) : BindablePropertyBase<T>(distinct, afterSet, beforeSet, validate), ReadOnlyProperty<Any?, T> {
     protected var value: T = defaultValue
         set(value) {
             if (distinct && value == field) return
 
-            field = value
-            fieldId?.let { viewModel.notifyPropertyChanged(it) }
-            afterSet?.invoke(value)
+            beforeSet?.invoke(this.value, value)
+            field = when (val validate = validate) {
+                null -> value
+                else -> validate(this.value, value)
+            }
+
+            viewModel.notifyPropertyChanged(fieldId)
+            afterSet?.invoke(this.value)
         }
 
-    final override operator fun getValue(thisRef: Any?, property: KProperty<*>): T {
-        if (fieldId == null) {
-            fieldId = property.resolveFieldId()
-        }
-
-        return value
-    }
-}
-
-/**
- * Sets [RxBindablePropertyBase.afterSet] of a [RxBindablePropertyBase] instance to a given function and
- * returns that instance.
- */
-fun <T, P : RxBindablePropertyBase<T>> P.afterSet(action: (T) -> Unit): P = apply {
-    afterSet = action
+    final override operator fun getValue(thisRef: Any?, property: KProperty<*>): T = value
 }

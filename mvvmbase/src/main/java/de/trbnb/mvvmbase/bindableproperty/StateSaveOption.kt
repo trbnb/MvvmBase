@@ -22,7 +22,10 @@ sealed class StateSaveOption {
     class Manual(internal val key: String) : StateSaveOption()
 }
 
-internal fun StateSaveOption.resolveKey(property: KProperty<*>): String? = when (this) {
+/**
+ * Resolves a key for [androidx.lifecycle.SavedStateHandle].
+ */
+fun StateSaveOption.resolveKey(property: KProperty<*>): String? = when (this) {
     StateSaveOption.Automatic -> property.name
     is StateSaveOption.Manual -> key
     StateSaveOption.None -> null
