@@ -1,7 +1,6 @@
 package de.trbnb.mvvmbase.bindableproperty
 
 import androidx.databinding.BaseObservable
-import de.trbnb.mvvmbase.BR
 import de.trbnb.mvvmbase.ViewModel
 import de.trbnb.mvvmbase.savedstate.StateSavingViewModel
 import de.trbnb.mvvmbase.utils.resolveFieldId
@@ -13,87 +12,71 @@ import kotlin.reflect.KProperty
  *
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  * @param defaultValue Value that will be used at start.
- * @param stateSaveOption Specifies if the state of the property should be saved and with which key.
+ * @param distinct See [BindablePropertyBase.distinct].
+ * @param stateSavingKey Specifies with which key the value will be state-saved. No state-saving if `null`.
+ * @param afterSet [BindablePropertyBase.afterSet]
+ * @param validate [BindablePropertyBase.validate]
+ * @param beforeSet [BindablePropertyBase.beforeSet]
  */
 @ExperimentalUnsignedTypes
 class BindableUByteProperty(
     viewModel: ViewModel,
-    private var fieldId: Int?,
+    private val fieldId: Int,
     defaultValue: UByte,
-    private val stateSaveOption: StateSaveOption
-) : BindablePropertyBase() {
-    /**
-     * Gets or sets the stored value.
-     */
+    distinct: Boolean,
+    private val stateSavingKey: String?,
+    afterSet: AfterSet<UByte>?,
+    beforeSet: BeforeSet<UByte>?,
+    validate: Validate<UByte>?
+) : BindablePropertyBase<UByte>(distinct, afterSet, beforeSet, validate) {
     private var value: UByte = when {
-        stateSaveOption is StateSaveOption.Manual && viewModel is StateSavingViewModel && stateSaveOption.key in viewModel.savedStateHandle -> {
-            viewModel.savedStateHandle.get<Byte>(stateSaveOption.key)?.toUByte() ?: defaultValue
+        stateSavingKey != null && viewModel is StateSavingViewModel && stateSavingKey in viewModel.savedStateHandle -> {
+            viewModel.savedStateHandle.get<Byte>(stateSavingKey)?.toUByte() ?: defaultValue
         }
         else -> defaultValue
     }
 
-    /**
-     * The key that will be used to save the state of the property.
-     */
-    private var stateSavingKey: String? = (stateSaveOption as? StateSaveOption.Manual)?.key
-
-    /**
-     * Gets or sets a function that will be invoked if a new value is about to be set.
-     * The first parameter is the old value and the second parameter is the new value.
-     *
-     * This function will not be invoked if [BindablePropertyBase.distinct] is true and the new value
-     * is equal to the old value.
-     */
-    internal var beforeSet: ((old:UByte, new: UByte) -> Unit)? = null
-
-    /**
-     * Gets or sets a function that will validate a newly set value.
-     * The first parameter is the old value and the second parameter is the new value.
-     * The returned value will be the new stored value.
-     *
-     * If this function is null validation will not happen and the new value will simply be set.
-     */
-    internal var validate: ((old:UByte, new: UByte) -> UByte)? = null
-
-    /**
-     * Gets or sets a function that will be invoked if a new value was set and
-     * [BaseObservable.notifyPropertyChanged] was invoked.
-     * The first parameter is the old value and the second parameter is the new value.
-     */
-    internal var afterSet: ((new: UByte) -> Unit)? = null
-
-    operator fun getValue(thisRef: ViewModel, property: KProperty<*>): UByte {
-        detectStateSavingKey(thisRef, property)
-        return value
-    }
+    operator fun getValue(thisRef: ViewModel, property: KProperty<*>): UByte = value
 
     operator fun setValue(thisRef: ViewModel, property: KProperty<*>, value: UByte) {
-        detectStateSavingKey(thisRef, property)
-
-        if (fieldId == null) {
-            fieldId = property.resolveFieldId()
-        }
-
         if (distinct && this.value == value) {
             return
         }
 
         beforeSet?.invoke(this.value, value)
-        this.value = validate?.invoke(this.value, value) ?: value
-        thisRef.notifyPropertyChanged(fieldId ?: BR._all)
-        if (thisRef is StateSavingViewModel) {
-            stateSavingKey?.let { thisRef.savedStateHandle[it] = this.value.toByte() }
+        this.value = when (val validate = validate) {
+            null -> value
+            else -> validate(this.value, value)
+        }
+
+        thisRef.notifyPropertyChanged(fieldId)
+        if (thisRef is StateSavingViewModel && stateSavingKey != null) {
+            thisRef.savedStateHandle[stateSavingKey] = this.value
         }
         afterSet?.invoke(this.value)
     }
 
-    private fun detectStateSavingKey(thisRef: ViewModel, property: KProperty<*>) {
-        if (stateSaveOption is StateSaveOption.Automatic && stateSavingKey == null && thisRef is StateSavingViewModel) {
-            val newStateSavingKey = property.name.also { this.stateSavingKey = it }
-            if (newStateSavingKey in thisRef.savedStateHandle) {
-                this.value = thisRef.savedStateHandle[newStateSavingKey] ?: return
-            }
-        }
+    /**
+     * Property delegate provider for [BindableUByteProperty].
+     * Needed so that reflection via [KProperty] is only necessary once, during delegate initialization.
+     *
+     * @see BindableUByteProperty
+     */
+    class Provider(
+        private val fieldId: Int? = null,
+        private val defaultValue: UByte,
+        private val stateSaveOption: StateSaveOption
+    ): BindablePropertyBase.Provider<UByte>() {
+        override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>) = BindableUByteProperty(
+            viewModel = thisRef,
+            fieldId = fieldId ?: property.resolveFieldId(),
+            defaultValue = defaultValue,
+            stateSavingKey = stateSaveOption.resolveKey(property),
+            distinct = distinct,
+            afterSet = afterSet,
+            beforeSet = beforeSet,
+            validate = validate
+        )
     }
 }
 
@@ -109,29 +92,7 @@ fun ViewModel.bindableUByte(
     defaultValue: UByte = 0.toUByte(),
     fieldId: Int? = null,
     stateSaveOption: StateSaveOption = StateSaveOption.Automatic
-) = BindableUByteProperty(this, fieldId, defaultValue, when (this) {
+) = BindableUByteProperty.Provider(fieldId, defaultValue, when (this) {
     is StateSavingViewModel -> stateSaveOption
     else -> StateSaveOption.None
 })
-
-/**
- * Sets [BindableUByteProperty.beforeSet] of a [BindableUByteProperty] instance to a given function and
- * returns that instance.
- */
-@ExperimentalUnsignedTypes
-fun BindableUByteProperty.beforeSet(action: (old: UByte, new: UByte) -> Unit) = apply { beforeSet = action }
-
-/**
- * Sets [BindableUByteProperty.validate] of a [BindableUByteProperty] instance to a given function and
- * returns that instance.
- */
-@ExperimentalUnsignedTypes
-fun BindableUByteProperty.validate(action: (old: UByte, new: UByte) -> UByte) = apply { validate = action }
-
-/**
- * Sets [BindableUByteProperty.afterSet] of a [BindableUByteProperty] instance to a given function and
- * returns that instance.
- */
-@ExperimentalUnsignedTypes
-fun BindableUByteProperty.afterSet(action: (UByte) -> Unit) = apply { afterSet = action }
-
