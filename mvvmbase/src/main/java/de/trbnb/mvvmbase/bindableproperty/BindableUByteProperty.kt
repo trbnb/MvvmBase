@@ -19,7 +19,7 @@ import kotlin.reflect.KProperty
  * @param beforeSet [BindablePropertyBase.beforeSet]
  */
 @ExperimentalUnsignedTypes
-class BindableUByteProperty(
+class BindableUByteProperty private constructor(
     viewModel: ViewModel,
     private val fieldId: Int,
     defaultValue: UByte,
@@ -51,7 +51,7 @@ class BindableUByteProperty(
 
         thisRef.notifyPropertyChanged(fieldId)
         if (thisRef is StateSavingViewModel && stateSavingKey != null) {
-            thisRef.savedStateHandle[stateSavingKey] = this.value
+            thisRef.savedStateHandle[stateSavingKey] = this.value.toByte()
         }
         afterSet?.invoke(this.value)
     }

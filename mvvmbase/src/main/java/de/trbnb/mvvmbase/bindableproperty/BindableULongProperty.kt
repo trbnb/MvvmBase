@@ -19,7 +19,7 @@ import kotlin.reflect.KProperty
  * @param beforeSet [BindablePropertyBase.beforeSet]
  */
 @ExperimentalUnsignedTypes
-class BindableULongProperty(
+class BindableULongProperty private constructor(
     viewModel: ViewModel,
     private val fieldId: Int,
     defaultValue: ULong,
@@ -51,7 +51,7 @@ class BindableULongProperty(
 
         thisRef.notifyPropertyChanged(fieldId)
         if (thisRef is StateSavingViewModel && stateSavingKey != null) {
-            thisRef.savedStateHandle[stateSavingKey] = this.value
+            thisRef.savedStateHandle[stateSavingKey] = this.value.toLong()
         }
         afterSet?.invoke(this.value)
     }

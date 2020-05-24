@@ -21,7 +21,7 @@ import kotlin.reflect.KProperty
  * @param validate [BindablePropertyBase.validate]
  * @param beforeSet [BindablePropertyBase.beforeSet]
  */
-class BindableProperty<T>(
+class BindableProperty<T> private constructor(
     viewModel: ViewModel,
     private val fieldId: Int,
     defaultValue: T,

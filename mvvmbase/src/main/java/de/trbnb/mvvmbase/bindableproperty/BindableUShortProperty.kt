@@ -19,7 +19,7 @@ import kotlin.reflect.KProperty
  * @param beforeSet [BindablePropertyBase.beforeSet]
  */
 @ExperimentalUnsignedTypes
-class BindableUShortProperty(
+class BindableUShortProperty private constructor(
     viewModel: ViewModel,
     private val fieldId: Int,
     defaultValue: UShort,
@@ -51,7 +51,7 @@ class BindableUShortProperty(
 
         thisRef.notifyPropertyChanged(fieldId)
         if (thisRef is StateSavingViewModel && stateSavingKey != null) {
-            thisRef.savedStateHandle[stateSavingKey] = this.value
+            thisRef.savedStateHandle[stateSavingKey] = this.value.toShort()
         }
         afterSet?.invoke(this.value)
     }

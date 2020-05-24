@@ -18,7 +18,7 @@ import kotlin.reflect.KProperty
  * @param validate [BindablePropertyBase.validate]
  * @param beforeSet [BindablePropertyBase.beforeSet]
  */
-class BindableShortProperty(
+class BindableShortProperty private constructor(
     viewModel: ViewModel,
     private val fieldId: Int,
     defaultValue: Short,

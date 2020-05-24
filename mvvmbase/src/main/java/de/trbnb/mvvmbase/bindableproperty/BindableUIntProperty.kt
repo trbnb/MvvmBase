@@ -19,7 +19,7 @@ import kotlin.reflect.KProperty
  * @param beforeSet [BindablePropertyBase.beforeSet]
  */
 @ExperimentalUnsignedTypes
-class BindableUIntProperty(
+class BindableUIntProperty private constructor(
     viewModel: ViewModel,
     private val fieldId: Int,
     defaultValue: UInt,
@@ -51,7 +51,7 @@ class BindableUIntProperty(
 
         thisRef.notifyPropertyChanged(fieldId)
         if (thisRef is StateSavingViewModel && stateSavingKey != null) {
-            thisRef.savedStateHandle[stateSavingKey] = this.value
+            thisRef.savedStateHandle[stateSavingKey] = this.value.toInt()
         }
         afterSet?.invoke(this.value)
     }
