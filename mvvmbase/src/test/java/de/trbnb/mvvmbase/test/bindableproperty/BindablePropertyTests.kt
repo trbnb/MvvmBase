@@ -103,6 +103,26 @@ class BindablePropertyTests {
     }
 
     @Test
+    fun `validate() returning null is handled properly`() {
+        val oldValue = 0
+        val newValue = 50
+        assert(oldValue != newValue)
+
+        val viewModel = object : BaseViewModel() {
+            var property: Int? by bindable<Int?>(defaultValue = oldValue)
+                .validate { old, new ->
+                    assert(old == oldValue)
+                    assert(new == newValue)
+                    return@validate null
+                }
+        }
+
+        assert(viewModel.property == oldValue)
+        viewModel.property = newValue
+        assert(viewModel.property == null)
+    }
+
+    @Test
     fun `is correct field ID used for notifyPropertyChanged()`() {
         MvvmBase.init<BR>()
         val propertyChangedCallback = TestPropertyChangedCallback()
