@@ -42,7 +42,7 @@ class BindableProperty<T> private constructor(
     override operator fun getValue(thisRef: ViewModel, property: KProperty<*>): T = value
 
     override operator fun setValue(thisRef: ViewModel, property: KProperty<*>, value: T) {
-        if (distinct && this.value == value) {
+        if (distinct && this.value === value) {
             return
         }
 

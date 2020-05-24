@@ -22,7 +22,7 @@ open class RxBindablePropertyBase<T> protected constructor(
 ) : BindablePropertyBase<T>(distinct, afterSet, beforeSet, validate), ReadOnlyProperty<Any?, T> {
     protected var value: T = defaultValue
         set(value) {
-            if (distinct && value == field) return
+            if (distinct && value === field) return
 
             beforeSet?.invoke(this.value, value)
             field = when (val validate = validate) {
