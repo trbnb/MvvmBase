@@ -1,4 +1,3 @@
-
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     repositories {
@@ -16,9 +15,11 @@ buildscript {
 
 plugins {
     id("com.jfrog.bintray") version "1.7.2" // jCenter
-    id("com.github.dcendents.android-maven") version "1.5" // maven
     kotlin("jvm") version "1.3.72"
+    id("io.gitlab.arturbosch.detekt") version "1.9.1"
 }
+
+detekt.buildUponDefaultConfig = true
 
 allprojects {
     repositories {
