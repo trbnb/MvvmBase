@@ -41,8 +41,8 @@ android {
         jvmTarget = javaVersion.toString()
     }
 
-    dataBinding {
-        isEnabled = true
+    buildFeatures {
+        dataBinding = true
     }
 
     packagingOptions {

@@ -79,7 +79,7 @@ repositories {
 }
 
 val sourcesJar = task<Jar>("sourcesJar") {
-    classifier = "sources"
+    archiveClassifier.set("sources")
     from(android.sourceSets["main"].java.sourceFiles)
 }
 
