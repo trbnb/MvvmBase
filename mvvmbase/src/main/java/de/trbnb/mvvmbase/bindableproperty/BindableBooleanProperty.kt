@@ -129,4 +129,3 @@ fun BindableBooleanProperty.validate(action: (old: Boolean, new: Boolean) -> Boo
  * returns that instance.
  */
 fun BindableBooleanProperty.afterSet(action: (Boolean) -> Unit) = apply { afterSet = action }
-

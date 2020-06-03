@@ -15,7 +15,7 @@ import kotlin.reflect.KProperty
  * @param defaultValue Value that will be used at start.
  * @param stateSaveOption Specifies if the state of the property should be saved and with which key.
  */
-class BindableShortProperty (
+class BindableShortProperty(
     viewModel: ViewModel,
     private var fieldId: Int?,
     defaultValue: Short,
@@ -129,4 +129,3 @@ fun BindableShortProperty.validate(action: (old: Short, new: Short) -> Short) = 
  * returns that instance.
  */
 fun BindableShortProperty.afterSet(action: (new: Short) -> Unit) = apply { afterSet = action }
-

@@ -16,8 +16,8 @@ android {
         versionName = Publishing.versionName
 
         testInstrumentationRunner = "android.support.test.runner.AndroidJUnitRunner"
-
     }
+
     buildTypes {
         named("release").configure {
             isMinifyEnabled = false

@@ -43,7 +43,7 @@ class BindableByteProperty(
      * This function will not be invoked if [BindablePropertyBase.distinct] is true and the new value
      * is equal to the old value.
      */
-    internal var beforeSet: ((old:Byte, new: Byte) -> Unit)? = null
+    internal var beforeSet: ((old: Byte, new: Byte) -> Unit)? = null
 
     /**
      * Gets or sets a function that will validate a newly set value.
@@ -52,7 +52,7 @@ class BindableByteProperty(
      *
      * If this function is null validation will not happen and the new value will simply be set.
      */
-    internal var validate: ((old:Byte, new: Byte) -> Byte)? = null
+    internal var validate: ((old: Byte, new: Byte) -> Byte)? = null
 
     /**
      * Gets or sets a function that will be invoked if a new value was set and
@@ -129,4 +129,3 @@ fun BindableByteProperty.validate(action: (old: Byte, new: Byte) -> Byte) = appl
  * returns that instance.
  */
 fun BindableByteProperty.afterSet(action: (Byte) -> Unit) = apply { afterSet = action }
-

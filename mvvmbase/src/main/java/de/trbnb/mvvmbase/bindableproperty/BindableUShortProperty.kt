@@ -16,7 +16,7 @@ import kotlin.reflect.KProperty
  * @param stateSaveOption Specifies if the state of the property should be saved and with which key.
  */
 @ExperimentalUnsignedTypes
-class BindableUShortProperty (
+class BindableUShortProperty(
     viewModel: ViewModel,
     private var fieldId: Int?,
     defaultValue: UShort,
@@ -134,4 +134,3 @@ fun BindableUShortProperty.validate(action: (old: UShort, new: UShort) -> UShort
  */
 @ExperimentalUnsignedTypes
 fun BindableUShortProperty.afterSet(action: (new: UShort) -> Unit) = apply { afterSet = action }
-

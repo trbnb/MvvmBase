@@ -129,4 +129,3 @@ fun BindableDoubleProperty.validate(action: (old: Double, new: Double) -> Double
  * returns that instance.
  */
 fun BindableDoubleProperty.afterSet(action: (new: Double) -> Unit) = apply { afterSet = action }
-

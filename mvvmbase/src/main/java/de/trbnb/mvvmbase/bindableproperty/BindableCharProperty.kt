@@ -129,4 +129,3 @@ fun BindableCharProperty.validate(action: (old: Char, new: Char) -> Char) = appl
  * returns that instance.
  */
 fun BindableCharProperty.afterSet(action: (new: Char) -> Unit) = apply { afterSet = action }
-

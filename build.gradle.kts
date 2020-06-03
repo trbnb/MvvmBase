@@ -22,7 +22,11 @@ plugins {
 
 subprojects {
     apply(plugin = "org.jlleitschuh.gradle.ktlint")
-    ktlint.android.set(true)
+    ktlint {
+        android.set(true)
+        // disable lexicographic import ordering rule
+        disabledRules.set(listOf("import-ordering"))
+    }
 
     apply(plugin = "io.gitlab.arturbosch.detekt")
     detekt {

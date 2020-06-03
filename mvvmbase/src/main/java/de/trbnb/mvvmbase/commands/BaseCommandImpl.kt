@@ -14,7 +14,7 @@ abstract class BaseCommandImpl<in P, out R>(private val action: (P) -> R) : Base
     private val listeners = mutableListOf<(Boolean) -> Unit>()
 
     final override fun invoke(param: P): R {
-        if(!isEnabled){
+        if (!isEnabled) {
             throw DisabledCommandInvocationException()
         }
 

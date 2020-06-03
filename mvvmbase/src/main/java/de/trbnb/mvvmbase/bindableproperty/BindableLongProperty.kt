@@ -129,4 +129,3 @@ fun BindableLongProperty.validate(action: (old: Long, new: Long) -> Long) = appl
  * returns that instance.
  */
 fun BindableLongProperty.afterSet(action: (new: Long) -> Unit) = apply { afterSet = action }
-

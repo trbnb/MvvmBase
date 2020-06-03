@@ -55,7 +55,6 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.2.0")
 }
 
-
 val sourcesJar = task<Jar>("sourcesJar") {
     archiveClassifier.set("sources")
     from(android.sourceSets["main"].java.sourceFiles)

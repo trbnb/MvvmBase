@@ -114,4 +114,3 @@ abstract class MvvmBindingFragment<VM, B> : Fragment(), MvvmView<VM, B>
         binding = null
     }
 }
-

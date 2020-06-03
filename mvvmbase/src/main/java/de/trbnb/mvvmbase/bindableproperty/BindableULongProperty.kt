@@ -134,4 +134,3 @@ fun BindableULongProperty.validate(action: (old: ULong, new: ULong) -> ULong) = 
  */
 @ExperimentalUnsignedTypes
 fun BindableULongProperty.afterSet(action: (new: ULong) -> Unit) = apply { afterSet = action }
-

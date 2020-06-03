@@ -129,4 +129,3 @@ fun BindableFloatProperty.validate(action: (old: Float, new: Float) -> Float) = 
  * returns that instance.
  */
 fun BindableFloatProperty.afterSet(action: (new: Float) -> Unit) = apply { afterSet = action }
-

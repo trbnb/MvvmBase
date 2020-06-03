@@ -44,7 +44,7 @@ class BindableUByteProperty(
      * This function will not be invoked if [BindablePropertyBase.distinct] is true and the new value
      * is equal to the old value.
      */
-    internal var beforeSet: ((old:UByte, new: UByte) -> Unit)? = null
+    internal var beforeSet: ((old: UByte, new: UByte) -> Unit)? = null
 
     /**
      * Gets or sets a function that will validate a newly set value.
@@ -53,7 +53,7 @@ class BindableUByteProperty(
      *
      * If this function is null validation will not happen and the new value will simply be set.
      */
-    internal var validate: ((old:UByte, new: UByte) -> UByte)? = null
+    internal var validate: ((old: UByte, new: UByte) -> UByte)? = null
 
     /**
      * Gets or sets a function that will be invoked if a new value was set and
@@ -134,4 +134,3 @@ fun BindableUByteProperty.validate(action: (old: UByte, new: UByte) -> UByte) = 
  */
 @ExperimentalUnsignedTypes
 fun BindableUByteProperty.afterSet(action: (UByte) -> Unit) = apply { afterSet = action }
-

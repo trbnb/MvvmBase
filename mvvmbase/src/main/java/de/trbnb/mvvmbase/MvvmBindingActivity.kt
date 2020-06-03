@@ -114,4 +114,3 @@ abstract class MvvmBindingActivity<VM, B> : AppCompatActivity(), MvvmView<VM, B>
         viewModel.removeOnPropertyChangedCallback(viewModelObserver)
     }
 }
-

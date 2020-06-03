@@ -5,7 +5,7 @@ package de.trbnb.mvvmbase.events
  *
  * @param memorizeNotReceivedEvents Defines if events that can't be received by listeners because none are registered are sent later when a listener is registered.
  */
-class DefaultEventHandler<T>(memorizeNotReceivedEvents: Boolean = false): EventHandler<T> {
+class DefaultEventHandler<T>(memorizeNotReceivedEvents: Boolean = false) : EventHandler<T> {
     private val listeners = mutableListOf<Listener<T>>()
     private val notReceivedEvents = if (memorizeNotReceivedEvents) mutableListOf<T>() else null
 
