@@ -17,9 +17,15 @@ plugins {
     id("com.jfrog.bintray") version "1.7.2" // jCenter
     kotlin("jvm") version "1.3.72"
     id("io.gitlab.arturbosch.detekt") version "1.9.1"
+    id("org.jlleitschuh.gradle.ktlint") version "9.2.1"
 }
 
 detekt.buildUponDefaultConfig = true
+
+subprojects {
+    apply(plugin = "org.jlleitschuh.gradle.ktlint")
+    ktlint.android.set(true)
+}
 
 allprojects {
     repositories {
