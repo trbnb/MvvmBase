@@ -20,11 +20,15 @@ plugins {
     id("org.jlleitschuh.gradle.ktlint") version "9.2.1"
 }
 
-detekt.buildUponDefaultConfig = true
-
 subprojects {
     apply(plugin = "org.jlleitschuh.gradle.ktlint")
     ktlint.android.set(true)
+
+    apply(plugin = "io.gitlab.arturbosch.detekt")
+    detekt {
+        buildUponDefaultConfig = true
+        config = files("${project.rootDir.canonicalPath}/detekt-config.yml")
+    }
 }
 
 allprojects {
