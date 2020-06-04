@@ -15,15 +15,19 @@ import io.reactivex.Observable
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+@Suppress("UndocumentedPublicClass")
 class MainViewModel @AssistedInject constructor(
     @Assisted savedStateHandle: SavedStateHandle
 ) : BaseStateSavingViewModel(savedStateHandle), RxViewModel {
+    @Suppress("UndocumentedPublicProperty")
     @get:Bindable
     var isShowingDialog by bindableBoolean(false)
 
+    @Suppress("UndocumentedPublicProperty")
     @get:Bindable
     var showSnackbar: Boolean by bindableBoolean(false)
 
+    @Suppress("UndocumentedPublicProperty", "MagicNumber")
     @get:Bindable
     val title: String by Observable.create<String> {
         viewModelScope.launch {
@@ -32,36 +36,44 @@ class MainViewModel @AssistedInject constructor(
         }
     }.toBindable(defaultValue = "foo")
 
+    @Suppress("UndocumentedPublicProperty")
     val showDialogCommand = ruleCommand(
         enabledRule = { !isShowingDialog },
         action = { isShowingDialog = true },
         dependentFieldIds = intArrayOf(BR.showingDialog)
     )
 
+    @Suppress("UndocumentedPublicProperty")
     val showSnackbarCommand = ruleCommand(
         action = { showSnackbar = true },
         enabledRule = { !showSnackbar },
         dependentFieldIds = intArrayOf(BR.showSnackbar)
     )
 
+    @Suppress("UndocumentedPublicProperty")
     val showToastCommand = simpleCommand {
         eventChannel(MainEvent.ShowToast)
     }
 
+    @Suppress("UndocumentedPublicProperty")
     val showFragmentExampleCommand = simpleCommand {
         eventChannel(MainEvent.ShowSecondActivityEvent)
     }
 
+    @Suppress("UndocumentedPublicProperty")
     val showMainActivityAgain = simpleCommand {
         eventChannel(MainEvent.ShowMainActivityAgainEvent)
     }
 
+    @Suppress("UndocumentedPublicProperty")
     val showConductorEvent = simpleCommand {
         eventChannel(MainEvent.ShowConductorEvent)
     }
 
+    @Suppress("UndocumentedPublicClass")
     @AssistedInject.Factory
     interface Factory {
+        @Suppress("UndocumentedPublicFunction")
         operator fun invoke(savedStateHandle: SavedStateHandle): MainViewModel
     }
 }

@@ -134,9 +134,10 @@ abstract class MvvmBindingController<VM, B>(
         viewModel.eventChannel.addListener(eventListener)
     }
 
+    @Suppress("EmptyFunctionBlock")
     override fun onViewModelPropertyChanged(viewModel: VM, fieldId: Int) { }
 
-    @CallSuper
+    @Suppress("EmptyFunctionBlock")
     override fun onEvent(event: Event) { }
 
     override fun onDestroyView(view: View) {

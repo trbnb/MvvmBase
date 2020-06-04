@@ -4,6 +4,9 @@ import de.trbnb.mvvmbase.ViewModel
 import io.reactivex.Flowable
 import io.reactivex.rxkotlin.plusAssign
 
+/**
+ * Read-only bindable property delegate that has last emitted value from a [Flowable] or `defaultValue` if no value has been emitted.
+ */
 class FlowableBindableProperty<T> internal constructor(
     viewModel: ViewModel,
     defaultValue: T,

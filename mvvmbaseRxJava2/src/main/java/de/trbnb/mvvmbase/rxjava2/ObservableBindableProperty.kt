@@ -4,6 +4,9 @@ import de.trbnb.mvvmbase.ViewModel
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.plusAssign
 
+/**
+ * Read-only bindable property delegate that has last emitted value from a [Observable] or `defaultValue` if no value has been emitted.
+ */
 class ObservableBindableProperty<T> internal constructor(
     viewModel: ViewModel,
     defaultValue: T,

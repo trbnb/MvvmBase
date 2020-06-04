@@ -61,11 +61,17 @@ class BindableCharProperty(
      */
     internal var afterSet: ((new: Char) -> Unit)? = null
 
+    /**
+     * @see [kotlin.properties.ReadWriteProperty.getValue]
+     */
     operator fun getValue(thisRef: ViewModel, property: KProperty<*>): Char {
         detectStateSavingKey(thisRef, property)
         return value
     }
 
+    /**
+     * @see [kotlin.properties.ReadWriteProperty.setValue]
+     */
     operator fun setValue(thisRef: ViewModel, property: KProperty<*>, value: Char) {
         detectStateSavingKey(thisRef, property)
 

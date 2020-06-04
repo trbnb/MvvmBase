@@ -61,11 +61,17 @@ class BindableByteProperty(
      */
     internal var afterSet: ((new: Byte) -> Unit)? = null
 
+    /**
+     * @see [kotlin.properties.ReadWriteProperty.getValue]
+     */
     operator fun getValue(thisRef: ViewModel, property: KProperty<*>): Byte {
         detectStateSavingKey(thisRef, property)
         return value
     }
 
+    /**
+     * @see [kotlin.properties.ReadWriteProperty.setValue]
+     */
     operator fun setValue(thisRef: ViewModel, property: KProperty<*>, value: Byte) {
         detectStateSavingKey(thisRef, property)
 

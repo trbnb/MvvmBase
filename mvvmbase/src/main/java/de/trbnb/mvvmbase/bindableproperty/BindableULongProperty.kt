@@ -62,11 +62,17 @@ class BindableULongProperty(
      */
     internal var afterSet: ((new: ULong) -> Unit)? = null
 
+    /**
+     * @see [kotlin.properties.ReadWriteProperty.getValue]
+     */
     operator fun getValue(thisRef: ViewModel, property: KProperty<*>): ULong {
         detectStateSavingKey(thisRef, property)
         return value
     }
 
+    /**
+     * @see [kotlin.properties.ReadWriteProperty.setValue]
+     */
     operator fun setValue(thisRef: ViewModel, property: KProperty<*>, value: ULong) {
         detectStateSavingKey(thisRef, property)
 

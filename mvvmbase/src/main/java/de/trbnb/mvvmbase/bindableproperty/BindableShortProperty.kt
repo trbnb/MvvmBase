@@ -61,11 +61,17 @@ class BindableShortProperty(
      */
     internal var afterSet: ((new: Short) -> Unit)? = null
 
+    /**
+     * @see [kotlin.properties.ReadWriteProperty.getValue]
+     */
     operator fun getValue(thisRef: ViewModel, property: KProperty<*>): Short {
         detectStateSavingKey(thisRef, property)
         return value
     }
 
+    /**
+     * @see [kotlin.properties.ReadWriteProperty.setValue]
+     */
     operator fun setValue(thisRef: ViewModel, property: KProperty<*>, value: Short) {
         detectStateSavingKey(thisRef, property)
 

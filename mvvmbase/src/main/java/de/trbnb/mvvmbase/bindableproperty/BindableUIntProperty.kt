@@ -62,11 +62,17 @@ class BindableUIntProperty(
      */
     internal var afterSet: ((new: UInt) -> Unit)? = null
 
+    /**
+     * @see [kotlin.properties.ReadWriteProperty.getValue]
+     */
     operator fun getValue(thisRef: ViewModel, property: KProperty<*>): UInt {
         detectStateSavingKey(thisRef, property)
         return value
     }
 
+    /**
+     * @see [kotlin.properties.ReadWriteProperty.setValue]
+     */
     operator fun setValue(thisRef: ViewModel, property: KProperty<*>, value: UInt) {
         detectStateSavingKey(thisRef, property)
 

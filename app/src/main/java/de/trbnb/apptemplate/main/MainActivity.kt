@@ -18,6 +18,7 @@ import de.trbnb.mvvmbase.events.Event
 import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.toast
 
+@Suppress("UndocumentedPublicClass")
 class MainActivity : MvvmActivity<MainViewModel>() {
     private var dialog: Dialog? = null
     private var snackbar: Snackbar? = null

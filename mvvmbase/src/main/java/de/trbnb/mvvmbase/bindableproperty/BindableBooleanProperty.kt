@@ -61,11 +61,17 @@ class BindableBooleanProperty(
      */
     internal var afterSet: ((new: Boolean) -> Unit)? = null
 
+    /**
+     * @see [kotlin.properties.ReadWriteProperty.getValue]
+     */
     operator fun getValue(thisRef: ViewModel, property: KProperty<*>): Boolean {
         detectStateSavingKey(thisRef, property)
         return value
     }
 
+    /**
+     * @see [kotlin.properties.ReadWriteProperty.setValue]
+     */
     operator fun setValue(thisRef: ViewModel, property: KProperty<*>, value: Boolean) {
         detectStateSavingKey(thisRef, property)
 

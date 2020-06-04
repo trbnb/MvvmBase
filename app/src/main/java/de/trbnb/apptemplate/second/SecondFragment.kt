@@ -6,6 +6,7 @@ import de.trbnb.apptemplate.R
 import de.trbnb.apptemplate.app.appComponent
 import de.trbnb.mvvmbase.MvvmFragment
 
+@Suppress("UndocumentedPublicClass")
 class SecondFragment : MvvmFragment<SecondViewModel>() {
     override val layoutId: Int = R.layout.fragment_second
 
