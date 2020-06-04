@@ -122,7 +122,7 @@ class MainActivity : MvvmActivity<MainViewModel>() {
         super.onEvent(event)
 
         when (event as? MainEvent ?: return) {
-            is MainEvent.ShowToast -> Toast.makeText(this,  "Toast message!", Toast.LENGTH_SHORT).show()
+            is MainEvent.ShowToast -> Toast.makeText(this, "Toast message!", Toast.LENGTH_SHORT).show()
             is MainEvent.ShowMainActivityAgainEvent -> startActivity(Intent(this, MainActivity::class.java))
             is MainEvent.ShowSecondActivityEvent -> startActivity(Intent(this, SecondActivity::class.java))
             is MainEvent.ShowConductorEvent -> {
