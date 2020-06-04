@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test
 
 class NestedViewModelTests {
     @Test
-    fun `autoDestroy() destroys ViewModels in a "parent" ViewModel`() {
+    fun `autoDestroy() destroys ViewModels in a parent ViewModel`() {
         val childViewModel = SimpleViewModel()
         val parentViewModel = object : BaseViewModel() {
             val items = listOf(childViewModel).autoDestroy()
@@ -18,7 +18,7 @@ class NestedViewModelTests {
     }
 
     @Test
-    fun `bindEvents() redirects events from "child" ViewModels to eventChannel of "parent" ViewModel`() {
+    fun `bindEvents() redirects events from child ViewModels to eventChannel of parent ViewModel`() {
         val event = object : Event {}
         val childViewModel = SimpleViewModel()
         val parentViewModel = object : BaseViewModel() {
