@@ -1,3 +1,3 @@
 rootProject.buildFileName = "build.gradle.kts"
 
-include(":app", ":mvvmbase", ":mvvmbaseRxJava2", ":mvvmbaseRxJava3", ":mvvmbaseConductor")
+include(":app", ":mvvmbase", ":mvvmbaseRxJava2", ":mvvmbaseRxJava3", ":mvvmbaseConductor", ":mvvmbaseCoroutines")

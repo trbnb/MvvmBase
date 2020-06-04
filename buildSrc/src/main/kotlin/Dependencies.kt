@@ -34,6 +34,9 @@ object Publishing {
     const val conductorDescription = "Conductor extensions for MvvmBase."
     const val conductorArtifactId = "mvvmbaseConductor"
 
+    const val coroutinesDescription = "Coroutines extensions for MvvmBase."
+    const val coroutinesArtifactId = "mvvmbaseCoroutines"
+
     fun getBintrayUser(project: Project): String = project.extra["private_bintray_user"].toString()
     fun getBintrayApiKey(project: Project): String = project.extra["private_bintray_apikey"].toString()
     fun getBintrayGpgPassphrase(project: Project): String = project.extra["private_bintray_gpg_passphrase"].toString()

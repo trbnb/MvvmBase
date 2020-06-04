@@ -52,7 +52,8 @@ dependencies {
 
     implementation(project(":mvvmbase"))
 
-    implementation("io.reactivex.rxjava3:rxkotlin:3.0.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.7")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0")
 
     testAnnotationProcessor("androidx.databinding:databinding-compiler:$gradleToolsVersion")
     kaptTest("androidx.databinding:databinding-compiler:$gradleToolsVersion")
