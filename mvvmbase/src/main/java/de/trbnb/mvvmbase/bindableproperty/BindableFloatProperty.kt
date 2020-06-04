@@ -67,11 +67,11 @@ class BindableFloatProperty private constructor(
      *
      * @see BindableFloatProperty
      */
-    class Provider(
+    class Provider internal constructor(
         private val fieldId: Int? = null,
         private val defaultValue: Float,
         private val stateSaveOption: StateSaveOption
-    ): BindablePropertyBase.Provider<Float>() {
+    ) : BindablePropertyBase.Provider<Float>() {
         override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>) = BindableFloatProperty(
             viewModel = thisRef,
             fieldId = fieldId ?: property.resolveFieldId(),

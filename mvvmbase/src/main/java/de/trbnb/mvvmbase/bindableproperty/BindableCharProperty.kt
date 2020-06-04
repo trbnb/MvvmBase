@@ -67,11 +67,11 @@ class BindableCharProperty private constructor(
      *
      * @see BindableBooleanProperty
      */
-    class Provider(
+    class Provider internal constructor(
         private val fieldId: Int? = null,
         private val defaultValue: Char,
         private val stateSaveOption: StateSaveOption
-    ): BindablePropertyBase.Provider<Char>() {
+    ) : BindablePropertyBase.Provider<Char>() {
         override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>) = BindableCharProperty(
             viewModel = thisRef,
             fieldId = fieldId ?: property.resolveFieldId(),
@@ -100,4 +100,3 @@ fun ViewModel.bindableChar(
     is StateSavingViewModel -> stateSaveOption
     else -> StateSaveOption.None
 })
-

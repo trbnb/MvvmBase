@@ -67,11 +67,11 @@ class BindableDoubleProperty private constructor(
      *
      * @see BindableDoubleProperty
      */
-    class Provider(
+    class Provider internal constructor(
         private val fieldId: Int? = null,
         private val defaultValue: Double,
         private val stateSaveOption: StateSaveOption
-    ): BindablePropertyBase.Provider<Double>() {
+    ) : BindablePropertyBase.Provider<Double>() {
         override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>) = BindableDoubleProperty(
             viewModel = thisRef,
             fieldId = fieldId ?: property.resolveFieldId(),

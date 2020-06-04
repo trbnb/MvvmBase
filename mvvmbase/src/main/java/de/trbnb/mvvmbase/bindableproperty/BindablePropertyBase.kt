@@ -32,6 +32,9 @@ abstract class BindablePropertyBase<T>(
     val beforeSet: BeforeSet<T>?,
     val validate: Validate<T>?
 ) {
+    /**
+     * Base delegate provider for [BindablePropertyBase].
+     */
     abstract class Provider<T> {
         protected var distinct: Boolean = false
         protected var afterSet: AfterSet<T>? = null
@@ -43,6 +46,9 @@ abstract class BindablePropertyBase<T>(
         internal fun internalValidate(action: Validate<T>) { validate = action }
         internal fun internalAfterSet(action: AfterSet<T>) { afterSet = action }
 
+        /**
+         * Creates a property delegate with the given arguments.
+         */
         abstract operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>): BindablePropertyBase<T>
     }
 }

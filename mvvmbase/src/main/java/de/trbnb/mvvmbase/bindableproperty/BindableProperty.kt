@@ -69,7 +69,7 @@ class BindableProperty<T> private constructor(
         private val fieldId: Int? = null,
         private val defaultValue: T,
         private val stateSaveOption: StateSaveOption
-    ): BindablePropertyBase.Provider<T>() {
+    ) : BindablePropertyBase.Provider<T>() {
         override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>) = BindableProperty(
             viewModel = thisRef,
             fieldId = fieldId ?: property.resolveFieldId(),

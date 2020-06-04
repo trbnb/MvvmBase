@@ -67,11 +67,11 @@ class BindableByteProperty private constructor(
      *
      * @see BindableByteProperty
      */
-    class Provider(
+    class Provider internal constructor(
         private val fieldId: Int? = null,
         private val defaultValue: Byte,
         private val stateSaveOption: StateSaveOption
-    ): BindablePropertyBase.Provider<Byte>() {
+    ) : BindablePropertyBase.Provider<Byte>() {
         override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>) = BindableByteProperty(
             viewModel = thisRef,
             fieldId = fieldId ?: property.resolveFieldId(),

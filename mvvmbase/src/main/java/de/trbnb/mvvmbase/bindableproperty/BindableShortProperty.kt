@@ -67,11 +67,11 @@ class BindableShortProperty private constructor(
      *
      * @see BindableShortProperty
      */
-    class Provider(
+    class Provider internal constructor(
         private val fieldId: Int? = null,
         private val defaultValue: Short,
         private val stateSaveOption: StateSaveOption
-    ): BindablePropertyBase.Provider<Short>() {
+    ) : BindablePropertyBase.Provider<Short>() {
         override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>) = BindableShortProperty(
             viewModel = thisRef,
             fieldId = fieldId ?: property.resolveFieldId(),

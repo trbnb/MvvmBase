@@ -35,13 +35,13 @@ class MaybeBindableProperty<T> private constructor(
      *
      * @see MaybeBindableProperty
      */
-    class Provider<T>(
+    class Provider<T> internal constructor(
         private val fieldId: Int? = null,
         private val defaultValue: T,
         private val maybe: Maybe<out T>,
         private val onError: (Throwable) -> Unit,
         private val onComplete: () -> Unit
-    ): BindablePropertyBase.Provider<T>() {
+    ) : BindablePropertyBase.Provider<T>() {
         override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>) = MaybeBindableProperty(
             viewModel = thisRef,
             fieldId = fieldId ?: property.resolveFieldId(),

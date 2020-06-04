@@ -67,11 +67,11 @@ class BindableLongProperty private constructor(
      *
      * @see BindableLongProperty
      */
-    class Provider(
+    class Provider internal constructor(
         private val fieldId: Int? = null,
         private val defaultValue: Long,
         private val stateSaveOption: StateSaveOption
-    ): BindablePropertyBase.Provider<Long>() {
+    ) : BindablePropertyBase.Provider<Long>() {
         override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>) = BindableLongProperty(
             viewModel = thisRef,
             fieldId = fieldId ?: property.resolveFieldId(),

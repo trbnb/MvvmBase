@@ -34,12 +34,12 @@ class SingleBindableProperty<T> private constructor(
      *
      * @see SingleBindableProperty
      */
-    class Provider<T>(
+    class Provider<T> internal constructor(
         private val fieldId: Int? = null,
         private val defaultValue: T,
         private val single: Single<out T>,
         private val onError: (Throwable) -> Unit
-    ): BindablePropertyBase.Provider<T>() {
+    ) : BindablePropertyBase.Provider<T>() {
         override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>) = SingleBindableProperty(
             viewModel = thisRef,
             fieldId = fieldId ?: property.resolveFieldId(),

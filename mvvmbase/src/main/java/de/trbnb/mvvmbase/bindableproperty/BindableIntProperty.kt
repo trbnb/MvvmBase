@@ -67,11 +67,11 @@ class BindableIntProperty private constructor(
      *
      * @see BindableIntProperty
      */
-    class Provider(
+    class Provider internal constructor(
         private val fieldId: Int? = null,
         private val defaultValue: Int,
         private val stateSaveOption: StateSaveOption
-    ): BindablePropertyBase.Provider<Int>() {
+    ) : BindablePropertyBase.Provider<Int>() {
         override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>) = BindableIntProperty(
             viewModel = thisRef,
             fieldId = fieldId ?: property.resolveFieldId(),

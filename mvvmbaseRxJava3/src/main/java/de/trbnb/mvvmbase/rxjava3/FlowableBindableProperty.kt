@@ -35,13 +35,13 @@ class FlowableBindableProperty<T> private constructor(
      *
      * @see FlowableBindableProperty
      */
-    class Provider<T>(
+    class Provider<T> internal constructor(
         private val fieldId: Int? = null,
         private val defaultValue: T,
         private val flowable: Flowable<out T>,
         private val onError: (Throwable) -> Unit,
         private val onComplete: () -> Unit
-    ): BindablePropertyBase.Provider<T>() {
+    ) : BindablePropertyBase.Provider<T>() {
         override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>) = FlowableBindableProperty(
             viewModel = thisRef,
             fieldId = fieldId ?: property.resolveFieldId(),

@@ -33,11 +33,11 @@ class CompletableBindableProperty private constructor(
      *
      * @see CompletableBindableProperty
      */
-    class Provider(
+    class Provider internal constructor(
         private val fieldId: Int? = null,
         private val completable: Completable,
         private val onError: (Throwable) -> Unit
-    ): BindablePropertyBase.Provider<Boolean>() {
+    ) : BindablePropertyBase.Provider<Boolean>() {
         override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>) = CompletableBindableProperty(
             viewModel = thisRef,
             fieldId = fieldId ?: property.resolveFieldId(),

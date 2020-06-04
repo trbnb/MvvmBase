@@ -67,11 +67,11 @@ class BindableBooleanProperty private constructor(
      *
      * @see BindableBooleanProperty
      */
-    class Provider(
+    class Provider internal constructor(
         private val fieldId: Int? = null,
         private val defaultValue: Boolean,
         private val stateSaveOption: StateSaveOption
-    ): BindablePropertyBase.Provider<Boolean>() {
+    ) : BindablePropertyBase.Provider<Boolean>() {
         override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>) = BindableBooleanProperty(
             viewModel = thisRef,
             fieldId = fieldId ?: property.resolveFieldId(),
