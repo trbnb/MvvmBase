@@ -31,7 +31,12 @@ subprojects {
     apply(plugin = "io.gitlab.arturbosch.detekt")
     detekt {
         buildUponDefaultConfig = true
-        config = files("${project.rootDir.canonicalPath}/detekt-config.yml")
+        config = files(
+            (when (name) {
+                "app" -> projectDir.canonicalPath
+                else -> project.rootDir.canonicalPath
+            } + File.separator + "detekt-config.yml")
+        )
     }
 }
 

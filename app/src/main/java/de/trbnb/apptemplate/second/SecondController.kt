@@ -6,7 +6,6 @@ import de.trbnb.apptemplate.app.appComponent
 import de.trbnb.mvvmbase.conductor.MvvmController
 import de.trbnb.mvvmbase.conductor.activityViewModels
 
-@Suppress("UndocumentedPublicClass")
 class SecondController : MvvmController<SecondViewModel>() {
     override val layoutId: Int = R.layout.fragment_second
     override val viewModelDelegate = activityViewModels<SecondViewModel> { viewModelFactory }

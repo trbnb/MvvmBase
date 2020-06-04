@@ -12,16 +12,13 @@ import de.trbnb.mvvmbase.bindableproperty.distinct
 import de.trbnb.mvvmbase.bindableproperty.validate
 import de.trbnb.mvvmbase.savedstate.BaseStateSavingViewModel
 
-@Suppress("UndocumentedPublicClass")
 class SecondViewModel @AssistedInject constructor(
     resourceProvider: ResourceProvider,
     @Assisted savedStateHandle: SavedStateHandle
 ) : BaseStateSavingViewModel(savedStateHandle) {
-    @Suppress("UndocumentedPublicProperty")
     @get:Bindable
     var text by bindable(resourceProvider.getString(R.string.not_restored))
 
-    @Suppress("UndocumentedPublicProperty", "MagicNumber")
     @get:Bindable
     var progress by bindableInt()
         .distinct()
@@ -35,10 +32,8 @@ class SecondViewModel @AssistedInject constructor(
         savedStateHandle[key] = true
     }
 
-    @Suppress("UndocumentedPublicClass")
     @AssistedInject.Factory
     interface Factory {
-        @Suppress("UndocumentedPublicFunction")
         operator fun invoke(savedStateHandle: SavedStateHandle): SecondViewModel
     }
 }

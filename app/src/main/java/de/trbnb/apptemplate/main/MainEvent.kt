@@ -1,5 +1,3 @@
-@file:Suppress("UndocumentedPublicClass")
-
 package de.trbnb.apptemplate.main
 
 import de.trbnb.mvvmbase.events.Event
