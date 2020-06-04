@@ -62,10 +62,10 @@ class BindableCharProperty private constructor(
     }
 
     /**
-     * Property delegate provider for [BindableBooleanProperty].
+     * Property delegate provider for [BindableCharProperty].
      * Needed so that reflection via [KProperty] is only necessary once, during delegate initialization.
      *
-     * @see BindableBooleanProperty
+     * @see BindableCharProperty
      */
     class Provider internal constructor(
         private val fieldId: Int? = null,
