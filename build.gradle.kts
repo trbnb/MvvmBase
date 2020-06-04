@@ -5,7 +5,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:4.0.0")
+        classpath(group = "com.android.tools.build", name = "gradle", version = gradleToolsVersion)
         classpath(kotlin("gradle-plugin", version = kotlinVersion))
 
         // NOTE: Do not place your application dependencies here; they belong

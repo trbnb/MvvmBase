@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "de.trbnb.apptemplate"
-        minSdkVersion(Android.minSdk)
+        minSdkVersion(21)
         targetSdkVersion(Android.compileSdk)
         versionCode = 1
         versionName = "1.0"
@@ -74,7 +74,7 @@ dependencies {
 
     // Kotlin
     implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.4")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.7")
 
     // Dagger 2
     kapt("com.google.dagger:dagger-compiler:$daggerVersion")

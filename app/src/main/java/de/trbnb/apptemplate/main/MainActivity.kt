@@ -2,7 +2,9 @@ package de.trbnb.apptemplate.main
 
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.databinding.library.baseAdapters.BR
 import androidx.lifecycle.SavedStateHandle
 import com.bluelinelabs.conductor.Conductor
@@ -15,8 +17,6 @@ import de.trbnb.apptemplate.second.SecondActivity
 import de.trbnb.apptemplate.second.SecondController
 import de.trbnb.mvvmbase.MvvmActivity
 import de.trbnb.mvvmbase.events.Event
-import org.jetbrains.anko.intentFor
-import org.jetbrains.anko.toast
 
 class MainActivity : MvvmActivity<MainViewModel>() {
     private var dialog: Dialog? = null
@@ -122,9 +122,9 @@ class MainActivity : MvvmActivity<MainViewModel>() {
         super.onEvent(event)
 
         when (event as? MainEvent ?: return) {
-            is MainEvent.ShowToast -> toast("Toast message!")
-            is MainEvent.ShowMainActivityAgainEvent -> startActivity(intentFor<MainActivity>())
-            is MainEvent.ShowSecondActivityEvent -> startActivity(intentFor<SecondActivity>())
+            is MainEvent.ShowToast -> Toast.makeText(this,  "Toast message!", Toast.LENGTH_SHORT).show()
+            is MainEvent.ShowMainActivityAgainEvent -> startActivity(Intent(this, MainActivity::class.java))
+            is MainEvent.ShowSecondActivityEvent -> startActivity(Intent(this, SecondActivity::class.java))
             is MainEvent.ShowConductorEvent -> {
                 router.pushController(RouterTransaction.with(SecondController()))
             }
