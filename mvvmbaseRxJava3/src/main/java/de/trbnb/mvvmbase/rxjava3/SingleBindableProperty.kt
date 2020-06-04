@@ -17,10 +17,10 @@ class SingleBindableProperty<T> private constructor(
     single: Single<out T>,
     onError: (Throwable) -> Unit,
     distinct: Boolean,
-    afterSet: AfterSet<T?>?,
-    beforeSet: BeforeSet<T?>?,
-    validate: Validate<T?>?
-) : RxBindablePropertyBase<T?>(viewModel, defaultValue, fieldId, distinct, afterSet, beforeSet, validate) {
+    afterSet: AfterSet<T>?,
+    beforeSet: BeforeSet<T>?,
+    validate: Validate<T>?
+) : RxBindablePropertyBase<T>(viewModel, defaultValue, fieldId, distinct, afterSet, beforeSet, validate) {
     init {
         viewModel.compositeDisposable += single.subscribe({ value = it }, onError)
     }
@@ -36,7 +36,7 @@ class SingleBindableProperty<T> private constructor(
         private val defaultValue: T,
         private val single: Single<out T>,
         private val onError: (Throwable) -> Unit
-    ): BindablePropertyBase.Provider<T?>() {
+    ): BindablePropertyBase.Provider<T>() {
         override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>) = SingleBindableProperty(
             viewModel = thisRef,
             fieldId = fieldId ?: property.resolveFieldId(),
