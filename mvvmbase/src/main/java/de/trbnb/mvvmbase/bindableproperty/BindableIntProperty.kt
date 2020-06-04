@@ -35,8 +35,14 @@ class BindableIntProperty private constructor(
         else -> defaultValue
     }
 
+    /**
+     * @see [kotlin.properties.ReadWriteProperty.getValue]
+     */
     operator fun getValue(thisRef: ViewModel, property: KProperty<*>): Int = value
 
+    /**
+     * @see [kotlin.properties.ReadWriteProperty.setValue]
+     */
     operator fun setValue(thisRef: ViewModel, property: KProperty<*>, value: Int) {
         if (distinct && this.value == value) {
             return

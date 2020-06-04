@@ -99,8 +99,10 @@ abstract class MvvmBindingFragment<VM, B> : Fragment(), MvvmView<VM, B>
         viewModel.eventChannel.addListener(eventListener)
     }
 
+    @Suppress("EmptyFunctionBlock")
     override fun onViewModelPropertyChanged(viewModel: VM, fieldId: Int) { }
 
+    @Suppress("EmptyFunctionBlock")
     override fun onEvent(event: Event) { }
 
     override fun onDestroyView() {
@@ -114,4 +116,3 @@ abstract class MvvmBindingFragment<VM, B> : Fragment(), MvvmView<VM, B>
         binding = null
     }
 }
-

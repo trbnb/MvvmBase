@@ -35,8 +35,14 @@ class BindableByteProperty private constructor(
         else -> defaultValue
     }
 
+    /**
+     * @see [kotlin.properties.ReadWriteProperty.getValue]
+     */
     operator fun getValue(thisRef: ViewModel, property: KProperty<*>): Byte = value
 
+    /**
+     * @see [kotlin.properties.ReadWriteProperty.setValue]
+     */
     operator fun setValue(thisRef: ViewModel, property: KProperty<*>, value: Byte) {
         if (distinct && this.value == value) {
             return

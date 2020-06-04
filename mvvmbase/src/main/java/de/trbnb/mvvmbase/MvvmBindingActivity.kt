@@ -97,8 +97,10 @@ abstract class MvvmBindingActivity<VM, B> : AppCompatActivity(), MvvmView<VM, B>
         viewModel.eventChannel.addListener(this, eventListener)
     }
 
+    @Suppress("EmptyFunctionBlock")
     override fun onViewModelPropertyChanged(viewModel: VM, fieldId: Int) { }
 
+    @Suppress("EmptyFunctionBlock")
     override fun onEvent(event: Event) { }
 
     /**
@@ -114,4 +116,3 @@ abstract class MvvmBindingActivity<VM, B> : AppCompatActivity(), MvvmView<VM, B>
         viewModel.removeOnPropertyChangedCallback(viewModelObserver)
     }
 }
-

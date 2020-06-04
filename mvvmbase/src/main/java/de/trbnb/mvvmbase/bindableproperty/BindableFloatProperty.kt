@@ -35,8 +35,14 @@ class BindableFloatProperty private constructor(
         else -> defaultValue
     }
 
+    /**
+     * @see [kotlin.properties.ReadWriteProperty.getValue]
+     */
     operator fun getValue(thisRef: ViewModel, property: KProperty<*>): Float = value
 
+    /**
+     * @see [kotlin.properties.ReadWriteProperty.setValue]
+     */
     operator fun setValue(thisRef: ViewModel, property: KProperty<*>, value: Float) {
         if (distinct && this.value == value) {
             return

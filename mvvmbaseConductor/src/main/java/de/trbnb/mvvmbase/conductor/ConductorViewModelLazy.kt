@@ -7,6 +7,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import com.bluelinelabs.conductor.Controller
 
+/**
+ * @see [androidx.fragment.app.Fragment.activityViewModels]
+ */
 @MainThread
 inline fun <reified VM : ViewModel> Controller.activityViewModels(
     noinline factoryProducer: () -> ViewModelProvider.Factory

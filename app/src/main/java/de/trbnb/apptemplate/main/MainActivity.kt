@@ -57,18 +57,18 @@ class MainActivity : MvvmActivity<MainViewModel>() {
     override fun onDestroy() {
         super.onDestroy()
 
-        //Dialogs should be dismissed in onDestroy so the window won't be leaked.
-        //This means we don't want to change the state in the view-model here.
+        // Dialogs should be dismissed in onDestroy so the window won't be leaked.
+        // This means we don't want to change the state in the view-model here.
 
-        //We dismiss and don't cancel here because we don't want to trigger the OnCancelListener that
-        //is attached to the dialog.
+        // We dismiss and don't cancel here because we don't want to trigger the OnCancelListener that
+        // is attached to the dialog.
         dialog?.dismiss()
     }
 
     /**
      * create a new Dialog and show it
      */
-    private fun showDialog(){
+    private fun showDialog() {
         dialog = AlertDialog.Builder(this)
                 .setTitle("Dialog title")
                 .setMessage("This is a sample dialog to show how to create a dialog via binding.")
@@ -88,7 +88,7 @@ class MainActivity : MvvmActivity<MainViewModel>() {
     /**
      * dismiss a Dialog if one exists
      */
-    private fun dismissDialog(){
+    private fun dismissDialog() {
         dialog?.dismiss()
         dialog = null
     }
@@ -96,15 +96,15 @@ class MainActivity : MvvmActivity<MainViewModel>() {
     /**
      * create a new Snackbar and show it
      */
-    private fun showSnackbar(){
+    private fun showSnackbar() {
         snackbar = Snackbar.make(findViewById(android.R.id.content), "This is a sample Snackbar made with binding.", Snackbar.LENGTH_LONG).apply {
 
             // if the snackbar is dismissed we want to update the state in the view-model
             addCallback(object : Snackbar.Callback() {
                 override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-                    //A Snackbar will dismiss itself if the containing Activity is destroyed.
-                    //Because we don't want to change the state in the view-model we just return in that case.
-                    if(isDestroyed){
+                    // A Snackbar will dismiss itself if the containing Activity is destroyed.
+                    // Because we don't want to change the state in the view-model we just return in that case.
+                    if (isDestroyed) {
                         return
                     }
 
@@ -140,9 +140,8 @@ class MainActivity : MvvmActivity<MainViewModel>() {
     /**
      * dismiss a Snackbar if one exists
      */
-    private fun dismissSnackbar(){
+    private fun dismissSnackbar() {
         snackbar?.dismiss()
         snackbar = null
     }
-
 }

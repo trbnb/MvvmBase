@@ -10,7 +10,7 @@ class TestPropertyChangedCallback : Observable.OnPropertyChangedCallback() {
         changedPropertyIds = changedPropertyIds.toMutableList().apply { add(propertyId) }
     }
 
-    fun clear(): Unit {
+    fun clear() {
         changedPropertyIds = emptyList()
     }
 }

@@ -10,6 +10,9 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.plusAssign
 import kotlin.reflect.KProperty
 
+/**
+ * Read-only bindable property delegate that has last emitted value from a [Observable] or `defaultValue` if no value has been emitted.
+ */
 class ObservableBindableProperty<T> private constructor(
     viewModel: ViewModel,
     defaultValue: T,

@@ -5,9 +5,10 @@ import java.lang.ref.WeakReference
 /**
  * Implementation of [EventHandler] that stores listeners as [WeakReference].
  *
- * @param memorizeNotReceivedEvents Defines if events that can't be received by listeners because none are registered are sent later when a listener is registered.
+ * @param memorizeNotReceivedEvents Defines if events that can't be received by listeners because none are registered are sent later
+ * when a listener is registered.
  */
-class WeakReferencesEventHandler<T>(memorizeNotReceivedEvents: Boolean = false): EventHandler<T> {
+class WeakReferencesEventHandler<T>(memorizeNotReceivedEvents: Boolean = false) : EventHandler<T> {
     private val listeners = mutableListOf<WeakReference<Listener<T>>>()
     private val notReceivedEvents = if (memorizeNotReceivedEvents) mutableListOf<T>() else null
 

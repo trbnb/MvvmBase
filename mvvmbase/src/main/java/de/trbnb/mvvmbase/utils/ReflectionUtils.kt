@@ -41,6 +41,7 @@ fun KProperty<*>.resolveFieldId(): Int = MvvmBase.lookupFieldIdByName(brFieldNam
  * See also:
  * https://android.googlesource.com/platform/frameworks/data-binding/+/master/compiler/src/main/java/android/databinding/annotationprocessor/ProcessBindable.java#216
  */
+@Suppress("MagicNumber")
 internal fun KProperty<*>.brFieldName(): String {
     val isBoolean = returnType.classifier == Boolean::class && !returnType.isMarkedNullable
     if (name.startsWith("is") && Character.isJavaIdentifierStart(name[2]) && isBoolean) {
