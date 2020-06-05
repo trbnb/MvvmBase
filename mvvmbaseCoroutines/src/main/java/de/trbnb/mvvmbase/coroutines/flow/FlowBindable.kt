@@ -51,10 +51,8 @@ class FlowBindable<T> private constructor(
 
     init {
         flow.onEach { value = it }
-            .apply {
-                onCompletion?.let { onCompletion(it) }
-                onException?.let { catch(it) }
-            }
+            .run { onCompletion(onCompletion ?: return@run this) }
+            .run { catch(onException ?: return@run this) }
             .launchIn(coroutineScope)
     }
 
