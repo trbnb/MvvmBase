@@ -32,8 +32,9 @@ interface CoroutineViewModel : ViewModel {
         defaultValue: T,
         fieldId: Int? = null,
         onException: OnException<T>? = null,
-        onCompletion: OnCompletion<T>? = null
-    ): FlowBindable.Provider<T> = FlowBindable.Provider(this, onException, onCompletion, viewModelScope, fieldId, defaultValue)
+        onCompletion: OnCompletion<T>? = null,
+        scope: CoroutineScope = viewModelScope
+    ): FlowBindable.Provider<T> = FlowBindable.Provider(this, onException, onCompletion, scope, fieldId, defaultValue)
 
     /**
      * Creates a new FlowBindable.Provider instance with `null` as default value.
@@ -44,6 +45,7 @@ interface CoroutineViewModel : ViewModel {
     fun <T> Flow<T>.toBindable(
         fieldId: Int? = null,
         onException: OnException<T>? = null,
-        onCompletion: OnCompletion<T>? = null
-    ): FlowBindable.Provider<T?> = toBindable(null, fieldId, onException, onCompletion)
+        onCompletion: OnCompletion<T>? = null,
+        scope: CoroutineScope = viewModelScope
+    ): FlowBindable.Provider<T?> = toBindable(null, fieldId, onException, onCompletion, scope)
 }
