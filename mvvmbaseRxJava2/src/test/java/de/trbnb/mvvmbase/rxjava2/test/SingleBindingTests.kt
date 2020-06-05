@@ -75,10 +75,6 @@ class SingleBindingTests {
         val propertyChangedCallback = TestPropertyChangedCallback()
         viewModel.addOnPropertyChangedCallback(propertyChangedCallback)
 
-        // imitate first getter call (usually done by binding)
-        // first getter call initiates the field id
-        viewModel.property
-
         val newValue = 55
         single.onSuccess(newValue)
         assert(BR.property in propertyChangedCallback.changedPropertyIds)

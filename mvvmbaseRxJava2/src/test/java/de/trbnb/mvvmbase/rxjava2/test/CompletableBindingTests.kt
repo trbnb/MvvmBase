@@ -63,10 +63,6 @@ class CompletableBindingTests {
         val propertyChangedCallback = TestPropertyChangedCallback()
         viewModel.addOnPropertyChangedCallback(propertyChangedCallback)
 
-        // imitate first getter call (usually done by binding)
-        // first getter call initiates the field id
-        viewModel.property
-
         completable.onComplete()
         assert(BR.property in propertyChangedCallback.changedPropertyIds)
     }
