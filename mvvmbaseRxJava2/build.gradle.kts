@@ -15,7 +15,7 @@ android {
         versionCode = Publishing.versionCode
         versionName = Publishing.versionName
 
-        testInstrumentationRunner = "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {

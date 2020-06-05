@@ -55,7 +55,6 @@ val ankoVersion = "0.10.4"
 
 dependencies {
     implementation(fileTree("dir" to "libs", "include" to listOf("*.jar")))
-    testImplementation("junit:junit:4.13")
 
     implementation(project(":mvvmbase"))
     implementation(project(":mvvmbaseConductor"))
