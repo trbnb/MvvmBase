@@ -83,8 +83,8 @@ bintray.apply {
     setConfigurations("archives")
     pkg.apply {
         repo = Publishing.groupId
-        name = Publishing.rxJava3ArtifactId
-        desc = Publishing.rxJava3Description
+        name = Publishing.coroutinesArtifactId
+        desc = Publishing.coroutinesDescription
         websiteUrl = Publishing.url
         vcsUrl = Publishing.gitUrl
         setLicenses("Apache-2.0")
@@ -92,7 +92,7 @@ bintray.apply {
         publicDownloadNumbers = true
         version.apply {
             name = Publishing.versionName
-            desc = Publishing.rxJava3Description
+            desc = Publishing.coroutinesDescription
             gpg.apply {
                 sign = true
                 passphrase = Publishing.getBintrayGpgPassphrase(rootProject)
@@ -108,14 +108,14 @@ afterEvaluate {
                 from(components["release"])
 
                 groupId = Publishing.groupId
-                artifactId = Publishing.rxJava3ArtifactId
+                artifactId = Publishing.coroutinesArtifactId
                 version = Publishing.versionName
 
                 pom {
                     packaging = "aar"
 
-                    name.set(Publishing.rxJava3ArtifactId)
-                    description.set(Publishing.rxJava3Description)
+                    name.set(Publishing.coroutinesArtifactId)
+                    description.set(Publishing.coroutinesDescription)
                     url.set(Publishing.url)
 
                     licenses {

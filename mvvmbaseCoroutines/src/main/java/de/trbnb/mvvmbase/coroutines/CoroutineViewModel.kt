@@ -2,6 +2,9 @@ package de.trbnb.mvvmbase.coroutines
 
 import androidx.lifecycle.viewModelScope
 import de.trbnb.mvvmbase.ViewModel
+import de.trbnb.mvvmbase.coroutines.flow.FlowBindable
+import de.trbnb.mvvmbase.coroutines.flow.OnCompletion
+import de.trbnb.mvvmbase.coroutines.flow.OnException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -28,8 +31,8 @@ interface CoroutineViewModel : ViewModel {
     fun <T> Flow<T>.toBindable(
         defaultValue: T,
         fieldId: Int? = null,
-        onException: OnException<T> = null,
-        onCompletion: OnCompletion<T> = null
+        onException: OnException<T>? = null,
+        onCompletion: OnCompletion<T>? = null
     ): FlowBindable.Provider<T> = FlowBindable.Provider(this, onException, onCompletion, viewModelScope, fieldId, defaultValue)
 
     /**
@@ -40,7 +43,7 @@ interface CoroutineViewModel : ViewModel {
     @ExperimentalCoroutinesApi
     fun <T> Flow<T>.toBindable(
         fieldId: Int? = null,
-        onException: OnException<T> = null,
-        onCompletion: OnCompletion<T> = null
+        onException: OnException<T>? = null,
+        onCompletion: OnCompletion<T>? = null
     ): FlowBindable.Provider<T?> = toBindable(null, fieldId, onException, onCompletion)
 }

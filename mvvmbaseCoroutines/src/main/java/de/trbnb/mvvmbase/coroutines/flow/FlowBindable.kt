@@ -1,4 +1,4 @@
-package de.trbnb.mvvmbase.coroutines
+package de.trbnb.mvvmbase.coroutines.flow
 
 import de.trbnb.mvvmbase.ViewModel
 import de.trbnb.mvvmbase.bindableproperty.AfterSet
@@ -10,7 +10,6 @@ import de.trbnb.mvvmbase.utils.resolveFieldId
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onCompletion
@@ -18,11 +17,9 @@ import kotlinx.coroutines.flow.onEach
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
-typealias OnException<T> = (suspend FlowCollector<T>.(Throwable) -> Unit)?
-typealias OnCompletion<T> = (suspend FlowCollector<T>.(Throwable?) -> Unit)?
-
 /**
- * Bindable delegate property that has the last emitted value of a given [Flow] or `defaultValue` if no value has been emitted.
+ * Bindable delegate property that collects the emitted values of a given [Flow] and uses them for [getValue].
+ * Uses `defaultValue` if no value has been emitted.
  */
 @ExperimentalCoroutinesApi
 class FlowBindable<T> private constructor(
@@ -30,8 +27,8 @@ class FlowBindable<T> private constructor(
     private val fieldId: Int,
     defaultValue: T,
     flow: Flow<T>,
-    onException: OnException<T>,
-    onCompletion: OnCompletion<T>,
+    onException: OnException<T>?,
+    onCompletion: OnCompletion<T>?,
     coroutineScope: CoroutineScope,
     distinct: Boolean,
     afterSet: AfterSet<T>?,
@@ -71,8 +68,8 @@ class FlowBindable<T> private constructor(
      */
     class Provider<T>(
         private val flow: Flow<T>,
-        private val onException: OnException<T>,
-        private val onCompletion: OnCompletion<T>,
+        private val onException: OnException<T>?,
+        private val onCompletion: OnCompletion<T>?,
         private val coroutineScope: CoroutineScope,
         private val fieldId: Int? = null,
         private val defaultValue: T
