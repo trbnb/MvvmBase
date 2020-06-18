@@ -92,7 +92,7 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel, LifecycleOwne
 
     override fun getLifecycle(): Lifecycle = lifecycleOwner.lifecycle
 
-    override fun <T : Any> getTag(key: String): T? = getTagFromViewModel(key)
+    override operator fun <T : Any> get(key: String): T? = getTagFromViewModel(key)
 
-    override fun <T : Any> setTagIfAbsent(key: String, newValue: T): T = setTagIfAbsentForViewModel(key, newValue)
+    override fun <T : Any> initTag(key: String, newValue: T): T = setTagIfAbsentForViewModel(key, newValue)
 }

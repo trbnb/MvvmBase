@@ -80,12 +80,12 @@ interface ViewModel : Observable, LifecycleOwner {
     /**
      * @see [androidx.lifecycle.ViewModel.getTag]
      */
-    fun <T : Any> getTag(key: String): T?
+    operator fun <T : Any> get(key: String): T?
 
     /**
      * @see [androidx.lifecycle.ViewModel.setTagIfAbsent]
      */
-    fun <T : Any> setTagIfAbsent(key: String, newValue: T): T
+    fun <T : Any> initTag(key: String, newValue: T): T
 
     /**
      * Destroys all ViewModels in that list when the containing ViewModel is destroyed.
