@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     kotlin("android")
     kotlin("kapt")
+    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -50,8 +51,9 @@ android {
     }
 }
 
-val daggerVersion = "2.27"
-val ankoVersion = "0.10.4"
+kapt {
+    correctErrorTypes = true
+}
 
 dependencies {
     implementation(fileTree("dir" to "libs", "include" to listOf("*.jar")))
@@ -67,20 +69,23 @@ dependencies {
     implementation("androidx.recyclerview:recyclerview:1.1.0")
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0")
-    implementation("androidx.fragment:fragment-ktx:1.2.4")
+    implementation("androidx.fragment:fragment-ktx:1.2.5")
     implementation("androidx.navigation:navigation-fragment-ktx:2.2.2")
     implementation("androidx.navigation:navigation-ui-ktx:2.2.2")
+
+    implementation("com.google.dagger:hilt-android:${Versions.dagger}")
+    kapt("com.google.dagger:hilt-android-compiler:${Versions.dagger}")
+    implementation("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha01")
+    kapt("androidx.hilt:hilt-compiler:1.0.0-alpha01")
 
     // Kotlin
     implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.7")
 
     // Dagger 2
-    kapt("com.google.dagger:dagger-compiler:$daggerVersion")
-    implementation("com.google.dagger:dagger:$daggerVersion")
+    /*kapt("com.google.dagger:dagger-compiler:${Versions.dagger}")
+    implementation("com.google.dagger:dagger:${Versions.dagger}")*/
     compileOnly("javax.annotation:jsr250-api:1.0")
-    compileOnly("com.squareup.inject:assisted-inject-annotations-dagger2:0.5.2")
-    kapt("com.squareup.inject:assisted-inject-processor-dagger2:0.5.2")
 
     implementation("io.reactivex.rxjava2:rxkotlin:2.4.0")
 

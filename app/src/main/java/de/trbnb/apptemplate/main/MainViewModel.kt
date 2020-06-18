@@ -1,11 +1,11 @@
 package de.trbnb.apptemplate.main
 
 import androidx.databinding.Bindable
+import androidx.hilt.Assisted
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.squareup.inject.assisted.Assisted
-import com.squareup.inject.assisted.AssistedInject
-import de.trbnb.mvvmbase.BR
+import de.trbnb.apptemplate.resource.ResourceProvider
 import de.trbnb.mvvmbase.bindableproperty.bindableBoolean
 import de.trbnb.mvvmbase.commands.ruleCommand
 import de.trbnb.mvvmbase.commands.simpleCommand
@@ -15,8 +15,9 @@ import io.reactivex.Observable
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class MainViewModel @AssistedInject constructor(
-    @Assisted savedStateHandle: SavedStateHandle
+class MainViewModel @ViewModelInject constructor(
+    @Assisted savedStateHandle: SavedStateHandle,
+    resourceProvider: ResourceProvider
 ) : BaseStateSavingViewModel(savedStateHandle), RxViewModel {
     @get:Bindable
     var isShowingDialog by bindableBoolean(false)
@@ -35,13 +36,13 @@ class MainViewModel @AssistedInject constructor(
     val showDialogCommand = ruleCommand(
         enabledRule = { !isShowingDialog },
         action = { isShowingDialog = true },
-        dependentFieldIds = intArrayOf(BR.showingDialog)
+        dependentFields = listOf(::isShowingDialog)
     )
 
     val showSnackbarCommand = ruleCommand(
         action = { showSnackbar = true },
         enabledRule = { !showSnackbar },
-        dependentFieldIds = intArrayOf(BR.showSnackbar)
+        dependentFields = listOf(::showSnackbar)
     )
 
     val showToastCommand = simpleCommand {
@@ -58,10 +59,5 @@ class MainViewModel @AssistedInject constructor(
 
     val showConductorEvent = simpleCommand {
         eventChannel(MainEvent.ShowConductorEvent)
-    }
-
-    @AssistedInject.Factory
-    interface Factory {
-        operator fun invoke(savedStateHandle: SavedStateHandle): MainViewModel
     }
 }

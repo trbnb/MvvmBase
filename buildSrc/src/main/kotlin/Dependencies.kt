@@ -8,6 +8,10 @@ const val gradleToolsVersion = "4.0.0"
 
 val javaVersion = JavaVersion.VERSION_1_8
 
+object Versions {
+    const val dagger = "2.28-alpha"
+}
+
 object Android {
     const val minSdk = 14
     const val compileSdk = 29
