@@ -2,6 +2,8 @@ package de.trbnb.mvvmbase.commands
 
 import androidx.databinding.Bindable
 import de.trbnb.mvvmbase.ViewModel
+import de.trbnb.mvvmbase.utils.resolveFieldId
+import kotlin.reflect.KProperty
 
 /**
  * A [Command] that determines if it is enabled via a predicate.
@@ -48,6 +50,17 @@ fun <P, R> ViewModel.ruleCommand(
 }
 
 /**
+ * Helper function to create a [RuleCommand] that clears all it's listeners automatically when
+ * [ViewModel.onUnbind] is called.
+ */
+@JvmName("parameterizedRuleCommand")
+fun <P, R> ViewModel.ruleCommand(
+    action: (P) -> R,
+    enabledRule: () -> Boolean,
+    dependentFields: List<KProperty<*>>
+): RuleCommand<P, R> = ruleCommand(action, enabledRule, dependentFields.map { it.resolveFieldId() }.toIntArray())
+
+/**
  * Helper function to create a parameter-less [RuleCommand] that clears all it's listeners automatically when
  * [ViewModel.onUnbind] is called.
  */
@@ -56,3 +69,13 @@ fun <R> ViewModel.ruleCommand(
     enabledRule: () -> Boolean,
     dependentFieldIds: IntArray? = null
 ): RuleCommand<Unit, R> = ruleCommand<Unit, R>(action, enabledRule, dependentFieldIds)
+
+/**
+ * Helper function to create a parameter-less [RuleCommand] that clears all it's listeners automatically when
+ * [ViewModel.onUnbind] is called.
+ */
+fun <R> ViewModel.ruleCommand(
+    action: (Unit) -> R,
+    enabledRule: () -> Boolean,
+    dependentFields: List<KProperty<*>>
+): RuleCommand<Unit, R> = ruleCommand(action, enabledRule, dependentFields.map { it.resolveFieldId() }.toIntArray())
