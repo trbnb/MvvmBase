@@ -10,7 +10,6 @@ import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelLazy
 import de.trbnb.mvvmbase.events.Event
-import de.trbnb.mvvmbase.savedstate.SavedStateViewModelFactory
 import de.trbnb.mvvmbase.utils.findGenericSuperclass
 
 /**
@@ -39,7 +38,7 @@ abstract class MvvmBindingFragment<VM, B> : Fragment(), MvvmView<VM, B>
     override val viewModelDelegate: Lazy<VM> = ViewModelLazy(
         viewModelClass = viewModelClass.kotlin,
         storeProducer = { viewModelStore },
-        factoryProducer = { viewModelFactory }
+        factoryProducer = { defaultViewModelProviderFactory }
     )
 
     /**
@@ -51,7 +50,7 @@ abstract class MvvmBindingFragment<VM, B> : Fragment(), MvvmView<VM, B>
     private val eventListener = { event: Event -> onEvent(event) }
 
     /**
-     * Defines which Bundle will be used as defaultArgs with [SavedStateViewModelFactory].
+     * Defines which Bundle will be used as defaultArgs with [androidx.lifecycle.AbstractSavedStateViewModelFactory].
      * Default is [getArguments].
      */
     override val defaultViewModelArgs: Bundle?

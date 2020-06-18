@@ -52,6 +52,7 @@ dependencies {
 
     // Support library
     implementation("androidx.appcompat:appcompat:1.1.0")
+    implementation("androidx.fragment:fragment-ktx:1.2.5")
 
     testAnnotationProcessor("androidx.databinding:databinding-compiler:$gradleToolsVersion")
     kaptTest("androidx.databinding:databinding-compiler:$gradleToolsVersion")

@@ -5,12 +5,9 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import de.trbnb.mvvmbase.events.Event
-import de.trbnb.mvvmbase.savedstate.SavedStateViewModelFactory
 
 /**
  * Contract for view components that want to support MVVM with a [ViewModel] bound to a [ViewDataBinding].
@@ -20,8 +17,6 @@ import de.trbnb.mvvmbase.savedstate.SavedStateViewModelFactory
  * Specifying a [DataBindingComponent] via [dataBindingComponent] is optional.
  *
  * The [ViewModel] will be instantiated via the ViewModel API by Android X.
- * For this the function [createViewModel] will be called and has to be implemented.
- * A [SavedStateHandle] will be passed to it to support saving state.
  */
 interface MvvmView<VM, B : ViewDataBinding> : ViewModelStoreOwner, SavedStateRegistryOwner
     where VM : ViewModel, VM : androidx.lifecycle.ViewModel {
@@ -35,7 +30,6 @@ interface MvvmView<VM, B : ViewDataBinding> : ViewModelStoreOwner, SavedStateReg
      * Delegate for [viewModel].
      *
      * Can be overridden to make use of `activityViewModels()` or `navGraphViewModels()`.
-     * These should then make use of [viewModelFactory].
      */
     val viewModelDelegate: Lazy<VM>
 
@@ -74,24 +68,10 @@ interface MvvmView<VM, B : ViewDataBinding> : ViewModelStoreOwner, SavedStateReg
         get() = null
 
     /**
-     * Defines which Bundle will be used as defaultArgs with [SavedStateViewModelFactory].
+     * Defines which Bundle will be used as defaultArgs with the ViewModel factory
+     * if it extends [androidx.lifecycle.AbstractSavedStateViewModelFactory].
      */
     val defaultViewModelArgs: Bundle?
-
-    /**
-     * Creates a new view model via [createViewModel].
-     *
-     * @see SavedStateViewModelFactory
-     */
-    val viewModelFactory: ViewModelProvider.Factory
-        get() = SavedStateViewModelFactory(this::createViewModel, this, defaultViewModelArgs)
-
-    /**
-     * Is called to create a need new ViewModel instance.
-     *
-     * @param savedStateHandle Needed for instances of a [de.trbnb.mvvmbase.savedstate.StateSavingViewModel].
-     */
-    fun createViewModel(savedStateHandle: SavedStateHandle): VM
 
     /**
      * Called when the view model is loaded and is set as [viewModel].

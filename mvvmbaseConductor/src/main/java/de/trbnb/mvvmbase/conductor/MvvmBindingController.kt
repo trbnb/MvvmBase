@@ -10,7 +10,9 @@ import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.lifecycle.ViewModelLazy
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
 import androidx.savedstate.SavedStateRegistryController
 import com.bluelinelabs.conductor.archlifecycle.LifecycleController
@@ -18,7 +20,6 @@ import de.trbnb.mvvmbase.MvvmView
 import de.trbnb.mvvmbase.ViewModel
 import de.trbnb.mvvmbase.ViewModelPropertyChangedCallback
 import de.trbnb.mvvmbase.events.Event
-import de.trbnb.mvvmbase.savedstate.SavedStateViewModelFactory
 import de.trbnb.mvvmbase.utils.findGenericSuperclass
 
 /**
@@ -28,9 +29,19 @@ import de.trbnb.mvvmbase.utils.findGenericSuperclass
 */
 abstract class MvvmBindingController<VM, B>(
     bundle: Bundle? = null
-) : LifecycleController(bundle), MvvmView<VM, B>
-        where VM : ViewModel, VM : androidx.lifecycle.ViewModel, B : ViewDataBinding {
+) : LifecycleController(bundle), MvvmView<VM, B> where VM : ViewModel, VM : androidx.lifecycle.ViewModel, B : ViewDataBinding {
     override var binding: B? = null
+
+    /**
+     * Serves the same purpose as [ComponentActivity.getDefaultViewModelProviderFactory].
+     */
+    open val defaultViewModelProviderFactory: ViewModelProvider.Factory by lazy {
+        SavedStateViewModelFactory(
+            activity?.application ?: throw RuntimeException("Unable to retrieve application context"),
+            this,
+            defaultViewModelArgs
+        )
+    }
 
     /**
      * Callback implementation that delegates the parametes to [onViewModelPropertyChanged].
@@ -42,7 +53,7 @@ abstract class MvvmBindingController<VM, B>(
     override val viewModelDelegate: Lazy<VM> = ViewModelLazy(
         viewModelClass = viewModelClass.kotlin,
         storeProducer = { viewModelStore },
-        factoryProducer = { viewModelFactory }
+        factoryProducer = { defaultViewModelProviderFactory }
     )
 
     /**
@@ -61,7 +72,7 @@ abstract class MvvmBindingController<VM, B>(
             ?: throw IllegalStateException("viewModelClass does not equal Class<VM>")
 
     /**
-     * Defines which Bundle will be used as defaultArgs with [SavedStateViewModelFactory].
+     * Defines which Bundle will be used as defaultArgs with [androidx.lifecycle.AbstractSavedStateViewModelFactory].
      * Default is [getArgs].
      */
     override val defaultViewModelArgs: Bundle?

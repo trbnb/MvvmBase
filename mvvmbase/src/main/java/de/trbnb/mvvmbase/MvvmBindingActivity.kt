@@ -8,7 +8,6 @@ import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModelLazy
 import de.trbnb.mvvmbase.events.Event
 import de.trbnb.mvvmbase.events.addListener
-import de.trbnb.mvvmbase.savedstate.SavedStateViewModelFactory
 import de.trbnb.mvvmbase.utils.findGenericSuperclass
 
 /**
@@ -32,7 +31,7 @@ abstract class MvvmBindingActivity<VM, B> : AppCompatActivity(), MvvmView<VM, B>
     override val viewModelDelegate: Lazy<VM> = ViewModelLazy(
         viewModelClass = viewModelClass.kotlin,
         storeProducer = { viewModelStore },
-        factoryProducer = { viewModelFactory }
+        factoryProducer = { defaultViewModelProviderFactory }
     )
 
     @Suppress("UNCHECKED_CAST")
@@ -49,7 +48,7 @@ abstract class MvvmBindingActivity<VM, B> : AppCompatActivity(), MvvmView<VM, B>
     private val viewModelObserver = ViewModelPropertyChangedCallback(this)
 
     /**
-     * Defines which Bundle will be used as defaultArgs with [SavedStateViewModelFactory].
+     * Defines which Bundle will be used as defaultArgs with [androidx.lifecycle.AbstractSavedStateViewModelFactory].
      * Default is [android.content.Intent.getExtras] from [getIntent].
      */
     override val defaultViewModelArgs: Bundle?
