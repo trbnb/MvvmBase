@@ -78,4 +78,4 @@ fun <R> ViewModel.ruleCommand(
     action: (Unit) -> R,
     enabledRule: () -> Boolean,
     dependentFields: List<KProperty<*>>
-): RuleCommand<Unit, R> = ruleCommand(action, enabledRule, dependentFields)
+): RuleCommand<Unit, R> = ruleCommand<Unit, R>(action, enabledRule, dependentFields)
