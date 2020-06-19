@@ -17,13 +17,3 @@
 #}
 #-dontobfuscate
 #-keepattributes Signature, InnerClasses, EnclosingMethod, RuntimeVisibleAnnotations
--keep class de.trbnb.mvvmbase.** { *; }
-# Prevent a BuildLoader error. Not needed when running with R8.
-#-keep interface kotlin.reflect.jvm.internal.impl.builtins.BuiltInsLoader
-#-keep class kotlin.reflect.jvm.internal.impl.serialization.deserialization.builtins.BuiltInsLoaderImpl
--keep @interface kotlin.Metadata { *; }
--keep class kotlin.reflect.jvm.internal.** { *; }
-
--keep class androidx.lifecycle.ViewModel
--keep interface androidx.databinding.Observable
--keep interface androidx.lifecycle.LifecycleOwner
