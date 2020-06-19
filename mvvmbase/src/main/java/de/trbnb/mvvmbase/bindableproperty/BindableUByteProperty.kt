@@ -49,17 +49,18 @@ class BindableUByteProperty private constructor(
             return
         }
 
-        beforeSet?.invoke(this.value, value)
+        val oldValue = this.value
+        beforeSet?.invoke(oldValue, value)
         this.value = when (val validate = validate) {
             null -> value
-            else -> validate(this.value, value)
+            else -> validate(oldValue, value)
         }
 
         thisRef.notifyPropertyChanged(fieldId)
         if (thisRef is StateSavingViewModel && stateSavingKey != null) {
             thisRef.savedStateHandle[stateSavingKey] = this.value.toByte()
         }
-        afterSet?.invoke(this.value)
+        afterSet?.invoke(oldValue, this.value)
     }
 
     /**

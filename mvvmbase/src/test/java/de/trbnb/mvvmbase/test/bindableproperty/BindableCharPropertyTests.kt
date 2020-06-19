@@ -31,10 +31,14 @@ class BindableCharPropertyTests {
 
     @Test
     fun `is afterSet() called`() {
+        val oldValue = 4.toChar()
         val newValue = 7.toChar()
         val viewModel = object : BaseViewModel() {
-            var property by bindableChar('A')
-                .afterSet { new -> assert(newValue == new) }
+            var property by bindableChar(oldValue)
+                .afterSet { old, new ->
+                    assert(newValue == new)
+                    assert(oldValue == old)
+                }
         }
 
         viewModel.property = newValue
@@ -47,7 +51,7 @@ class BindableCharPropertyTests {
         val viewModel = object : BaseViewModel() {
             var propery by bindableChar(value)
                 .distinct()
-                .afterSet { afterSetWasCalled = true }
+                .afterSet { _, _ -> afterSetWasCalled = true }
         }
 
         viewModel.propery = value

@@ -41,10 +41,14 @@ class BindableUShortPropertyTests {
 
     @Test
     fun `is afterSet() called`() {
+        val oldValue = 4.toUShort()
         val newValue = 7.toUShort()
         val viewModel = object : BaseViewModel() {
-            var property by bindableUShort()
-                .afterSet { new -> assert(newValue == new) }
+            var property by bindableUShort(oldValue)
+                .afterSet { old, new ->
+                    assert(newValue == new)
+                    assert(oldValue == old)
+                }
         }
 
         viewModel.property = newValue
@@ -57,7 +61,7 @@ class BindableUShortPropertyTests {
         val viewModel = object : BaseViewModel() {
             var propery by bindableUShort(value)
                 .distinct()
-                .afterSet { afterSetWasCalled = true }
+                .afterSet { _, _ -> afterSetWasCalled = true }
         }
 
         viewModel.propery = value

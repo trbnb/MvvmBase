@@ -41,10 +41,14 @@ class BindableULongPropertyTests {
 
     @Test
     fun `is afterSet() called`() {
+        val oldValue = 4.toULong()
         val newValue = 7.toULong()
         val viewModel = object : BaseViewModel() {
-            var property by bindableULong()
-                .afterSet { new -> assert(newValue == new) }
+            var property by bindableULong(oldValue)
+                .afterSet { old, new ->
+                    assert(newValue == new)
+                    assert(oldValue == old)
+                }
         }
 
         viewModel.property = newValue
@@ -57,7 +61,7 @@ class BindableULongPropertyTests {
         val viewModel = object : BaseViewModel() {
             var propery by bindableULong(value)
                 .distinct()
-                .afterSet { afterSetWasCalled = true }
+                .afterSet { _, _ -> afterSetWasCalled = true }
         }
 
         viewModel.propery = value

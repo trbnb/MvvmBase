@@ -40,10 +40,14 @@ class BindableFloatPropertyTests {
 
     @Test
     fun `is afterSet() called`() {
+        val oldValue = 4f
         val newValue = 7f
         val viewModel = object : BaseViewModel() {
-            var property by bindableFloat()
-                .afterSet { new -> assert(newValue == new) }
+            var property by bindableFloat(oldValue)
+                .afterSet { old, new ->
+                    assert(newValue == new)
+                    assert(oldValue == old)
+                }
         }
 
         viewModel.property = newValue
@@ -56,7 +60,7 @@ class BindableFloatPropertyTests {
         val viewModel = object : BaseViewModel() {
             var propery by bindableFloat(value)
                 .distinct()
-                .afterSet { afterSetWasCalled = true }
+                .afterSet { _, _ -> afterSetWasCalled = true }
         }
 
         viewModel.propery = value

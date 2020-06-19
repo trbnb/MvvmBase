@@ -40,10 +40,14 @@ class BindableBytePropertyTests {
 
     @Test
     fun `is afterSet() called`() {
+        val oldValue = 4.toByte()
         val newValue = 7.toByte()
         val viewModel = object : BaseViewModel() {
-            var property by bindableByte()
-                .afterSet { new -> assert(newValue == new) }
+            var property by bindableByte(oldValue)
+                .afterSet { old, new ->
+                    assert(newValue == new)
+                    assert(oldValue == old)
+                }
         }
 
         viewModel.property = newValue
@@ -56,7 +60,7 @@ class BindableBytePropertyTests {
         val viewModel = object : BaseViewModel() {
             var propery by bindableByte(value)
                 .distinct()
-                .afterSet { afterSetWasCalled = true }
+                .afterSet { _, _ -> afterSetWasCalled = true }
         }
 
         viewModel.propery = value

@@ -5,7 +5,7 @@ import kotlin.reflect.KProperty
 
 typealias BeforeSet<T> = (old: T, new: T) -> Unit
 typealias Validate<T> = (old: T, new: T) -> T
-typealias AfterSet<T> = (new: T) -> Unit
+typealias AfterSet<T> = (old: T, new: T) -> Unit
 
 /**
  * Base class for all BindableProperty implementations.

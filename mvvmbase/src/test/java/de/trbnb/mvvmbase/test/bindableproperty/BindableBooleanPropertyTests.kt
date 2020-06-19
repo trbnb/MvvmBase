@@ -40,10 +40,14 @@ class BindableBooleanPropertyTests {
 
     @Test
     fun `is afterSet() called`() {
+        val oldValue = false
         val newValue = true
         val viewModel = object : BaseViewModel() {
-            var property by bindableBoolean()
-                .afterSet { new -> assert(newValue == new) }
+            var property by bindableBoolean(oldValue)
+                .afterSet { old, new ->
+                    assert(newValue == new)
+                    assert(oldValue == old)
+                }
         }
 
         viewModel.property = newValue
@@ -56,7 +60,7 @@ class BindableBooleanPropertyTests {
         val viewModel = object : BaseViewModel() {
             var propery by bindableBoolean(value)
                 .distinct()
-                .afterSet { afterSetWasCalled = true }
+                .afterSet { _, _ -> afterSetWasCalled = true }
         }
 
         viewModel.propery = value

@@ -41,10 +41,14 @@ class BindableUIntPropertyTests {
 
     @Test
     fun `is afterSet() called`() {
+        val oldValue = 4.toUInt()
         val newValue = 7.toUInt()
         val viewModel = object : BaseViewModel() {
-            var property by bindableUInt()
-                .afterSet { new -> assert(newValue == new) }
+            var property by bindableUInt(oldValue)
+                .afterSet { old, new ->
+                    assert(newValue == new)
+                    assert(oldValue == old)
+                }
         }
 
         viewModel.property = newValue
@@ -57,7 +61,7 @@ class BindableUIntPropertyTests {
         val viewModel = object : BaseViewModel() {
             var propery by bindableUInt(value)
                 .distinct()
-                .afterSet { afterSetWasCalled = true }
+                .afterSet { _, _ -> afterSetWasCalled = true }
         }
 
         viewModel.propery = value

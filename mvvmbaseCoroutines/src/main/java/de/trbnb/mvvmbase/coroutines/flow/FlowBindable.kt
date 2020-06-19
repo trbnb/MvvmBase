@@ -39,14 +39,15 @@ class FlowBindable<T> private constructor(
         set(value) {
             if (distinct && value === field) return
 
-            beforeSet?.invoke(field, value)
+            val oldValue = field
+            beforeSet?.invoke(oldValue, value)
             field = when (val validate = validate) {
                 null -> value
-                else -> validate(field, value)
+                else -> validate(oldValue, value)
             }
 
             viewModel.notifyPropertyChanged(fieldId)
-            afterSet?.invoke(field)
+            afterSet?.invoke(oldValue, field)
         }
 
     init {
