@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
+import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
@@ -28,7 +29,8 @@ import de.trbnb.mvvmbase.utils.findGenericSuperclass
  * This creates the binding in [onCreateView] and the ViewModel lazily.
 */
 abstract class MvvmBindingController<VM, B>(
-    bundle: Bundle? = null
+    bundle: Bundle? = null,
+    @LayoutRes override val layoutId: Int = 0
 ) : LifecycleController(bundle), MvvmView<VM, B> where VM : ViewModel, VM : androidx.lifecycle.ViewModel, B : ViewDataBinding {
     override var binding: B? = null
 

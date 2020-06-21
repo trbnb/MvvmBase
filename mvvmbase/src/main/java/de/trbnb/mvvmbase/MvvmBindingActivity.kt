@@ -2,6 +2,7 @@ package de.trbnb.mvvmbase
 
 import android.os.Bundle
 import androidx.annotation.CallSuper
+import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
@@ -15,7 +16,7 @@ import de.trbnb.mvvmbase.utils.findGenericSuperclass
  *
  * This creates the binding and the ViewModel during [onCreate].
  */
-abstract class MvvmBindingActivity<VM, B> : AppCompatActivity(), MvvmView<VM, B>
+abstract class MvvmBindingActivity<VM, B>(@LayoutRes override val layoutId: Int = 0) : AppCompatActivity(), MvvmView<VM, B>
         where VM : ViewModel, VM : androidx.lifecycle.ViewModel, B : ViewDataBinding {
     override lateinit var binding: B
 
