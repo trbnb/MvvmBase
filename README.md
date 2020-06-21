@@ -41,7 +41,9 @@ MvvmBase.init<BR>()
 
 A futher explanation on why this is necessary is given in section `BindableProperty`.
 
-The library also uses some Kotlin reflection features. The AAR is exported with a proguard config.
+## Proguard
+
+The library also uses some Kotlin reflection features. The AAR is exported with a proguard config. Be aware that if you choose to call `MvvmBase.init<BR>()` the manually specified BR class will need its own rule.
 
 # Features
 This library comes with two major features:
@@ -69,17 +71,18 @@ However this is not enough if we want to support saving state, so instead we use
 class MainViewModel(savedStateHandle: SavedStateHandle) : BaseStateSavingViewModel(savedStateHandle)
 ```
 
-Now this view model can be used by an `MvvmActivity`. This activity will have to implement two members:
+Now this view model can be used by an `MvvmActivity`. This activity has to specify its layout ID. This can be done by override the `layoutId` property or by passing it as constructor paramter:
 
 ```kotlin
 class MainActivity : MvvmActivity<MainViewModel>() {
     override val layoutId: Int = R.layout.activity_main
 }
+
+class MainActivity : MvvmActivity<MainViewModel>(R.layout.activity_main)
 ```
 
 So what happens here?
 
-* `layoutId`  
 The layout resource ID tells the data binding tools which layout should be inflated and prepared for data binding. It will also need a variable with the name `vm` and the type of the view model. This variable will be used to associate the view model with the layout. It can then be used to bind properties to views. It should look like this:
 
 ```xml
