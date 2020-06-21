@@ -17,6 +17,9 @@ import javax.inject.Provider
 )
 abstract class LegacyMvvmBindingController<VM, B> : MvvmBindingController<VM, B>()
     where VM : ViewModel, VM : androidx.lifecycle.ViewModel, B : ViewDataBinding {
+    /**
+     * Specifies how to instantiate a new [VM].
+     */
     abstract val viewModelProvider: Provider<VM>
 
     override val defaultViewModelProviderFactory = object : ViewModelProvider.Factory {
@@ -26,4 +29,3 @@ abstract class LegacyMvvmBindingController<VM, B> : MvvmBindingController<VM, B>
         }
     }
 }
-
