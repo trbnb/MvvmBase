@@ -18,8 +18,8 @@ object Android {
 }
 
 object Publishing {
-    const val versionName = "2.0.0-beta5"
-    const val versionCode = 34
+    const val versionName = "2.0.0-beta6"
+    const val versionCode = 35
 
     const val url = "https://github.com/trbnb/MvvmBase"
     const val gitUrl = "https://github.com/trbnb/MvvmBase.git"
