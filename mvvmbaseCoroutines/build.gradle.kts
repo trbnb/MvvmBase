@@ -66,22 +66,28 @@ dependencies {
 
 val sourcesJar = task<Jar>("sourcesJar") {
     archiveClassifier.set("sources")
-    from(android.sourceSets["main"].java.sourceFiles)
+    from(android.sourceSets["main"].java.srcDirs)
 }
 
-task<Javadoc>("javadoc") {
+val javadoc = task<Javadoc>("javadoc") {
+    isFailOnError = false
     source = android.sourceSets["main"].java.sourceFiles
     classpath += project.files(android.bootClasspath.joinToString(separator = File.pathSeparator))
 }
 
-artifacts.archives(sourcesJar)
+val javadocJar = task<Jar>("javadocJar") {
+    dependsOn(javadoc)
+    archiveClassifier.set("javadoc")
+    from(javadoc.destinationDir)
+}
 
 // Bintray
 bintray.apply {
     user = Publishing.getBintrayUser(rootProject)
     key = Publishing.getBintrayApiKey(rootProject)
+    publish = true
+    setPublications("release")
 
-    setConfigurations("archives")
     pkg.apply {
         repo = Publishing.groupId
         name = Publishing.coroutinesArtifactId
@@ -89,7 +95,6 @@ bintray.apply {
         websiteUrl = Publishing.url
         vcsUrl = Publishing.gitUrl
         setLicenses("Apache-2.0")
-        publish = true
         publicDownloadNumbers = true
         version.apply {
             name = Publishing.versionName
@@ -107,6 +112,9 @@ afterEvaluate {
         publications {
             create<MavenPublication>("release") {
                 from(components["release"])
+
+                artifact(sourcesJar)
+                artifact(javadocJar)
 
                 groupId = Publishing.groupId
                 artifactId = Publishing.coroutinesArtifactId
