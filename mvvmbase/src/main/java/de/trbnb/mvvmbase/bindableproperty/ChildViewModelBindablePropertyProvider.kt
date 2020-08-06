@@ -7,7 +7,6 @@ import de.trbnb.mvvmbase.utils.resolveFieldId
 import de.trbnb.mvvmbase.utils.savingStateInBindableSupports
 import kotlin.reflect.KProperty
 
-
 /**
  * Property delegate provider for [BindableProperty].
  * Needed so that reflection via [KProperty] is only necessary once, during delegate initialization.

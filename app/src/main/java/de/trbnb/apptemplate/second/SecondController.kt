@@ -12,7 +12,7 @@ class SecondController : MvvmController<SecondViewModel>() {
 
     override val defaultViewModelProviderFactory = object : AbstractSavedStateViewModelFactory(this, defaultViewModelArgs) {
         override fun <T : ViewModel?> create(key: String, modelClass: Class<T>, handle: SavedStateHandle): T {
-            return SecondViewModel(handle, ResourceProviderImpl(activity ?: throw Exception())) as T
+            return SecondViewModel(handle, ResourceProviderImpl(activity ?: throw IllegalStateException())) as T
         }
     }
 }
