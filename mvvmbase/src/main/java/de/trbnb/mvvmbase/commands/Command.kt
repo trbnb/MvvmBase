@@ -44,7 +44,7 @@ interface Command<in P, out R> : Observable {
 
     /**
      * Adds a listener for a view component.
-     * These will be removed via [clearViewEnabledListeners] and [observeLifecycle] .
+     * These will be removed via [clearEnabledListenersForViews] and [observeLifecycle] .
      */
     fun addEnabledListenerForView(listener: EnabledListener)
 

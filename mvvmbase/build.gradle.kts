@@ -52,8 +52,9 @@ dependencies {
     implementation(fileTree("dir" to "libs", "include" to listOf("*.jar")))
 
     // Support library
-    implementation("androidx.appcompat:appcompat:1.1.0")
+    implementation("androidx.appcompat:appcompat:1.2.0")
     implementation("androidx.fragment:fragment-ktx:1.2.5")
+    implementation("androidx.recyclerview:recyclerview:1.1.0")
 
     testAnnotationProcessor("androidx.databinding:databinding-compiler:$gradleToolsVersion")
     kaptTest("androidx.databinding:databinding-compiler:$gradleToolsVersion")

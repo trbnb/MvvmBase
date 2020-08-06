@@ -26,10 +26,10 @@ class MainViewModel @ViewModelInject constructor(
     var showSnackbar: Boolean by bindableBoolean(false)
 
     @get:Bindable
-    val title: String by Observable.create<String> {
+    val title: String by Observable.create<String> { emitter ->
         viewModelScope.launch {
             delay(5000)
-            it.onNext("bar")
+            emitter.onNext("bar")
         }
     }.toBindable(defaultValue = "foo")
 
@@ -59,5 +59,9 @@ class MainViewModel @ViewModelInject constructor(
 
     val showConductorEvent = simpleCommand {
         eventChannel(MainEvent.ShowConductorEvent)
+    }
+
+    val showListCommand = simpleCommand {
+        eventChannel(MainEvent.ShowListEvent)
     }
 }

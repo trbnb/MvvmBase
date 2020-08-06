@@ -6,6 +6,7 @@ import androidx.databinding.Observable
 import androidx.databinding.PropertyChangeRegistry
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.destroyInternal
 import androidx.lifecycle.getTagFromViewModel
 import androidx.lifecycle.setTagIfAbsentForViewModel
 import de.trbnb.mvvmbase.events.EventChannel
@@ -65,7 +66,7 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel, LifecycleOwne
      */
     @CallSuper
     override fun onBind() {
-        lifecycleOwner.setState(ViewModelLifecycleOwner.State.BOUND)
+        lifecycleOwner.onEvent(ViewModelLifecycleOwner.Event.BOUND)
     }
 
     /**
@@ -73,7 +74,11 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel, LifecycleOwne
      */
     @CallSuper
     override fun onUnbind() {
-        lifecycleOwner.setState(ViewModelLifecycleOwner.State.UNBOUND)
+        lifecycleOwner.onEvent(ViewModelLifecycleOwner.Event.UNBOUND)
+    }
+
+    override fun destroy() {
+        destroyInternal()
     }
 
     /**
@@ -81,9 +86,13 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel, LifecycleOwne
      * Any references that could cause memory leaks should be cleared here.
      */
     @CallSuper
-    override fun onDestroy() {
+    protected fun onDestroy() {
+        if (lifecycleOwner.getInternalState() == ViewModelLifecycleOwner.State.BOUND) {
+            onUnbind()
+        }
+
         super.onCleared()
-        lifecycleOwner.setState(ViewModelLifecycleOwner.State.DESTROYED)
+        lifecycleOwner.onEvent(ViewModelLifecycleOwner.Event.DESTROYED)
     }
 
     final override fun onCleared() {

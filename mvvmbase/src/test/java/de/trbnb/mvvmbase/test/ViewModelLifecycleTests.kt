@@ -57,7 +57,7 @@ class ViewModelLifecycleTests {
         val viewModel = ViewModel().apply {
             lifecycle.addObserver(observer)
         }
-        viewModel.onDestroy()
+        viewModel.destroy()
         assert(viewModel.lifecycle.currentState == Lifecycle.State.DESTROYED)
 
         assert(observer.events[0] == Lifecycle.Event.ON_CREATE)
@@ -74,7 +74,7 @@ class ViewModelLifecycleTests {
         }
         viewModel.onBind()
         viewModel.onUnbind()
-        viewModel.onDestroy()
+        viewModel.destroy()
         assert(viewModel.lifecycle.currentState == Lifecycle.State.DESTROYED)
 
         assert(observer.events[0] == Lifecycle.Event.ON_CREATE)
@@ -83,6 +83,22 @@ class ViewModelLifecycleTests {
         assert(observer.events[3] == Lifecycle.Event.ON_PAUSE)
         assert(observer.events[4] == Lifecycle.Event.ON_STOP)
         assert(observer.events[5] == Lifecycle.Event.ON_DESTROY)
+    }
+
+    @Test
+    fun `onUnbind() called if ViewModel is bound and about to be destroyed`() {
+        var onUnbindCalled = false
+        val viewModel = object : BaseViewModel() {
+            override fun onUnbind() {
+                super.onUnbind()
+                onUnbindCalled = true
+            }
+        }
+
+        viewModel.onBind()
+        viewModel.destroy()
+
+        assert(onUnbindCalled)
     }
 
     class LifecycleObserver : LifecycleEventObserver {

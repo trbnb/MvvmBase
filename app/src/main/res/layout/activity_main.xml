@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -31,37 +32,43 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:clickCommand="@{vm.showDialogCommand}"
+                app:clickCommand="@{vm.showDialogCommand}"
                 android:text="Show Dialog" />
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:clickCommand="@{vm.showSnackbarCommand}"
+                app:clickCommand="@{vm.showSnackbarCommand}"
                 android:text="Show Snackbar" />
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Toast example"
-                android:clickCommand="@{vm.showToastCommand}"/>
+                app:clickCommand="@{vm.showToastCommand}"/>
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:clickCommand="@{vm.showFragmentExampleCommand}"
+                app:clickCommand="@{vm.showFragmentExampleCommand}"
                 android:text="Show Fragment example" />
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Show Conductor example"
-                android:clickCommand="@{vm.showConductorEvent}"/>
+                app:clickCommand="@{vm.showConductorEvent}"/>
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:clickCommand="@{vm.showMainActivityAgain}"
+                android:text="Show List example"
+                app:clickCommand="@{vm.showListCommand}"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:clickCommand="@{vm.showMainActivityAgain}"
                 android:text="Show this activity again!"
                 style="@style/Widget.AppCompat.Button.Colored" />
 

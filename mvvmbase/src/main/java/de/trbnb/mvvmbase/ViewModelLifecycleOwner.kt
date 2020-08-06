@@ -17,24 +17,39 @@ internal class ViewModelLifecycleOwner : LifecycleOwner {
     private val registry = LifecycleRegistry(this)
 
     init {
-        setState(State.INITIALIZED)
+        onEvent(Event.INITIALIZED)
     }
 
-    fun setState(state: State) {
-        registry.currentState = when (state) {
-            State.INITIALIZED -> Lifecycle.State.STARTED
-            State.BOUND -> Lifecycle.State.RESUMED
-            State.UNBOUND -> Lifecycle.State.STARTED
-            State.DESTROYED -> Lifecycle.State.DESTROYED
+    fun onEvent(event: Event) {
+        registry.currentState = when (event) {
+            Event.INITIALIZED -> Lifecycle.State.STARTED
+            Event.BOUND -> Lifecycle.State.RESUMED
+            Event.UNBOUND -> Lifecycle.State.STARTED
+            Event.DESTROYED -> Lifecycle.State.DESTROYED
         }
     }
 
     override fun getLifecycle() = registry
 
+    internal fun getInternalState() = when (registry.currentState) {
+        Lifecycle.State.DESTROYED -> State.DESTROYED
+        Lifecycle.State.RESUMED -> State.BOUND
+        else -> State.INITIALIZED
+    }
+
     /**
      * Enum for the specific Lifecycle of ViewModels.
      */
     internal enum class State {
+        INITIALIZED,
+        BOUND,
+        DESTROYED
+    }
+
+    /**
+     * Enum for the specific Lifecycle of ViewModels.
+     */
+    internal enum class Event {
         INITIALIZED,
         BOUND,
         UNBOUND,

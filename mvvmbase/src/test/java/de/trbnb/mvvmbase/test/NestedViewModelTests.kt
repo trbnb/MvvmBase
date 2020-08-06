@@ -4,6 +4,7 @@ import androidx.lifecycle.Lifecycle
 import de.trbnb.mvvmbase.BaseViewModel
 import de.trbnb.mvvmbase.events.Event
 import org.junit.jupiter.api.Test
+import java.io.Closeable
 
 class NestedViewModelTests {
     @Test
@@ -13,7 +14,7 @@ class NestedViewModelTests {
             val items = listOf(childViewModel).autoDestroy()
         }
 
-        parentViewModel.onDestroy()
+        parentViewModel.destroy()
         assert(childViewModel.lifecycle.currentState == Lifecycle.State.DESTROYED)
     }
 
@@ -35,6 +36,23 @@ class NestedViewModelTests {
 
         childViewModel.eventChannel(event)
         assert(eventWasReceived)
+    }
+
+    @Test
+    fun `destroy() closes all tags`() {
+        var tagIsClosed = false
+        val viewModel = object : BaseViewModel() {
+            init {
+                initTag("foo", object : Closeable {
+                    override fun close() {
+                        tagIsClosed = true
+                    }
+                })
+            }
+        }
+
+        viewModel.destroy()
+        assert(tagIsClosed)
     }
 }
 

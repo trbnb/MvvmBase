@@ -2,6 +2,7 @@ package de.trbnb.apptemplate.main
 
 import android.app.AlertDialog
 import android.app.Dialog
+import android.app.ListActivity
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -121,9 +122,8 @@ class MainActivity : MvvmActivity<MainViewModel>() {
             is MainEvent.ShowToast -> Toast.makeText(this, "Toast message!", Toast.LENGTH_SHORT).show()
             is MainEvent.ShowMainActivityAgainEvent -> startActivity(Intent(this, MainActivity::class.java))
             is MainEvent.ShowSecondActivityEvent -> startActivity(Intent(this, SecondActivity::class.java))
-            is MainEvent.ShowConductorEvent -> {
-                router.pushController(RouterTransaction.with(SecondController()))
-            }
+            is MainEvent.ShowConductorEvent -> router.pushController(RouterTransaction.with(SecondController()))
+            is MainEvent.ShowListEvent -> startActivity(Intent(this, ListActivity::class.java))
         }
     }
 

@@ -7,4 +7,5 @@ sealed class MainEvent : Event {
     object ShowSecondActivityEvent : MainEvent()
     object ShowMainActivityAgainEvent : MainEvent()
     object ShowConductorEvent : MainEvent()
+    object ShowListEvent : MainEvent()
 }

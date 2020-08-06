@@ -73,9 +73,11 @@ interface ViewModel : Observable, LifecycleOwner {
      * Is called when this instance is about to be removed from memory.
      * This means that this object is no longer bound to a view and will never be. It is about to
      * be garbage collected.
-     * Implementations should use this method to deregister from callbacks, etc.
+     * Implementations should provide a method to deregister from callbacks, etc.
+     *
+     * @see [BaseViewModel.onDestroy]
      */
-    fun onDestroy()
+    fun destroy()
 
     /**
      * @see [androidx.lifecycle.ViewModel.getTag]
@@ -98,7 +100,7 @@ interface ViewModel : Observable, LifecycleOwner {
     fun <VM : ViewModel> VM.autoDestroy(): VM = also { child ->
         val parentLifecycleObserver = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_DESTROY) {
-                child.onDestroy()
+                child.destroy()
             }
         }.also(this@ViewModel.lifecycle::addObserver)
 
@@ -119,6 +121,6 @@ interface ViewModel : Observable, LifecycleOwner {
      * Sends all the events of a given (receiver type) ViewModel through the event channel of the ViewModel where this function is called in.
      */
     fun <VM : ViewModel> VM.bindEvents(): VM = also { child ->
-        child.eventChannel.addListener(this@ViewModel, { event -> this@ViewModel.eventChannel.invoke(event) })
+        child.eventChannel.addListener(this@ViewModel) { event -> this@ViewModel.eventChannel.invoke(event) }
     }
 }

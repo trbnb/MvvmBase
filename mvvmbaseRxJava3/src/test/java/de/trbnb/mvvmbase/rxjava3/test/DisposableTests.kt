@@ -27,7 +27,7 @@ class DisposableTests {
             override fun <T : ViewModel?> create(modelClass: Class<T>) = object : BaseViewModel() {} as T
         })[BaseViewModel::class.java]
         val compositeDisposable = viewModel.compositeDisposable
-        viewModel.onDestroy()
+        viewModel.destroy()
         viewModelStore.clear()
         assert(compositeDisposable.isDisposed)
     }
@@ -40,7 +40,7 @@ class DisposableTests {
                 compositeDisposable.autoDispose(this)
             }
         }
-        viewModel.onDestroy()
+        viewModel.destroy()
         assert(compositeDisposable.isDisposed)
     }
 }

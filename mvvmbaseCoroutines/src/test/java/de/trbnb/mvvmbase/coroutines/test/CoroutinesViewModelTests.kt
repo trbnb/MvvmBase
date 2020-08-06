@@ -28,9 +28,9 @@ class CoroutinesViewModelTests {
             override fun removeOnPropertyChangedCallback(callback: Observable.OnPropertyChangedCallback) { TODO("Not yet implemented") }
             override fun onBind() { TODO("Not yet implemented") }
             override fun onUnbind() { TODO("Not yet implemented") }
-            override fun onDestroy() { TODO("Not yet implemented") }
-            override fun <T : Any> getTag(key: String): T? { TODO("Not yet implemented") }
-            override fun <T : Any> setTagIfAbsent(key: String, newValue: T): T { TODO("Not yet implemented") }
+            override fun destroy() { TODO("Not yet implemented") }
+            override fun <T : Any> get(key: String): T? { TODO("Not yet implemented") }
+            override fun <T : Any> initTag(key: String, newValue: T): T { TODO("Not yet implemented") }
             override fun getLifecycle(): Lifecycle { TODO("Not yet implemented") }
         }
 

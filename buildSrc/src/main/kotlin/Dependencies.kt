@@ -4,7 +4,7 @@ import org.gradle.kotlin.dsl.extra
 
 const val kotlinVersion = "1.3.72"
 
-const val gradleToolsVersion = "4.0.0"
+const val gradleToolsVersion = "4.0.1"
 
 val javaVersion = JavaVersion.VERSION_1_8
 
