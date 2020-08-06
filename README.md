@@ -12,7 +12,7 @@ dependencies {
     // Necessary for SavedStateHandle
     implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:2.2.0"
 
-    def mvvmbaseVersion = "2.0.0-beta6"
+    def mvvmbaseVersion = "2.0.0-rc1"
 
     [...]
     implementation de.trbnb.mvvmbase:mvvmbase:$mvvmbaseVersion"
