@@ -3,10 +3,8 @@ package de.trbnb.apptemplate.second
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import dagger.hilt.android.AndroidEntryPoint
 import de.trbnb.apptemplate.R
 
-@AndroidEntryPoint
 class SecondActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

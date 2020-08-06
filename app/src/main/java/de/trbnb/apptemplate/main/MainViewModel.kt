@@ -1,8 +1,6 @@
 package de.trbnb.apptemplate.main
 
 import androidx.databinding.Bindable
-import androidx.hilt.Assisted
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import de.trbnb.apptemplate.resource.ResourceProvider
@@ -15,8 +13,8 @@ import io.reactivex.Observable
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class MainViewModel @ViewModelInject constructor(
-    @Assisted savedStateHandle: SavedStateHandle,
+class MainViewModel(
+    savedStateHandle: SavedStateHandle,
     resourceProvider: ResourceProvider
 ) : BaseStateSavingViewModel(savedStateHandle), RxViewModel {
     @get:Bindable

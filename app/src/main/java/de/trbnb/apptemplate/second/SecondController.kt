@@ -1,15 +1,18 @@
 package de.trbnb.apptemplate.second
 
-import androidx.activity.ComponentActivity
-import dagger.hilt.android.internal.lifecycle.DefaultViewModelFactories
+import androidx.lifecycle.AbstractSavedStateViewModelFactory
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import de.trbnb.apptemplate.R
+import de.trbnb.apptemplate.resource.ResourceProviderImpl
 import de.trbnb.mvvmbase.conductor.MvvmController
-import de.trbnb.mvvmbase.conductor.activityViewModels
 
 class SecondController : MvvmController<SecondViewModel>() {
     override val layoutId: Int = R.layout.fragment_second
-    override val viewModelDelegate = activityViewModels<SecondViewModel> {
-        DefaultViewModelFactories.getActivityFactory(activity as? ComponentActivity ?: throw IllegalStateException("Can't retrieve Activity"))
-            ?: defaultViewModelProviderFactory
+
+    override val defaultViewModelProviderFactory = object : AbstractSavedStateViewModelFactory(this, defaultViewModelArgs) {
+        override fun <T : ViewModel?> create(key: String, modelClass: Class<T>, handle: SavedStateHandle): T {
+            return SecondViewModel(handle, ResourceProviderImpl(activity ?: throw Exception())) as T
+        }
     }
 }

@@ -1,8 +1,6 @@
 package de.trbnb.apptemplate.second
 
 import androidx.databinding.Bindable
-import androidx.hilt.Assisted
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.SavedStateHandle
 import de.trbnb.apptemplate.R
 import de.trbnb.apptemplate.resource.ResourceProvider
@@ -12,9 +10,9 @@ import de.trbnb.mvvmbase.bindableproperty.distinct
 import de.trbnb.mvvmbase.bindableproperty.validate
 import de.trbnb.mvvmbase.savedstate.BaseStateSavingViewModel
 
-class SecondViewModel @ViewModelInject constructor(
-    resourceProvider: ResourceProvider,
-    @Assisted savedStateHandle: SavedStateHandle
+class SecondViewModel(
+    savedStateHandle: SavedStateHandle,
+    resourceProvider: ResourceProvider
 ) : BaseStateSavingViewModel(savedStateHandle) {
     @get:Bindable
     var text by bindable(resourceProvider.getString(R.string.not_restored))

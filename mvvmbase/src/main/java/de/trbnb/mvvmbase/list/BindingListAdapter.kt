@@ -41,5 +41,6 @@ open class BindingListAdapter<VM : ViewModel, B : ViewDataBinding>(val layoutId:
 @BindingAdapter("items", "itemLayout")
 fun RecyclerView.setItems(items: List<ViewModel>, itemLayout: Int) {
     @Suppress("UNCHECKED_CAST")
-    (adapter as? BindingListAdapter<ViewModel, ViewDataBinding> ?: BindingListAdapter(itemLayout)).submitList(items)
+    (adapter as? BindingListAdapter<ViewModel, ViewDataBinding>
+        ?: BindingListAdapter<ViewModel, ViewDataBinding>(itemLayout).also { this.adapter = it }).submitList(items)
 }
