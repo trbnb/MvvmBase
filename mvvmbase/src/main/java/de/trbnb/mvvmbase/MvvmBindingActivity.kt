@@ -49,13 +49,6 @@ abstract class MvvmBindingActivity<VM, B>(@LayoutRes override val layoutId: Int 
     private val viewModelObserver = ViewModelPropertyChangedCallback(this)
 
     /**
-     * Defines which Bundle will be used as defaultArgs with [androidx.lifecycle.AbstractSavedStateViewModelFactory].
-     * Default is [android.content.Intent.getExtras] from [getIntent].
-     */
-    override val defaultViewModelArgs: Bundle?
-        get() = intent.extras
-
-    /**
      * Called by the lifecycle.
      * Creates the [ViewDataBinding] and loads the view model.
      */

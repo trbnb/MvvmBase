@@ -77,7 +77,7 @@ abstract class MvvmBindingController<VM, B>(
      * Defines which Bundle will be used as defaultArgs with [androidx.lifecycle.AbstractSavedStateViewModelFactory].
      * Default is [getArgs].
      */
-    override val defaultViewModelArgs: Bundle?
+    protected open val defaultViewModelArgs: Bundle?
         get() = args
 
     override val dataBindingComponent: DataBindingComponent?

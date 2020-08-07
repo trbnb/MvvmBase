@@ -1,6 +1,5 @@
 package de.trbnb.mvvmbase
 
-import android.os.Bundle
 import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
@@ -66,12 +65,6 @@ interface MvvmView<VM, B : ViewDataBinding> : ViewModelStoreOwner, SavedStateReg
      */
     val dataBindingComponent: DataBindingComponent?
         get() = null
-
-    /**
-     * Defines which Bundle will be used as defaultArgs with the ViewModel factory
-     * if it extends [androidx.lifecycle.AbstractSavedStateViewModelFactory].
-     */
-    val defaultViewModelArgs: Bundle?
 
     /**
      * Called when the view model is loaded and is set as [viewModel].

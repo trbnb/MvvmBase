@@ -51,13 +51,6 @@ abstract class MvvmBindingFragment<VM, B>(@LayoutRes override val layoutId: Int 
     private val eventListener = { event: Event -> onEvent(event) }
 
     /**
-     * Defines which Bundle will be used as defaultArgs with [androidx.lifecycle.AbstractSavedStateViewModelFactory].
-     * Default is [getArguments].
-     */
-    override val defaultViewModelArgs: Bundle?
-        get() = arguments
-
-    /**
      * Called by the lifecycle.
      *
      * Creates the [ViewDataBinding].
