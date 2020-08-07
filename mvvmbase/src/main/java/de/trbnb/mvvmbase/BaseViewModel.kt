@@ -86,7 +86,7 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel, LifecycleOwne
      * Any references that could cause memory leaks should be cleared here.
      */
     @CallSuper
-    protected fun onDestroy() {
+    protected open fun onDestroy() {
         if (lifecycleOwner.getInternalState() == ViewModelLifecycleOwner.State.BOUND) {
             onUnbind()
         }
