@@ -12,7 +12,7 @@ import de.trbnb.mvvmbase.ViewModel
  *
  * @param binding Binding containing the view associated with this ViewHolder.
  */
-open class BindingViewHolder<B : ViewDataBinding>(
+open class BindingViewHolder<out B : ViewDataBinding>(
     val binding: B,
     private val viewModelFieldId: Int = BR.vm
 ) : RecyclerView.ViewHolder(binding.root) {
@@ -33,5 +33,12 @@ open class BindingViewHolder<B : ViewDataBinding>(
      */
     fun bind(viewModel: ViewModel) {
         this.viewModel = viewModel
+        onBound()
     }
+
+    /**
+     * Called when [viewModel] was bound to [binding].
+     * The ViewModel with specific type can be accessed via [binding].
+     */
+    open fun onBound() {}
 }
