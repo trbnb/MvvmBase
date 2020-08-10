@@ -12,7 +12,7 @@ import de.trbnb.mvvmbase.ViewModel
  *
  * @param binding Binding containing the view associated with this ViewHolder.
  */
-class BindingViewHolder<B : ViewDataBinding>(
+open class BindingViewHolder<B : ViewDataBinding>(
     val binding: B,
     private val viewModelFieldId: Int = BR.vm
 ) : RecyclerView.ViewHolder(binding.root) {
