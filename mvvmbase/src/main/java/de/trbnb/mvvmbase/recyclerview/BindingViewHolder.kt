@@ -1,4 +1,4 @@
-package de.trbnb.mvvmbase.list
+package de.trbnb.mvvmbase.recyclerview
 
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView

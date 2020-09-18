@@ -1,4 +1,4 @@
-package de.trbnb.mvvmbase.list
+package de.trbnb.mvvmbase.recyclerview
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
