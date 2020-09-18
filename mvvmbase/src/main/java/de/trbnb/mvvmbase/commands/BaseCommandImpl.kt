@@ -1,6 +1,7 @@
 package de.trbnb.mvvmbase.commands
 
-import java.lang.ref.WeakReference
+import androidx.databinding.BaseObservable
+import de.trbnb.mvvmbase.BR
 
 /**
  * Base class for standard [Command] implementations.
@@ -9,12 +10,11 @@ import java.lang.ref.WeakReference
  *
  * @param action The initial action that will be run when the Command is executed.
  */
-abstract class BaseCommandImpl<in P, out R>(private val action: (P) -> R) : Command<P, R> {
-
-    private val listeners = mutableListOf<WeakReference<(Boolean) -> Unit>>()
+abstract class BaseCommandImpl<in P, out R>(private val action: (P) -> R) : BaseObservable(), Command<P, R> {
+    private val listeners = mutableListOf<(Boolean) -> Unit>()
 
     final override fun invoke(param: P): R {
-        if(!isEnabled){
+        if (!isEnabled) {
             throw DisabledCommandInvocationException()
         }
 
@@ -25,21 +25,31 @@ abstract class BaseCommandImpl<in P, out R>(private val action: (P) -> R) : Comm
      * This method should be called when the result of [isEnabled] might have changed.
      */
     protected fun triggerEnabledChangedListener() {
-        listeners.forEach {
-            it.get()?.invoke(isEnabled)
-        }
+        notifyPropertyChanged(BR.enabled)
+        listeners.forEach { it(isEnabled) }
     }
 
-    override fun addEnabledListener(listener: (Boolean) -> Unit) {
-        listeners.add(WeakReference(listener))
+    override fun addEnabledListener(listener: EnabledListener) {
+        listeners.add(listener)
     }
 
-    override fun removeEnabledListener(listener: (Boolean) -> Unit) {
-        listeners.removeAll { it.get() == listener }
+    override fun removeEnabledListener(listener: EnabledListener) {
+        listeners.remove(listener)
     }
 
     override fun clearEnabledListeners() {
         listeners.clear()
     }
 
+    override fun addEnabledListenerForView(listener: EnabledListener) {
+        listeners.add(ViewListener(listener))
+    }
+
+    override fun clearEnabledListenersForViews() {
+        listeners.removeAll { it is ViewListener }
+    }
+
+    private class ViewListener(private val listener: EnabledListener) : EnabledListener {
+        override fun invoke(enabled: Boolean) = listener(enabled)
+    }
 }

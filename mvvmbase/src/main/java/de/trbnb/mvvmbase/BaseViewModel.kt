@@ -5,19 +5,20 @@ import androidx.databinding.BaseObservable
 import androidx.databinding.Observable
 import androidx.databinding.PropertyChangeRegistry
 import androidx.lifecycle.Lifecycle
-import de.trbnb.mvvmbase.annotations.DependsOn
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.destroyInternal
+import androidx.lifecycle.getTagFromViewModel
+import androidx.lifecycle.setTagIfAbsentForViewModel
 import de.trbnb.mvvmbase.events.EventChannel
 import de.trbnb.mvvmbase.events.EventChannelImpl
 import de.trbnb.mvvmbase.utils.resolveFieldId
 import kotlin.reflect.KProperty
-import kotlin.reflect.full.memberProperties
 import androidx.lifecycle.ViewModel as ArchitectureViewModel
 
 /**
  * Simple base implementation of the [ViewModel] interface based on [BaseObservable].
  */
-abstract class BaseViewModel : ArchitectureViewModel(), ViewModel {
-
+abstract class BaseViewModel : ArchitectureViewModel(), ViewModel, LifecycleOwner {
     /**
      * Callback registry for [Observable].
      */
@@ -35,25 +36,10 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel {
     protected open val memorizeNotReceivedEvents: Boolean
         get() = true
 
-    private val dependentFieldIds: Map<Int, IntArray>
-
-    init {
-        dependentFieldIds = this::class.memberProperties.asSequence()
-            .filter { it.annotations.any { annotation -> annotation is DependsOn } }
-            .map {
-                it.resolveFieldId().takeUnless { id -> id == BR._all } to
-                it.annotations.filterIsInstance<DependsOn>().firstOrNull()?.value
-            }
-            .filter { it.first != null && it.second != null }
-            .filterIsInstance<Pair<Int, IntArray>>()
-            .toMap()
-    }
-
     /**
-     * @see ViewModelLifecycle
+     * @see ViewModelLifecycleOwner
      */
-    @Suppress("LeakingThis")
-    private val lifecycle = ViewModelLifecycle(this)
+    private val lifecycleOwner = ViewModelLifecycleOwner()
 
     final override fun addOnPropertyChangedCallback(callback: Observable.OnPropertyChangedCallback) {
         callbacks.add(callback)
@@ -69,11 +55,6 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel {
 
     final override fun notifyPropertyChanged(fieldId: Int) {
         callbacks.notifyCallbacks(this, fieldId, null)
-        dependentFieldIds.forEach { (property, dependentIds) ->
-            if (fieldId in dependentIds) {
-                notifyPropertyChanged(property)
-            }
-        }
     }
 
     final override fun notifyPropertyChanged(property: KProperty<*>) {
@@ -85,7 +66,7 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel {
      */
     @CallSuper
     override fun onBind() {
-        lifecycle.state = ViewModelLifecycle.State.BOUND
+        lifecycleOwner.onEvent(ViewModelLifecycleOwner.Event.BOUND)
     }
 
     /**
@@ -93,7 +74,11 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel {
      */
     @CallSuper
     override fun onUnbind() {
-        lifecycle.state = ViewModelLifecycle.State.UNBOUND
+        lifecycleOwner.onEvent(ViewModelLifecycleOwner.Event.UNBOUND)
+    }
+
+    override fun destroy() {
+        destroyInternal()
     }
 
     /**
@@ -101,14 +86,22 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel {
      * Any references that could cause memory leaks should be cleared here.
      */
     @CallSuper
-    override fun onDestroy() {
+    protected open fun onDestroy() {
+        if (lifecycleOwner.getInternalState() == ViewModelLifecycleOwner.State.BOUND) {
+            onUnbind()
+        }
+
         super.onCleared()
-        lifecycle.state = ViewModelLifecycle.State.DESTROYED
+        lifecycleOwner.onEvent(ViewModelLifecycleOwner.Event.DESTROYED)
     }
 
     final override fun onCleared() {
         onDestroy()
     }
 
-    override fun getLifecycle(): Lifecycle = lifecycle
+    override fun getLifecycle(): Lifecycle = lifecycleOwner.lifecycle
+
+    override operator fun <T : Any> get(key: String): T? = getTagFromViewModel(key)
+
+    override fun <T : Any> initTag(key: String, newValue: T): T = setTagIfAbsentForViewModel(key, newValue)
 }

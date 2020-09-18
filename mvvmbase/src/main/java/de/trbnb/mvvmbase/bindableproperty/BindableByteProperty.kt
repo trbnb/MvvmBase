@@ -1,64 +1,88 @@
 package de.trbnb.mvvmbase.bindableproperty
 
 import androidx.databinding.BaseObservable
-import de.trbnb.mvvmbase.BR
 import de.trbnb.mvvmbase.ViewModel
+import de.trbnb.mvvmbase.savedstate.StateSavingViewModel
 import de.trbnb.mvvmbase.utils.resolveFieldId
 import kotlin.reflect.KProperty
 
 /**
- * Delegate property that invokes [BaseObservable.notifyPropertyChanged] after a value is set.
- * The getter is not affected.
+ * Delegate property that invokes [BaseObservable.notifyPropertyChanged] and saves state
+ * via [StateSavingViewModel.savedStateHandle].
  *
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  * @param defaultValue Value that will be used at start.
+ * @param distinct See [BindablePropertyBase.distinct].
+ * @param stateSavingKey Specifies with which key the value will be state-saved. No state-saving if `null`.
+ * @param afterSet [BindablePropertyBase.afterSet]
+ * @param validate [BindablePropertyBase.validate]
+ * @param beforeSet [BindablePropertyBase.beforeSet]
  */
-class BindableByteProperty(private var fieldId: Int?, defaultValue: Byte) : BindablePropertyBase() {
-    /**
-     * Gets or sets the stored value.
-     */
-    private var value = defaultValue
-
-    /**
-     * Gets or sets a function that will be invoked if a new value is about to be set.
-     * The first parameter is the old value and the second parameter is the new value.
-     *
-     * This function will not be invoked if [BindablePropertyBase.distinct] is true and the new value
-     * is equal to the old value.
-     */
-    internal var beforeSet: ((old:Byte, new: Byte) -> Unit)? = null
-
-    /**
-     * Gets or sets a function that will validate a newly set value.
-     * The first parameter is the old value and the second parameter is the new value.
-     * The returned value will be the new stored value.
-     *
-     * If this function is null validation will not happen and the new value will simply be set.
-     */
-    internal var validate: ((old:Byte, new: Byte) -> Byte)? = null
-
-    /**
-     * Gets or sets a function that will be invoked if a new value was set and
-     * [BaseObservable.notifyPropertyChanged] was invoked.
-     * The first parameter is the old value and the second parameter is the new value.
-     */
-    internal var afterSet: ((new: Byte) -> Unit)? = null
-
-    operator fun getValue(thisRef: ViewModel, property: KProperty<*>) = value
-
-    operator fun setValue(thisRef: ViewModel, property: KProperty<*>, value: Byte) {
-        if (fieldId == null) {
-            fieldId = property.resolveFieldId()
+class BindableByteProperty private constructor(
+    viewModel: ViewModel,
+    private val fieldId: Int,
+    defaultValue: Byte,
+    distinct: Boolean,
+    private val stateSavingKey: String?,
+    afterSet: AfterSet<Byte>?,
+    beforeSet: BeforeSet<Byte>?,
+    validate: Validate<Byte>?
+) : BindablePropertyBase<Byte>(distinct, afterSet, beforeSet, validate) {
+    private var value: Byte = when {
+        stateSavingKey != null && viewModel is StateSavingViewModel && stateSavingKey in viewModel.savedStateHandle -> {
+            viewModel.savedStateHandle[stateSavingKey] ?: defaultValue
         }
+        else -> defaultValue
+    }
 
+    /**
+     * @see [kotlin.properties.ReadWriteProperty.getValue]
+     */
+    operator fun getValue(thisRef: ViewModel, property: KProperty<*>): Byte = value
+
+    /**
+     * @see [kotlin.properties.ReadWriteProperty.setValue]
+     */
+    operator fun setValue(thisRef: ViewModel, property: KProperty<*>, value: Byte) {
         if (distinct && this.value == value) {
             return
         }
 
-        beforeSet?.invoke(this.value, value)
-        this.value = validate?.invoke(this.value, value) ?: value
-        thisRef.notifyPropertyChanged(fieldId ?: BR._all)
-        afterSet?.invoke(this.value)
+        val oldValue = this.value
+        beforeSet?.invoke(oldValue, value)
+        this.value = when (val validate = validate) {
+            null -> value
+            else -> validate(oldValue, value)
+        }
+
+        thisRef.notifyPropertyChanged(fieldId)
+        if (thisRef is StateSavingViewModel && stateSavingKey != null) {
+            thisRef.savedStateHandle[stateSavingKey] = this.value
+        }
+        afterSet?.invoke(oldValue, this.value)
+    }
+
+    /**
+     * Property delegate provider for [BindableByteProperty].
+     * Needed so that reflection via [KProperty] is only necessary once, during delegate initialization.
+     *
+     * @see BindableByteProperty
+     */
+    class Provider internal constructor(
+        private val fieldId: Int? = null,
+        private val defaultValue: Byte,
+        private val stateSaveOption: StateSaveOption
+    ) : BindablePropertyBase.Provider<Byte>() {
+        override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>) = BindableByteProperty(
+            viewModel = thisRef,
+            fieldId = fieldId ?: property.resolveFieldId(),
+            defaultValue = defaultValue,
+            stateSavingKey = stateSaveOption.resolveKey(property),
+            distinct = distinct,
+            afterSet = afterSet,
+            beforeSet = beforeSet,
+            validate = validate
+        )
     }
 }
 
@@ -67,26 +91,13 @@ class BindableByteProperty(private var fieldId: Int?, defaultValue: Byte) : Bind
  *
  * @param defaultValue Value of the property from the start.
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
+ * @param stateSaveOption Specifies if the state of the property should be saved and with which key.
  */
-fun ViewModel.bindableByte(defaultValue: Byte = 0, fieldId: Int? = null): BindableByteProperty {
-    return BindableByteProperty(fieldId, defaultValue)
-}
-
-/**
- * Sets [BindableByteProperty.beforeSet] of a [BindableByteProperty] instance to a given function and
- * returns that instance.
- */
-fun BindableByteProperty.beforeSet(action: (old: Byte, new: Byte) -> Unit) = apply { beforeSet = action }
-
-/**
- * Sets [BindableByteProperty.validate] of a [BindableByteProperty] instance to a given function and
- * returns that instance.
- */
-fun BindableByteProperty.validate(action: (old: Byte, new: Byte) -> Byte) = apply { validate = action }
-
-/**
- * Sets [BindableByteProperty.afterSet] of a [BindableByteProperty] instance to a given function and
- * returns that instance.
- */
-fun BindableByteProperty.afterSet(action: (Byte) -> Unit) = apply { afterSet = action }
-
+fun ViewModel.bindableByte(
+    defaultValue: Byte = 0,
+    fieldId: Int? = null,
+    stateSaveOption: StateSaveOption = StateSaveOption.Automatic
+) = BindableByteProperty.Provider(fieldId, defaultValue, when (this) {
+    is StateSavingViewModel -> stateSaveOption
+    else -> StateSaveOption.None
+})

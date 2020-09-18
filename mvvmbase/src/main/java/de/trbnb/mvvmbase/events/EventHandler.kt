@@ -1,7 +1,7 @@
 package de.trbnb.mvvmbase.events
 
-import androidx.lifecycle.GenericLifecycleObserver
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 
 typealias Listener<T> = (T) -> Unit
@@ -52,7 +52,7 @@ interface EventHandler<T> {
 fun <T> EventHandler<T>.addListener(lifecycleOwner: LifecycleOwner, listener: Listener<T>) {
     addListener(listener)
 
-    lifecycleOwner.lifecycle.addObserver(object : GenericLifecycleObserver {
+    lifecycleOwner.lifecycle.addObserver(object : LifecycleEventObserver {
         override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
             if (event == Lifecycle.Event.ON_DESTROY) {
                 removeListener(listener)

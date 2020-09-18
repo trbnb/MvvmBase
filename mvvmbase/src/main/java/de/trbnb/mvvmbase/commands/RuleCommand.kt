@@ -1,6 +1,9 @@
 package de.trbnb.mvvmbase.commands
 
+import androidx.databinding.Bindable
 import de.trbnb.mvvmbase.ViewModel
+import de.trbnb.mvvmbase.utils.resolveFieldId
+import kotlin.reflect.KProperty
 
 /**
  * A [Command] that determines if it is enabled via a predicate.
@@ -11,13 +14,11 @@ import de.trbnb.mvvmbase.ViewModel
  * @param action The initial action that will be run when the Command is executed.
  * @param enabledRule The initial rule that determines if this Command is enabled.
  */
-class RuleCommand<in P, out R>
-@Deprecated("Use the ViewModel extension functions to create lifecycle-aware commands.", replaceWith = ReplaceWith("ruleCommand(action, enabledRule)"), level = DeprecationLevel.WARNING)
-constructor(
+class RuleCommand<in P, out R> internal constructor(
     action: (P) -> R,
     private val enabledRule: () -> Boolean
 ) : BaseCommandImpl<P, R>(action) {
-
+    @get:Bindable
     override var isEnabled: Boolean = enabledRule()
         private set(value) {
             if (field == value) return
@@ -38,21 +39,43 @@ constructor(
  * Helper function to create a [RuleCommand] that clears all it's listeners automatically when
  * [ViewModel.onUnbind] is called.
  */
-@Suppress("DEPRECATION")
 @JvmName("parameterizedRuleCommand")
-fun <P, R> ViewModel.ruleCommand(action: (P) -> R, enabledRule: () -> Boolean): RuleCommand<P, R> {
-    return RuleCommand(action, enabledRule).apply {
-        observeLifecycle(lifecycle)
-    }
+fun <P, R> ViewModel.ruleCommand(
+    action: (P) -> R,
+    enabledRule: () -> Boolean,
+    dependentFieldIds: IntArray? = null
+): RuleCommand<P, R> = RuleCommand(action, enabledRule).apply {
+    observeLifecycle(this@ruleCommand)
+    dependsOn(this@ruleCommand, dependentFieldIds)
 }
+
+/**
+ * Helper function to create a [RuleCommand] that clears all it's listeners automatically when
+ * [ViewModel.onUnbind] is called.
+ */
+@JvmName("parameterizedRuleCommand")
+fun <P, R> ViewModel.ruleCommand(
+    action: (P) -> R,
+    enabledRule: () -> Boolean,
+    dependentFields: List<KProperty<*>>
+): RuleCommand<P, R> = ruleCommand(action, enabledRule, dependentFields.map { it.resolveFieldId() }.toIntArray())
 
 /**
  * Helper function to create a parameter-less [RuleCommand] that clears all it's listeners automatically when
  * [ViewModel.onUnbind] is called.
  */
-@Suppress("DEPRECATION")
-fun <R> ViewModel.ruleCommand(action: (Unit) -> R, enabledRule: () -> Boolean): RuleCommand<Unit, R> {
-    return RuleCommand(action, enabledRule).apply {
-        observeLifecycle(lifecycle)
-    }
-}
+fun <R> ViewModel.ruleCommand(
+    action: (Unit) -> R,
+    enabledRule: () -> Boolean,
+    dependentFieldIds: IntArray? = null
+): RuleCommand<Unit, R> = ruleCommand<Unit, R>(action, enabledRule, dependentFieldIds)
+
+/**
+ * Helper function to create a parameter-less [RuleCommand] that clears all it's listeners automatically when
+ * [ViewModel.onUnbind] is called.
+ */
+fun <R> ViewModel.ruleCommand(
+    action: (Unit) -> R,
+    enabledRule: () -> Boolean,
+    dependentFields: List<KProperty<*>>
+): RuleCommand<Unit, R> = ruleCommand<Unit, R>(action, enabledRule, dependentFields)

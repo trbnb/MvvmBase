@@ -1,64 +1,88 @@
 package de.trbnb.mvvmbase.bindableproperty
 
 import androidx.databinding.BaseObservable
-import de.trbnb.mvvmbase.BR
 import de.trbnb.mvvmbase.ViewModel
+import de.trbnb.mvvmbase.savedstate.StateSavingViewModel
 import de.trbnb.mvvmbase.utils.resolveFieldId
 import kotlin.reflect.KProperty
 
 /**
- * Delegate property that invokes [BaseObservable.notifyPropertyChanged] after a value is set.
- * The getter is not affected.
+ * Delegate property that invokes [BaseObservable.notifyPropertyChanged] and saves state
+ * via [StateSavingViewModel.savedStateHandle].
  *
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  * @param defaultValue Value that will be used at start.
+ * @param distinct See [BindablePropertyBase.distinct].
+ * @param stateSavingKey Specifies with which key the value will be state-saved. No state-saving if `null`.
+ * @param afterSet [BindablePropertyBase.afterSet]
+ * @param validate [BindablePropertyBase.validate]
+ * @param beforeSet [BindablePropertyBase.beforeSet]
  */
-class BindableIntProperty(private var fieldId: Int?, defaultValue: Int) : BindablePropertyBase() {
-    /**
-     * Gets or sets the stored value.
-     */
-    private var value = defaultValue
-
-    /**
-     * Gets or sets a function that will be invoked if a new value is about to be set.
-     * The first parameter is the old value and the second parameter is the new value.
-     *
-     * This function will not be invoked if [BindablePropertyBase.distinct] is true and the new value
-     * is equal to the old value.
-     */
-    internal var beforeSet: ((old: Int, new: Int) -> Unit)? = null
-
-    /**
-     * Gets or sets a function that will validate a newly set value.
-     * The first parameter is the old value and the second parameter is the new value.
-     * The returned value will be the new stored value.
-     *
-     * If this function is null validation will not happen and the new value will simply be set.
-     */
-    internal var validate: ((old: Int, new: Int) -> Int)? = null
-
-    /**
-     * Gets or sets a function that will be invoked if a new value was set and
-     * [BaseObservable.notifyPropertyChanged] was invoked.
-     * The first parameter is the old value and the second parameter is the new value.
-     */
-    internal var afterSet: ((new: Int) -> Unit)? = null
-
-    operator fun getValue(thisRef: ViewModel, property: KProperty<*>) = value
-
-    operator fun setValue(thisRef: ViewModel, property: KProperty<*>, value: Int) {
-        if (fieldId == null) {
-            fieldId = property.resolveFieldId()
+class BindableIntProperty private constructor(
+    viewModel: ViewModel,
+    private val fieldId: Int,
+    defaultValue: Int,
+    distinct: Boolean,
+    private val stateSavingKey: String?,
+    afterSet: AfterSet<Int>?,
+    beforeSet: BeforeSet<Int>?,
+    validate: Validate<Int>?
+) : BindablePropertyBase<Int>(distinct, afterSet, beforeSet, validate) {
+    private var value: Int = when {
+        stateSavingKey != null && viewModel is StateSavingViewModel && stateSavingKey in viewModel.savedStateHandle -> {
+            viewModel.savedStateHandle[stateSavingKey] ?: defaultValue
         }
+        else -> defaultValue
+    }
 
+    /**
+     * @see [kotlin.properties.ReadWriteProperty.getValue]
+     */
+    operator fun getValue(thisRef: ViewModel, property: KProperty<*>): Int = value
+
+    /**
+     * @see [kotlin.properties.ReadWriteProperty.setValue]
+     */
+    operator fun setValue(thisRef: ViewModel, property: KProperty<*>, value: Int) {
         if (distinct && this.value == value) {
             return
         }
 
-        beforeSet?.invoke(this.value, value)
-        this.value = validate?.invoke(this.value, value) ?: value
-        thisRef.notifyPropertyChanged(fieldId ?: BR._all)
-        afterSet?.invoke(this.value)
+        val oldValue = this.value
+        beforeSet?.invoke(oldValue, value)
+        this.value = when (val validate = validate) {
+            null -> value
+            else -> validate(oldValue, value)
+        }
+
+        thisRef.notifyPropertyChanged(fieldId)
+        if (thisRef is StateSavingViewModel && stateSavingKey != null) {
+            thisRef.savedStateHandle[stateSavingKey] = this.value
+        }
+        afterSet?.invoke(oldValue, this.value)
+    }
+
+    /**
+     * Property delegate provider for [BindableIntProperty].
+     * Needed so that reflection via [KProperty] is only necessary once, during delegate initialization.
+     *
+     * @see BindableIntProperty
+     */
+    class Provider internal constructor(
+        private val fieldId: Int? = null,
+        private val defaultValue: Int,
+        private val stateSaveOption: StateSaveOption
+    ) : BindablePropertyBase.Provider<Int>() {
+        override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>) = BindableIntProperty(
+            viewModel = thisRef,
+            fieldId = fieldId ?: property.resolveFieldId(),
+            defaultValue = defaultValue,
+            stateSavingKey = stateSaveOption.resolveKey(property),
+            distinct = distinct,
+            afterSet = afterSet,
+            beforeSet = beforeSet,
+            validate = validate
+        )
     }
 }
 
@@ -67,25 +91,13 @@ class BindableIntProperty(private var fieldId: Int?, defaultValue: Int) : Bindab
  *
  * @param defaultValue Value of the property from the start.
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
+ * @param stateSaveOption Specifies if the state of the property should be saved and with which key.
  */
-fun ViewModel.bindableInt(defaultValue: Int = 0, fieldId: Int? = null): BindableIntProperty {
-    return BindableIntProperty(fieldId, defaultValue)
-}
-
-/**
- * Sets [BindableIntProperty.beforeSet] of a [BindableIntProperty] instance to a given function and
- * returns that instance.
- */
-fun BindableIntProperty.beforeSet(action: (old: Int, new: Int) -> Unit) = apply { beforeSet = action }
-
-/**
- * Sets [BindableIntProperty.validate] of a [BindableIntProperty] instance to a given function and
- * returns that instance.
- */
-fun BindableIntProperty.validate(action: (old: Int, new: Int) -> Int) = apply { validate = action }
-
-/**
- * Sets [BindableIntProperty.afterSet] of a [BindableIntProperty] instance to a given function and
- * returns that instance.
- */
-fun BindableIntProperty.afterSet(action: (new: Int) -> Unit) = apply { afterSet = action }
+fun ViewModel.bindableInt(
+    defaultValue: Int = 0,
+    fieldId: Int? = null,
+    stateSaveOption: StateSaveOption = StateSaveOption.Automatic
+) = BindableIntProperty.Provider(fieldId, defaultValue, when (this) {
+    is StateSavingViewModel -> stateSaveOption
+    else -> StateSaveOption.None
+})

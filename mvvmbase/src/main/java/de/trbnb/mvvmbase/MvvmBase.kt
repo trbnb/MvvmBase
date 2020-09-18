@@ -25,6 +25,10 @@ object MvvmBase {
         init(BR::class.java)
     }
 
+    fun autoInit() {
+        init<BR>()
+    }
+
     /**
      * Get data binding field ID for given property name.
      *
