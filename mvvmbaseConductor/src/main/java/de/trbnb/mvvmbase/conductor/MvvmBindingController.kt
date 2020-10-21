@@ -121,9 +121,8 @@ abstract class MvvmBindingController<VM, B>(
             binding.lifecycleOwner = this
             binding.setVariable(viewModelBindingId, viewModel)
             viewModel.onBind()
-            onViewModelLoaded(viewModel)
-
             onBindingCreated(binding)
+            onViewModelLoaded(viewModel)
         }.root
     }
 
