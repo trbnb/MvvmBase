@@ -143,7 +143,7 @@ class MainActivity : MvvmActivity<MainViewModel>() {
         snackbar = null
     }
 
-    override fun getDefaultViewModelProviderFactory() = object : AbstractSavedStateViewModelFactory(this, defaultViewModelArgs) {
+    override fun getDefaultViewModelProviderFactory() = object : AbstractSavedStateViewModelFactory(this, intent?.extras) {
         override fun <T : ViewModel?> create(key: String, modelClass: Class<T>, handle: SavedStateHandle): T {
             return MainViewModel(handle, ResourceProviderImpl(this@MainActivity)) as T
         }
