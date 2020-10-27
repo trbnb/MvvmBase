@@ -67,9 +67,8 @@ abstract class MvvmBindingFragment<VM, B>(@LayoutRes override val layoutId: Int 
 
         binding?.setVariable(viewModelBindingId, viewModel)
         viewModel.onBind()
-        onViewModelLoaded(viewModel)
-
         binding?.let(this::onBindingCreated)
+        onViewModelLoaded(viewModel)
     }
 
     protected open fun onBindingCreated(binding: B) { }

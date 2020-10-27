@@ -15,17 +15,18 @@ import de.trbnb.mvvmbase.ViewModel
  * Basic [ListAdapter] implementation for ViewModel lists.
  *
  * Uses referential equality for [DiffUtil.ItemCallback.areContentsTheSame]
- * and [ViewModel.equals] for [DiffUtil.ItemCallback.areItemsTheSame].
+ * and [ViewModel.equals] for [DiffUtil.ItemCallback.areItemsTheSame] by default.
  *
  * @param layoutId Layout resource ID of the item layout.
  */
-open class BindingListAdapter<VM : ViewModel, B : ViewDataBinding>(val layoutId: Int) : ListAdapter<VM, BindingViewHolder<B>>(
-    object : DiffUtil.ItemCallback<VM>() {
+open class BindingListAdapter<VM : ViewModel, B : ViewDataBinding>(
+    val layoutId: Int,
+    diffItemCallback: DiffUtil.ItemCallback<VM> = object : DiffUtil.ItemCallback<VM>() {
         @SuppressLint("DiffUtilEquals")
         override fun areContentsTheSame(oldItem: VM, newItem: VM) = oldItem == newItem
         override fun areItemsTheSame(oldItem: VM, newItem: VM) = oldItem === newItem
     }
-) {
+) : ListAdapter<VM, BindingViewHolder<B>>(diffItemCallback) {
     override fun onBindViewHolder(holder: BindingViewHolder<B>, position: Int) {
         holder.bind(getItem(position))
     }
