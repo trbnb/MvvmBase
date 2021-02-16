@@ -62,7 +62,7 @@ val sourcesJar = task<Jar>("sourcesJar") {
 
 val javadoc = task<Javadoc>("javadoc") {
     isFailOnError = false
-    source = android.sourceSets["main"].java.sourceFiles
+    source = android.sourceSets["main"].java.getSourceFiles()
     classpath += project.files(android.bootClasspath.joinToString(separator = File.pathSeparator))
 }
 

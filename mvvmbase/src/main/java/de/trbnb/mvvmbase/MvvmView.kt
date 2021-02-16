@@ -3,10 +3,16 @@ package de.trbnb.mvvmbase
 import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
+import androidx.databinding.Observable
 import androidx.databinding.ViewDataBinding
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import de.trbnb.mvvmbase.events.Event
+import de.trbnb.mvvmbase.utils.addOnPropertyChangedCallback
+import de.trbnb.mvvmbase.utils.resolveFieldId
+import kotlin.reflect.KProperty0
+import kotlin.reflect.jvm.isAccessible
 
 /**
  * Contract for view components that want to support MVVM with a [ViewModel] bound to a [ViewDataBinding].
@@ -17,7 +23,7 @@ import de.trbnb.mvvmbase.events.Event
  *
  * The [ViewModel] will be instantiated via the ViewModel API by Android X.
  */
-interface MvvmView<VM, B : ViewDataBinding> : ViewModelStoreOwner, SavedStateRegistryOwner
+interface MvvmView<VM, B : ViewDataBinding> : ViewModelStoreOwner, SavedStateRegistryOwner, LifecycleOwner
     where VM : ViewModel, VM : androidx.lifecycle.ViewModel {
     /**
      * The [ViewDataBinding] implementation for a specific layout.
@@ -85,4 +91,24 @@ interface MvvmView<VM, B : ViewDataBinding> : ViewModelStoreOwner, SavedStateReg
      * Is called when the ViewModel sends an [Event].
      */
     fun onEvent(event: Event) { }
+
+    fun <T> KProperty0<T>.observeBindable(invokeImmediately: Boolean = true, action: (T) -> Unit) {
+        observeBindable(viewModel, this@MvvmView, invokeImmediately, action)
+    }
+}
+
+inline fun <T> KProperty0<T>.observeBindable(viewModel: ViewModel, lifecycleOwner: LifecycleOwner, invokeImmediately: Boolean = true, crossinline action: (T) -> Unit) {
+    isAccessible = true
+    val propertyId = resolveFieldId().takeUnless { it == BR._all } ?: throw IllegalArgumentException("Property isn't bindable")
+    viewModel.addOnPropertyChangedCallback(lifecycleOwner, object : Observable.OnPropertyChangedCallback() {
+        override fun onPropertyChanged(sender: Observable?, changedPropertyId: Int) {
+            if (changedPropertyId == propertyId) {
+                action(get())
+            }
+        }
+    })
+
+    if (invokeImmediately) {
+        action(get())
+    }
 }
