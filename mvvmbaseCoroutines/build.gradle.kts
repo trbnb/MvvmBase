@@ -52,33 +52,21 @@ dependencies {
 
     implementation(project(":mvvmbase"))
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.7")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.3.7")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.2")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.2")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0")
 
     testAnnotationProcessor("androidx.databinding:databinding-compiler:$gradleToolsVersion")
     kaptTest("androidx.databinding:databinding-compiler:$gradleToolsVersion")
 
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.6.2")
-    androidTestImplementation("androidx.test:runner:1.2.0")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.2.0")
+    androidTestImplementation("androidx.test:runner:1.3.0")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.3.0")
 }
 
 val sourcesJar = task<Jar>("sourcesJar") {
     archiveClassifier.set("sources")
     from(android.sourceSets["main"].java.srcDirs)
-}
-
-val javadoc = task<Javadoc>("javadoc") {
-    isFailOnError = false
-    source = android.sourceSets["main"].java.sourceFiles
-    classpath += project.files(android.bootClasspath.joinToString(separator = File.pathSeparator))
-}
-
-val javadocJar = task<Jar>("javadocJar") {
-    dependsOn(javadoc)
-    archiveClassifier.set("javadoc")
-    from(javadoc.destinationDir)
 }
 
 // Bintray
@@ -114,7 +102,6 @@ afterEvaluate {
                 from(components["release"])
 
                 artifact(sourcesJar)
-                artifact(javadocJar)
 
                 groupId = Publishing.groupId
                 artifactId = Publishing.coroutinesArtifactId
