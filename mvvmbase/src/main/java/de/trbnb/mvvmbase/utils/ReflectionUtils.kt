@@ -1,10 +1,15 @@
 package de.trbnb.mvvmbase.utils
 
+import androidx.databinding.Observable
+import androidx.lifecycle.LifecycleOwner
 import de.trbnb.mvvmbase.BR
 import de.trbnb.mvvmbase.MvvmBase
+import de.trbnb.mvvmbase.ViewModel
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 import kotlin.reflect.KProperty
+import kotlin.reflect.KProperty0
+import kotlin.reflect.jvm.isAccessible
 
 /**
  * Searches for a given parameterized class type in the receivers type hierachy and returns it if it was found.
@@ -49,4 +54,28 @@ internal fun KProperty<*>.brFieldName(): String {
     }
 
     return name
+}
+
+/**
+ * Invokes [action] everytime notifyPropertyChanged is called for the receiver property.
+ */
+internal inline fun <T> KProperty0<T>.observeBindable(
+    viewModel: ViewModel,
+    lifecycleOwner: LifecycleOwner,
+    invokeImmediately: Boolean = true,
+    crossinline action: (T) -> Unit
+) {
+    isAccessible = true
+    val propertyId = resolveFieldId().takeUnless { it == BR._all } ?: throw IllegalArgumentException("Property isn't bindable")
+    viewModel.addOnPropertyChangedCallback(lifecycleOwner, object : Observable.OnPropertyChangedCallback() {
+        override fun onPropertyChanged(sender: Observable?, changedPropertyId: Int) {
+            if (changedPropertyId == propertyId) {
+                action(get())
+            }
+        }
+    })
+
+    if (invokeImmediately) {
+        action(get())
+    }
 }
