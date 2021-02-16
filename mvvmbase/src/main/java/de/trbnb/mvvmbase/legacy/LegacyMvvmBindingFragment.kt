@@ -4,6 +4,7 @@ import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModelProvider
 import de.trbnb.mvvmbase.MvvmBindingFragment
 import de.trbnb.mvvmbase.ViewModel
+import de.trbnb.mvvmbase.utils.findGenericSuperclass
 import javax.inject.Provider
 
 /**
@@ -21,6 +22,13 @@ abstract class LegacyMvvmBindingFragment<VM, B> : MvvmBindingFragment<VM, B>()
      * Specifies how to instantiate a new [VM].
      */
     abstract val viewModelProvider: Provider<VM>
+
+    @Suppress("UNCHECKED_CAST")
+    override val viewModelClass: Class<VM>
+        get() = findGenericSuperclass<LegacyMvvmBindingFragment<VM, B>>()
+            ?.actualTypeArguments
+            ?.firstOrNull() as? Class<VM>
+            ?: throw IllegalStateException("viewModelClass does not equal Class<VM>")
 
     override fun getDefaultViewModelProviderFactory() = object : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
