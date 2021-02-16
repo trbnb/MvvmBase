@@ -1,5 +1,6 @@
 package de.trbnb.mvvmbase
 
+import android.annotation.SuppressLint
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
@@ -8,13 +9,13 @@ import androidx.lifecycle.LifecycleRegistry
  * The custom lifecycle owner for ViewModels.
  *
  * Its lifecycle state is:
- * - After initialization & being unbound: [Lifecycle.State.STARTED].
+ * - After initialization/being unbound: [Lifecycle.State.STARTED].
  * - After being bound: [Lifecycle.State.RESUMED].
- * - After being unbound: [Lifecycle.State.STARTED].
  * - After being destroyed: [Lifecycle.State.DESTROYED].
  */
 internal class ViewModelLifecycleOwner : LifecycleOwner {
-    private val registry = LifecycleRegistry(this)
+    @SuppressLint("VisibleForTests")
+    private val registry = LifecycleRegistry.createUnsafe(this)
 
     init {
         onEvent(Event.INITIALIZED)
