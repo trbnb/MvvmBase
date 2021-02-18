@@ -96,7 +96,7 @@ class BindableByteProperty private constructor(
 fun ViewModel.bindableByte(
     defaultValue: Byte = 0,
     fieldId: Int? = null,
-    stateSaveOption: StateSaveOption = StateSaveOption.Automatic
+    stateSaveOption: StateSaveOption = (this as? StateSavingViewModel)?.defaultStateSaveOption ?: StateSaveOption.None
 ) = BindableByteProperty.Provider(fieldId, defaultValue, when (this) {
     is StateSavingViewModel -> stateSaveOption
     else -> StateSaveOption.None

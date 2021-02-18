@@ -51,7 +51,7 @@ inline fun <reified C : Collection<ViewModel>> ViewModel.childrenBindable(
 ): ChildViewModelBindablePropertyProvider<C> = ChildViewModelBindablePropertyProvider(fieldId, defaultValue, when (this) {
     is StateSavingViewModel -> when (stateSaveOption) {
         null -> when (savingStateInBindableSupports<C>()) {
-            true -> StateSaveOption.Automatic
+            true -> defaultStateSaveOption
             false -> StateSaveOption.None
         }
         else -> stateSaveOption
