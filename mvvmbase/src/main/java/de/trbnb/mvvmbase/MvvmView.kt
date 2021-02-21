@@ -95,7 +95,7 @@ interface MvvmView<VM, B : ViewDataBinding> : ViewModelStoreOwner, SavedStateReg
      * @param invokeImmediately If true [action] will be invoked immediately and not wait for the first notifyPropertyChanged call.
      * @param lifecycleOwner Lifecycle that determines when listening for notifyPropertyChanged stops.
      */
-    fun <T> KProperty0<T>.observeBindable(invokeImmediately: Boolean = true, lifecycleOwner: LifecycleOwner = this@MvvmView, action: (T) -> Unit) {
+    fun <T> KProperty0<T>.observe(invokeImmediately: Boolean = true, lifecycleOwner: LifecycleOwner = this@MvvmView, action: (T) -> Unit) {
         observeBindable(viewModel, lifecycleOwner, invokeImmediately, action)
     }
 }

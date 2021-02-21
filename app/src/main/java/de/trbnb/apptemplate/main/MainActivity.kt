@@ -37,11 +37,11 @@ class MainActivity : MvvmActivity<MainViewModel>() {
     override fun onViewModelLoaded(viewModel: MainViewModel) {
         super.onViewModelLoaded(viewModel)
 
-        viewModel::isShowingDialog.observeBindable { showDialog: Boolean ->
+        viewModel::isShowingDialog.observe { showDialog: Boolean ->
             if (showDialog) showDialog() else dismissDialog()
         }
 
-        viewModel::showSnackbar.observeBindable { showSnackbar ->
+        viewModel::showSnackbar.observe { showSnackbar ->
             if (showSnackbar) showSnackbar() else dismissSnackbar()
         }
     }
