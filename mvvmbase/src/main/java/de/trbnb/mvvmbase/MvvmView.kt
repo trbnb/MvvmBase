@@ -20,7 +20,7 @@ import kotlin.reflect.KProperty0
  *
  * The [ViewModel] will be instantiated via the ViewModel API by Android X.
  */
-interface MvvmView<VM, B : ViewDataBinding> : ViewModelStoreOwner, SavedStateRegistryOwner, LifecycleOwner
+interface MvvmView<VM, B : ViewDataBinding> : ViewModelStoreOwner, SavedStateRegistryOwner
     where VM : ViewModel, VM : androidx.lifecycle.ViewModel {
     /**
      * The [ViewDataBinding] implementation for a specific layout.
