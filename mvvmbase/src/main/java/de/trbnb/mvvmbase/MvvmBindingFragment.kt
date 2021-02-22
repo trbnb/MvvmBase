@@ -44,7 +44,7 @@ abstract class MvvmBindingFragment<VM, B>(@LayoutRes override val layoutId: Int 
         factoryProducer = { defaultViewModelProviderFactory }
     )
 
-    private val mainHandler = Handler(Looper.getMainLooper())
+    private val mainHandler by lazy { Handler(Looper.getMainLooper()) }
 
     /**
      * Is called when the ViewModel sends an [Event].

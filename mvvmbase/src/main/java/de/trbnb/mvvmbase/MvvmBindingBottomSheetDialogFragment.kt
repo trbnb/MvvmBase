@@ -1,6 +1,8 @@
 package de.trbnb.mvvmbase
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,13 +44,17 @@ abstract class MvvmBindingBottomSheetDialogFragment<VM, B>(@LayoutRes override v
         factoryProducer = { defaultViewModelProviderFactory }
     )
 
+    private val mainHandler by lazy { Handler(Looper.getMainLooper()) }
+
     /**
      * Is called when the ViewModel sends an [Event].
      * Will only call [onEvent].
      *
      * @see onEvent
      */
-    private val eventListener = { event: Event -> onEvent(event) }
+    private val eventListener: (Event) -> Unit = { event ->
+        mainHandler.post { onEvent(event) }
+    }
 
     /**
      * Called by the lifecycle.
