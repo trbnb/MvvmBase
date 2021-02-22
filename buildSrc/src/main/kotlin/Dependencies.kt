@@ -2,9 +2,9 @@ import org.gradle.api.JavaVersion
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.extra
 
-const val kotlinVersion = "1.3.72"
+const val kotlinVersion = "1.4.21"
 
-const val gradleToolsVersion = "4.0.1"
+const val gradleToolsVersion = "4.1.1"
 
 val javaVersion = JavaVersion.VERSION_1_8
 
