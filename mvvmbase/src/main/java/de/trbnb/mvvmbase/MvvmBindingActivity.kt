@@ -26,7 +26,9 @@ abstract class MvvmBindingActivity<VM, B>(@LayoutRes override val layoutId: Int 
      *
      * @see onEvent
      */
-    private val eventListener = { event: Event -> onEvent(event) }
+    private val eventListener: (Event) -> Unit = { event ->
+        runOnUiThread { onEvent(event) }
+    }
 
     @Suppress("LeakingThis")
     override val viewModelDelegate: Lazy<VM> = ViewModelLazy(

@@ -15,12 +15,13 @@ object MvvmBase {
 
     internal var defaultStateSaveOption: StateSaveOption = StateSaveOption.Automatic
 
+    internal var enforceViewModelLifecycleMainThread = true
+
     /**
      * Initializes the automatic field ID detection by providing the class inside BR.java.
      */
-    fun init(brClass: Class<*>): MvvmBase {
+    fun init(brClass: Class<*>): MvvmBase = apply {
         retrieveFieldIds(brClass)
-        return this
     }
 
     /**
@@ -39,6 +40,14 @@ object MvvmBase {
      */
     fun defaultStateSaveOption(stateSaveOption: StateSaveOption) = apply {
         defaultStateSaveOption = stateSaveOption
+    }
+
+    /**
+     * Starting with Androidx Lifecycle version 2.3.0 all Lifecycles are thread-safe (only usable from main-thread).
+     * This can be deactivated for [ViewModel.getLifecycle] to allow for initialization of ViewModels on other threads.
+     */
+    fun disableViewModelLifecycleThreadConstraints(): MvvmBase = apply {
+        enforceViewModelLifecycleMainThread = false
     }
 
     /**
