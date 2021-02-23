@@ -96,7 +96,7 @@ class BindableLongProperty private constructor(
 fun ViewModel.bindableLong(
     defaultValue: Long = 0,
     fieldId: Int? = null,
-    stateSaveOption: StateSaveOption = StateSaveOption.Automatic
+    stateSaveOption: StateSaveOption = (this as? StateSavingViewModel)?.defaultStateSaveOption ?: StateSaveOption.None
 ) = BindableLongProperty.Provider(fieldId, defaultValue, when (this) {
     is StateSavingViewModel -> stateSaveOption
     else -> StateSaveOption.None

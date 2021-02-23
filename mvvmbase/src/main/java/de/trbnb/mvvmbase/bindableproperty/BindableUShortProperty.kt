@@ -98,7 +98,7 @@ class BindableUShortProperty private constructor(
 fun ViewModel.bindableUShort(
     defaultValue: UShort = 0.toUShort(),
     fieldId: Int? = null,
-    stateSaveOption: StateSaveOption = StateSaveOption.Automatic
+    stateSaveOption: StateSaveOption = (this as? StateSavingViewModel)?.defaultStateSaveOption ?: StateSaveOption.None
 ) = BindableUShortProperty.Provider(fieldId, defaultValue, when (this) {
     is StateSavingViewModel -> stateSaveOption
     else -> StateSaveOption.None

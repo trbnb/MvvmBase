@@ -96,7 +96,7 @@ class BindableBooleanProperty private constructor(
 fun ViewModel.bindableBoolean(
     defaultValue: Boolean = false,
     fieldId: Int? = null,
-    stateSaveOption: StateSaveOption = StateSaveOption.Automatic
+    stateSaveOption: StateSaveOption = (this as? StateSavingViewModel)?.defaultStateSaveOption ?: StateSaveOption.None
 ): BindableBooleanProperty.Provider = BindableBooleanProperty.Provider(fieldId, defaultValue, when (this) {
     is StateSavingViewModel -> stateSaveOption
     else -> StateSaveOption.None
