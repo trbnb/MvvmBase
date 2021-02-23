@@ -13,9 +13,12 @@ import androidx.lifecycle.LifecycleRegistry
  * - After being bound: [Lifecycle.State.RESUMED].
  * - After being destroyed: [Lifecycle.State.DESTROYED].
  */
-internal class ViewModelLifecycleOwner : LifecycleOwner {
+internal class ViewModelLifecycleOwner(enforceMainThread: Boolean) : LifecycleOwner {
     @SuppressLint("VisibleForTests")
-    private val registry = LifecycleRegistry.createUnsafe(this)
+    private val registry = when (enforceMainThread) {
+        true -> LifecycleRegistry(this)
+        false -> LifecycleRegistry.createUnsafe(this)
+    }
 
     init {
         onEvent(Event.INITIALIZED)

@@ -39,7 +39,7 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel, LifecycleOwne
     /**
      * @see ViewModelLifecycleOwner
      */
-    private val lifecycleOwner = ViewModelLifecycleOwner()
+    private val lifecycleOwner = ViewModelLifecycleOwner(MvvmBase.enforceViewModelLifecycleMainThread)
 
     final override fun addOnPropertyChangedCallback(callback: Observable.OnPropertyChangedCallback) {
         callbacks.add(callback)
