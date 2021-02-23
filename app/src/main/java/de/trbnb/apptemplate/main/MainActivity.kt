@@ -37,7 +37,7 @@ class MainActivity : MvvmActivity<MainViewModel>() {
     override fun onViewModelLoaded(viewModel: MainViewModel) {
         super.onViewModelLoaded(viewModel)
 
-        viewModel::isShowingDialog.observe { showDialog: Boolean ->
+        viewModel::isShowingDialog.observe { showDialog ->
             if (showDialog) showDialog() else dismissDialog()
         }
 
