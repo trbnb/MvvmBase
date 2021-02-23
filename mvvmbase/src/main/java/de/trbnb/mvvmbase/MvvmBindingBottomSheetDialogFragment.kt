@@ -10,17 +10,17 @@ import androidx.annotation.CallSuper
 import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelLazy
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import de.trbnb.mvvmbase.events.Event
 import de.trbnb.mvvmbase.utils.findGenericSuperclass
 
 /**
- * Reference implementation of an [MvvmView] with [Fragment].
+ * Reference implementation of an [MvvmView] with [BottomSheetDialogFragment].
  *
  * This creates the binding during [onCreateView] and the ViewModel during [onCreate].
  */
-abstract class MvvmBindingFragment<VM, B>(@LayoutRes override val layoutId: Int = 0) : Fragment(), MvvmView<VM, B>
+abstract class MvvmBindingBottomSheetDialogFragment<VM, B>(@LayoutRes override val layoutId: Int = 0) : BottomSheetDialogFragment(), MvvmView<VM, B>
         where VM : ViewModel, VM : androidx.lifecycle.ViewModel, B : ViewDataBinding {
     override var binding: B? = null
 
@@ -32,7 +32,7 @@ abstract class MvvmBindingFragment<VM, B>(@LayoutRes override val layoutId: Int 
 
     @Suppress("UNCHECKED_CAST")
     override val viewModelClass: Class<VM>
-        get() = findGenericSuperclass<MvvmBindingFragment<VM, B>>()
+        get() = findGenericSuperclass<MvvmBindingBottomSheetDialogFragment<VM, B>>()
             ?.actualTypeArguments
             ?.firstOrNull() as? Class<VM>
             ?: throw IllegalStateException("viewModelClass does not equal Class<VM>")
