@@ -8,4 +8,6 @@ sealed class MainEvent : Event {
     object ShowMainActivityAgainEvent : MainEvent()
     object ShowConductorEvent : MainEvent()
     object ShowListEvent : MainEvent()
+    object ShowDialog : MainEvent()
+    class ShowSnackbar(val text: String) : MainEvent()
 }

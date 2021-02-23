@@ -4,8 +4,8 @@ import androidx.databinding.Bindable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import de.trbnb.apptemplate.resource.ResourceProvider
-import de.trbnb.mvvmbase.bindableproperty.bindableBoolean
-import de.trbnb.mvvmbase.commands.ruleCommand
+import de.trbnb.mvvmbase.bindableproperty.bindable
+import de.trbnb.mvvmbase.bindableproperty.distinct
 import de.trbnb.mvvmbase.commands.simpleCommand
 import de.trbnb.mvvmbase.rxjava2.RxViewModel
 import de.trbnb.mvvmbase.savedstate.BaseStateSavingViewModel
@@ -18,10 +18,8 @@ class MainViewModel(
     resourceProvider: ResourceProvider
 ) : BaseStateSavingViewModel(savedStateHandle), RxViewModel {
     @get:Bindable
-    var isShowingDialog by bindableBoolean(false)
-
-    @get:Bindable
-    var showSnackbar: Boolean by bindableBoolean(false)
+    var textInput by bindable("")
+        .distinct()
 
     @get:Bindable
     val title: String by Observable.create<String> { emitter ->
@@ -31,17 +29,9 @@ class MainViewModel(
         }
     }.toBindable(defaultValue = "foo")
 
-    val showDialogCommand = ruleCommand(
-        enabledRule = { !isShowingDialog },
-        action = { isShowingDialog = true },
-        dependentFields = listOf(::isShowingDialog)
-    )
+    val showDialogCommand = simpleCommand { eventChannel(MainEvent.ShowDialog) }
 
-    val showSnackbarCommand = ruleCommand(
-        action = { showSnackbar = true },
-        enabledRule = { !showSnackbar },
-        dependentFields = listOf(::showSnackbar)
-    )
+    val showSnackbarCommand = simpleCommand { eventChannel(MainEvent.ShowSnackbar("This is a sample Snackbar made with binding.")) }
 
     val showToastCommand = simpleCommand {
         eventChannel(MainEvent.ShowToast)
