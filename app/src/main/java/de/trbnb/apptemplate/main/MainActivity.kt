@@ -17,7 +17,6 @@ import de.trbnb.apptemplate.list.ListActivity
 import de.trbnb.apptemplate.resource.ResourceProviderImpl
 import de.trbnb.apptemplate.second.SecondActivity
 import de.trbnb.apptemplate.second.SecondController
-import de.trbnb.mvvmbase.BR
 import de.trbnb.mvvmbase.MvvmActivity
 import de.trbnb.mvvmbase.events.Event
 
@@ -38,18 +37,12 @@ class MainActivity : MvvmActivity<MainViewModel>() {
     override fun onViewModelLoaded(viewModel: MainViewModel) {
         super.onViewModelLoaded(viewModel)
 
-        // now that the view-model is loaded, we know whether or not we should know if we should
-        // show the dialog and snackbar
-        arrayOf(BR.showingDialog, BR.showSnackbar).forEach { onViewModelPropertyChanged(viewModel, it) }
-    }
+        viewModel::isShowingDialog.observe { showDialog: Boolean ->
+            if (showDialog) showDialog() else dismissDialog()
+        }
 
-    /**
-     * will be called whenever the view-model calls notifyPropertyChanged
-     */
-    override fun onViewModelPropertyChanged(viewModel: MainViewModel, fieldId: Int) {
-        when (fieldId) {
-            BR.showingDialog -> if (viewModel.isShowingDialog) showDialog() else dismissDialog()
-            BR.showSnackbar -> if (viewModel.showSnackbar) showSnackbar() else dismissSnackbar()
+        viewModel::showSnackbar.observe { showSnackbar ->
+            if (showSnackbar) showSnackbar() else dismissSnackbar()
         }
     }
 

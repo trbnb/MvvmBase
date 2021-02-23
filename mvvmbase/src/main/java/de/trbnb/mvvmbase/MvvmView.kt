@@ -4,9 +4,12 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import de.trbnb.mvvmbase.events.Event
+import de.trbnb.mvvmbase.utils.observeBindable
+import kotlin.reflect.KProperty0
 
 /**
  * Contract for view components that want to support MVVM with a [ViewModel] bound to a [ViewDataBinding].
@@ -85,4 +88,14 @@ interface MvvmView<VM, B : ViewDataBinding> : ViewModelStoreOwner, SavedStateReg
      * Is called when the ViewModel sends an [Event].
      */
     fun onEvent(event: Event) { }
+
+    /**
+     * Invokes [action] everytime notifyPropertyChanged is called for the receiver property.
+     *
+     * @param invokeImmediately If true [action] will be invoked immediately and not wait for the first notifyPropertyChanged call.
+     * @param lifecycleOwner Lifecycle that determines when listening for notifyPropertyChanged stops.
+     */
+    fun <T> KProperty0<T>.observe(invokeImmediately: Boolean = true, lifecycleOwner: LifecycleOwner = this@MvvmView, action: (T) -> Unit) {
+        observeBindable(viewModel, lifecycleOwner, invokeImmediately, action)
+    }
 }
