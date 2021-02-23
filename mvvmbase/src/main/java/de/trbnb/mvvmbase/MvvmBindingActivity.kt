@@ -107,7 +107,6 @@ abstract class MvvmBindingActivity<VM, B>(@LayoutRes override val layoutId: Int 
     override fun onDestroy() {
         super.onDestroy()
 
-        viewModel.onUnbind()
         viewModel.removeOnPropertyChangedCallback(viewModelObserver)
     }
 }

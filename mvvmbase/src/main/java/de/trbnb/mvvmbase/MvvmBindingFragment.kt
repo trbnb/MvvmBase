@@ -107,7 +107,6 @@ abstract class MvvmBindingFragment<VM, B>(@LayoutRes override val layoutId: Int 
         super.onDestroyView()
 
         binding?.setVariable(viewModelBindingId, null)
-        viewModel.onUnbind()
         viewModel.eventChannel.removeListener(eventListener)
         viewModel.removeOnPropertyChangedCallback(viewModelObserver)
 

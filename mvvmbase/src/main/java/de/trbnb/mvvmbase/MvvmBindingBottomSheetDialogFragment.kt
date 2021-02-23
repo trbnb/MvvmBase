@@ -107,7 +107,6 @@ abstract class MvvmBindingBottomSheetDialogFragment<VM, B>(@LayoutRes override v
         super.onDestroyView()
 
         binding?.setVariable(viewModelBindingId, null)
-        viewModel.onUnbind()
         viewModel.eventChannel.removeListener(eventListener)
         viewModel.removeOnPropertyChangedCallback(viewModelObserver)
 

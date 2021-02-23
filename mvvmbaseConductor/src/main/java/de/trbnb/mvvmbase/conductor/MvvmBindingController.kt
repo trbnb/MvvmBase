@@ -162,7 +162,6 @@ abstract class MvvmBindingController<VM, B>(
         super.onDestroyView(view)
 
         binding?.setVariable(viewModelBindingId, null)
-        viewModel.onUnbind()
         viewModel.eventChannel.removeListener(eventListener)
         viewModel.removeOnPropertyChangedCallback(viewModelObserver)
 
