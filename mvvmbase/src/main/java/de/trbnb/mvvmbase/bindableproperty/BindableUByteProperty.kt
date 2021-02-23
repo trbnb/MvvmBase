@@ -98,7 +98,7 @@ class BindableUByteProperty private constructor(
 fun ViewModel.bindableUByte(
     defaultValue: UByte = 0.toUByte(),
     fieldId: Int? = null,
-    stateSaveOption: StateSaveOption = StateSaveOption.Automatic
+    stateSaveOption: StateSaveOption = (this as? StateSavingViewModel)?.defaultStateSaveOption ?: StateSaveOption.None
 ) = BindableUByteProperty.Provider(fieldId, defaultValue, when (this) {
     is StateSavingViewModel -> stateSaveOption
     else -> StateSaveOption.None

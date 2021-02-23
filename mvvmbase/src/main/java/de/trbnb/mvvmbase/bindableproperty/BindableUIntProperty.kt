@@ -98,7 +98,7 @@ class BindableUIntProperty private constructor(
 fun ViewModel.bindableUInt(
     defaultValue: UInt = 0.toUInt(),
     fieldId: Int? = null,
-    stateSaveOption: StateSaveOption = StateSaveOption.Automatic
+    stateSaveOption: StateSaveOption = (this as? StateSavingViewModel)?.defaultStateSaveOption ?: StateSaveOption.None
 ) = BindableUIntProperty.Provider(fieldId, defaultValue, when (this) {
     is StateSavingViewModel -> stateSaveOption
     else -> StateSaveOption.None

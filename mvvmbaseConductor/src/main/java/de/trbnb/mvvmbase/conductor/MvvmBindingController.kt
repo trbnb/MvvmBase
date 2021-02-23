@@ -2,6 +2,8 @@ package de.trbnb.mvvmbase.conductor
 
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -58,13 +60,17 @@ abstract class MvvmBindingController<VM, B>(
         factoryProducer = { defaultViewModelProviderFactory }
     )
 
+    private val mainHandler = Handler(Looper.getMainLooper())
+
     /**
      * Is called when the ViewModel sends an [Event].
      * Will only call [onEvent].
      *
      * @see onEvent
      */
-    private val eventListener = { event: Event -> onEvent(event) }
+    private val eventListener: (Event) -> Unit = { event ->
+        mainHandler.post { onEvent(event) }
+    }
 
     @Suppress("UNCHECKED_CAST")
     override val viewModelClass: Class<VM>
