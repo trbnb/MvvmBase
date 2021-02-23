@@ -27,13 +27,12 @@ object MvvmBase {
     /**
      * Initializes the automatic field ID detection by providing the class inside BR.java.
      */
-    inline fun <reified BR> init(): MvvmBase {
-        return init(BR::class.java)
-    }
+    inline fun <reified BR> init(): MvvmBase = init(BR::class.java)
 
-    fun autoInit(): MvvmBase {
-        return init<BR>()
-    }
+    /**
+     * Initializes the library with the BR class from itself (which will be expanded by the databinding compiler and so will contain every field id).
+     */
+    fun autoInit(): MvvmBase = init<BR>()
 
     /**
      * Sets the default [StateSaveOption] that will be used for bindable properties in [de.trbnb.mvvmbase.savedstate.StateSavingViewModel].
