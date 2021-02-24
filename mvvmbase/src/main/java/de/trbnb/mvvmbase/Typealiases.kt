@@ -2,7 +2,6 @@ package de.trbnb.mvvmbase
 
 import androidx.databinding.ViewDataBinding
 
-
 /**
  * Typealias for Fragments that don't need to specify the specific [ViewDataBinding] implementation.
  *

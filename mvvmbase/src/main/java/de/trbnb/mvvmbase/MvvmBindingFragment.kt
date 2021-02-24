@@ -11,10 +11,7 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.AbstractSavedStateViewModelFactory
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelLazy
-import androidx.lifecycle.ViewModelProvider
 import de.trbnb.mvvmbase.events.Event
 import de.trbnb.mvvmbase.utils.findGenericSuperclass
 
