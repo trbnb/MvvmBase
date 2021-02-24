@@ -15,7 +15,7 @@ class ObservableTests {
         val observable = BaseObservable()
 
         val lifecycleOwner = object : LifecycleOwner {
-            private val lifecycle = LifecycleRegistry(this).apply {
+            private val lifecycle = LifecycleRegistry.createUnsafe(this).apply {
                 currentState = Lifecycle.State.STARTED
             }
             override fun getLifecycle() = lifecycle

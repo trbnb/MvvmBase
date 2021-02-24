@@ -14,7 +14,7 @@ import org.junit.Test
 class ObservableBindingTests {
     @Before
     fun setup() {
-        MvvmBase.init<BR>()
+        MvvmBase.init<BR>().disableViewModelLifecycleThreadConstraints()
     }
 
     @Test

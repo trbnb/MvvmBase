@@ -24,7 +24,7 @@ class FlowBindableTests {
     @BeforeEach
     fun setup() {
         Dispatchers.setMain(TestCoroutineDispatcher())
-        MvvmBase.init<BR>()
+        MvvmBase.init<BR>().disableViewModelLifecycleThreadConstraints()
     }
 
     @Test
