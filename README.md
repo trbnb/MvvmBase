@@ -7,12 +7,7 @@ MvvmBase is available via JCenter. To use it put this in your `build.gradle`:
 
 ```gradle
 dependencies {
-    // Always needed, library depends on ViewModelLazy
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
-    // Necessary for SavedStateHandle
-    implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:2.2.0"
-
-    def mvvmbaseVersion = "2.0.0"
+    def mvvmbaseVersion = "2.1.0"
 
     [...]
     implementation de.trbnb.mvvmbase:mvvmbase:$mvvmbaseVersion"
