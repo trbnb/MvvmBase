@@ -2,6 +2,8 @@ package de.trbnb.mvvmbase.conductor
 
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +12,7 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.lifecycle.HasDefaultViewModelProviderFactory
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.lifecycle.ViewModelLazy
@@ -31,19 +34,9 @@ import de.trbnb.mvvmbase.utils.findGenericSuperclass
 abstract class MvvmBindingController<VM, B>(
     bundle: Bundle? = null,
     @LayoutRes override val layoutId: Int = 0
-) : LifecycleController(bundle), MvvmView<VM, B> where VM : ViewModel, VM : androidx.lifecycle.ViewModel, B : ViewDataBinding {
+) : LifecycleController(bundle), MvvmView<VM, B>, HasDefaultViewModelProviderFactory
+    where VM : ViewModel, VM : androidx.lifecycle.ViewModel, B : ViewDataBinding {
     override var binding: B? = null
-
-    /**
-     * Serves the same purpose as [ComponentActivity.getDefaultViewModelProviderFactory].
-     */
-    open val defaultViewModelProviderFactory: ViewModelProvider.Factory by lazy {
-        SavedStateViewModelFactory(
-            activity?.application ?: throw RuntimeException("Unable to retrieve application context"),
-            this,
-            defaultViewModelArgs
-        )
-    }
 
     /**
      * Callback implementation that delegates the parametes to [onViewModelPropertyChanged].
@@ -58,13 +51,17 @@ abstract class MvvmBindingController<VM, B>(
         factoryProducer = { defaultViewModelProviderFactory }
     )
 
+    private val mainHandler by lazy { Handler(Looper.getMainLooper()) }
+
     /**
      * Is called when the ViewModel sends an [Event].
      * Will only call [onEvent].
      *
      * @see onEvent
      */
-    private val eventListener = { event: Event -> onEvent(event) }
+    private val eventListener: (Event) -> Unit = { event ->
+        mainHandler.post { onEvent(event) }
+    }
 
     @Suppress("UNCHECKED_CAST")
     override val viewModelClass: Class<VM>
@@ -77,6 +74,7 @@ abstract class MvvmBindingController<VM, B>(
      * Defines which Bundle will be used as defaultArgs with [androidx.lifecycle.AbstractSavedStateViewModelFactory].
      * Default is [getArgs].
      */
+    @Deprecated("Not used anymore. Use getArgs() instead.", ReplaceWith("getArgs()"), DeprecationLevel.WARNING)
     protected open val defaultViewModelArgs: Bundle?
         get() = args
 
@@ -156,7 +154,6 @@ abstract class MvvmBindingController<VM, B>(
         super.onDestroyView(view)
 
         binding?.setVariable(viewModelBindingId, null)
-        viewModel.onUnbind()
         viewModel.eventChannel.removeListener(eventListener)
         viewModel.removeOnPropertyChangedCallback(viewModelObserver)
 
@@ -172,5 +169,13 @@ abstract class MvvmBindingController<VM, B>(
         super.onRestoreInstanceState(savedInstanceState)
         savedStateRegistryController.performRestore(savedInstanceState)
         onRestoreInstanceStateCalled = true
+    }
+
+    override fun getDefaultViewModelProviderFactory(): ViewModelProvider.Factory {
+        return SavedStateViewModelFactory(
+            activity?.application ?: throw RuntimeException("Unable to retrieve application context"),
+            this,
+            args
+        )
     }
 }

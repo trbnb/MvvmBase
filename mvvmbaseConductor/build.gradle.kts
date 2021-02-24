@@ -42,34 +42,22 @@ android {
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
 
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:2.2.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:2.3.0")
 
     implementation(project(":mvvmbase"))
 
     api("com.bluelinelabs:conductor:2.1.5")
     api("com.bluelinelabs:conductor-archlifecycle:2.1.5")
 
-    testImplementation("junit:junit:4.13")
-    androidTestImplementation("androidx.test:runner:1.2.0")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.2.0")
+    testImplementation("junit:junit:4.13.1")
+    androidTestImplementation("androidx.test:runner:1.3.0")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.3.0")
 }
 
 val sourcesJar = task<Jar>("sourcesJar") {
     archiveClassifier.set("sources")
     from(android.sourceSets["main"].java.srcDirs)
-}
-
-val javadoc = task<Javadoc>("javadoc") {
-    isFailOnError = false
-    source = android.sourceSets["main"].java.sourceFiles
-    classpath += project.files(android.bootClasspath.joinToString(separator = File.pathSeparator))
-}
-
-val javadocJar = task<Jar>("javadocJar") {
-    dependsOn(javadoc)
-    archiveClassifier.set("javadoc")
-    from(javadoc.destinationDir)
 }
 
 // Bintray
@@ -105,7 +93,6 @@ afterEvaluate {
                 from(components["release"])
 
                 artifact(sourcesJar)
-                artifact(javadocJar)
 
                 groupId = Publishing.groupId
                 artifactId = Publishing.conductorArtifactId

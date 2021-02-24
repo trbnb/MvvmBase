@@ -14,7 +14,7 @@ import org.junit.Test
 class CompletableBindingTests {
     @Before
     fun setup() {
-        MvvmBase.init<BR>()
+        MvvmBase.init<BR>().disableViewModelLifecycleThreadConstraints()
     }
 
     @Test

@@ -98,7 +98,7 @@ inline fun <reified T> ViewModel.bindable(
 ): BindableProperty.Provider<T> = BindableProperty.Provider(fieldId, defaultValue, when (this) {
     is StateSavingViewModel -> when (stateSaveOption) {
         null -> when (savingStateInBindableSupports<T>()) {
-            true -> StateSaveOption.Automatic
+            true -> defaultStateSaveOption
             false -> StateSaveOption.None
         }
         else -> stateSaveOption

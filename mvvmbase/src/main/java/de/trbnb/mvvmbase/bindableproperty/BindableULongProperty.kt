@@ -98,7 +98,7 @@ class BindableULongProperty private constructor(
 fun ViewModel.bindableULong(
     defaultValue: ULong = 0.toULong(),
     fieldId: Int? = null,
-    stateSaveOption: StateSaveOption = StateSaveOption.Automatic
+    stateSaveOption: StateSaveOption = (this as? StateSavingViewModel)?.defaultStateSaveOption ?: StateSaveOption.None
 ) = BindableULongProperty.Provider(fieldId, defaultValue, when (this) {
     is StateSavingViewModel -> stateSaveOption
     else -> StateSaveOption.None

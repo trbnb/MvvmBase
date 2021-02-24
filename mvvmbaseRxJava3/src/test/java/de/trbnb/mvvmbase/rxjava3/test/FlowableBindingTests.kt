@@ -16,7 +16,7 @@ import org.junit.Test
 class FlowableBindingTests {
     @Before
     fun setup() {
-        MvvmBase.init<BR>()
+        MvvmBase.init<BR>().disableViewModelLifecycleThreadConstraints()
     }
 
     @Test

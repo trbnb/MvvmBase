@@ -1,13 +1,9 @@
 package de.trbnb.apptemplate.main
 
 import android.app.AlertDialog
-import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
-import androidx.lifecycle.AbstractSavedStateViewModelFactory
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import com.bluelinelabs.conductor.Conductor
 import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
@@ -17,16 +13,11 @@ import de.trbnb.apptemplate.list.ListActivity
 import de.trbnb.apptemplate.resource.ResourceProviderImpl
 import de.trbnb.apptemplate.second.SecondActivity
 import de.trbnb.apptemplate.second.SecondController
-import de.trbnb.mvvmbase.BR
 import de.trbnb.mvvmbase.MvvmActivity
 import de.trbnb.mvvmbase.events.Event
+import de.trbnb.mvvmbase.viewmodel.viewModelProviderFactory
 
-class MainActivity : MvvmActivity<MainViewModel>() {
-    private var dialog: Dialog? = null
-    private var snackbar: Snackbar? = null
-
-    override val layoutId: Int = R.layout.activity_main
-
+class MainActivity : MvvmActivity<MainViewModel>(R.layout.activity_main) {
     private lateinit var router: Router
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,94 +29,42 @@ class MainActivity : MvvmActivity<MainViewModel>() {
     override fun onViewModelLoaded(viewModel: MainViewModel) {
         super.onViewModelLoaded(viewModel)
 
-        // now that the view-model is loaded, we know whether or not we should know if we should
-        // show the dialog and snackbar
-        arrayOf(BR.showingDialog, BR.showSnackbar).forEach { onViewModelPropertyChanged(viewModel, it) }
-    }
-
-    /**
-     * will be called whenever the view-model calls notifyPropertyChanged
-     */
-    override fun onViewModelPropertyChanged(viewModel: MainViewModel, fieldId: Int) {
-        when (fieldId) {
-            BR.showingDialog -> if (viewModel.isShowingDialog) showDialog() else dismissDialog()
-            BR.showSnackbar -> if (viewModel.showSnackbar) showSnackbar() else dismissSnackbar()
+        viewModel::textInput.observe { textInput ->
+            supportActionBar?.subtitle = textInput
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        // Dialogs should be dismissed in onDestroy so the window won't be leaked.
-        // This means we don't want to change the state in the view-model here.
-
-        // We dismiss and don't cancel here because we don't want to trigger the OnCancelListener that
-        // is attached to the dialog.
-        dialog?.dismiss()
     }
 
     /**
      * create a new Dialog and show it
      */
     private fun showDialog() {
-        dialog = AlertDialog.Builder(this)
-                .setTitle("Dialog title")
-                .setMessage("This is a sample dialog to show how to create a dialog via binding.")
-                .setOnCancelListener {
-                    // Will only be called when the Dialog is canceled, not dismissed.
-                    // This also changes the state in the view-model, so the dialog won't be shown
-                    // again after rotation.
-                    viewModel.isShowingDialog = false
-                }
-                .setPositiveButton(android.R.string.ok) { d, _ ->
-                    // We cancel the Dialog here because the user got rid of it.
-                    d.cancel()
-                }
-                .show()
-    }
-
-    /**
-     * dismiss a Dialog if one exists
-     */
-    private fun dismissDialog() {
-        dialog?.dismiss()
-        dialog = null
+        AlertDialog.Builder(this)
+            .setTitle("Dialog title")
+            .setMessage("This is a sample dialog to show how to create a dialog via binding.")
+            .setPositiveButton(android.R.string.ok) { d, _ -> d.cancel() }
+            .show()
     }
 
     /**
      * create a new Snackbar and show it
      */
-    private fun showSnackbar() {
-        snackbar = Snackbar.make(findViewById(android.R.id.content), "This is a sample Snackbar made with binding.", Snackbar.LENGTH_LONG).apply {
-
-            // if the snackbar is dismissed we want to update the state in the view-model
-            addCallback(object : Snackbar.Callback() {
-                override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-                    // A Snackbar will dismiss itself if the containing Activity is destroyed.
-                    // Because we don't want to change the state in the view-model we just return in that case.
-                    if (isDestroyed) {
-                        return
-                    }
-
-                    viewModel.showSnackbar = false
-                }
-            })
-
-            setAction("Hide") { viewModel.showSnackbar = false }
-
-            show()
-        }
+    private fun showSnackbar(text: String) {
+        Snackbar.make(findViewById(android.R.id.content), text, Snackbar.LENGTH_LONG).apply {
+            setAction("Hide") { dismiss() }
+        }.show()
     }
 
     override fun onEvent(event: Event) {
         super.onEvent(event)
 
-        when (event as? MainEvent ?: return) {
-            is MainEvent.ShowToast -> Toast.makeText(this, "Toast message!", Toast.LENGTH_SHORT).show()
-            is MainEvent.ShowMainActivityAgainEvent -> startActivity(Intent(this, MainActivity::class.java))
-            is MainEvent.ShowSecondActivityEvent -> startActivity(Intent(this, SecondActivity::class.java))
-            is MainEvent.ShowConductorEvent -> router.pushController(RouterTransaction.with(SecondController()))
-            is MainEvent.ShowListEvent -> startActivity(Intent(this, ListActivity::class.java))
+        when (event) {
+            MainEvent.ShowToast -> Toast.makeText(this, "Toast message!", Toast.LENGTH_SHORT).show()
+            MainEvent.ShowMainActivityAgainEvent -> startActivity(Intent(this, MainActivity::class.java))
+            MainEvent.ShowSecondActivityEvent -> startActivity(Intent(this, SecondActivity::class.java))
+            MainEvent.ShowConductorEvent -> router.pushController(RouterTransaction.with(SecondController()))
+            MainEvent.ShowListEvent -> startActivity(Intent(this, ListActivity::class.java))
+            MainEvent.ShowDialog -> showDialog()
+            is MainEvent.ShowSnackbar -> showSnackbar(event.text)
         }
     }
 
@@ -135,17 +74,7 @@ class MainActivity : MvvmActivity<MainViewModel>() {
         }
     }
 
-    /**
-     * dismiss a Snackbar if one exists
-     */
-    private fun dismissSnackbar() {
-        snackbar?.dismiss()
-        snackbar = null
-    }
-
-    override fun getDefaultViewModelProviderFactory() = object : AbstractSavedStateViewModelFactory(this, intent?.extras) {
-        override fun <T : ViewModel?> create(key: String, modelClass: Class<T>, handle: SavedStateHandle): T {
-            return MainViewModel(handle, ResourceProviderImpl(this@MainActivity)) as T
-        }
+    override fun getDefaultViewModelProviderFactory() = viewModelProviderFactory { handle ->
+        MainViewModel(handle, ResourceProviderImpl(this@MainActivity))
     }
 }

@@ -13,10 +13,16 @@ import de.trbnb.mvvmbase.bindableproperty.validate
 import de.trbnb.mvvmbase.savedstate.BaseStateSavingViewModel
 import de.trbnb.mvvmbase.test.BR
 import de.trbnb.mvvmbase.test.TestPropertyChangedCallback
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 @ExperimentalUnsignedTypes
 class BindableUIntPropertyTests {
+    @BeforeEach
+    fun setup() {
+        MvvmBase.disableViewModelLifecycleThreadConstraints()
+    }
+
     @Test
     fun `is zero the default value without explicit assignment`() {
         val viewModel = object : BaseViewModel() {

@@ -10,17 +10,17 @@ import androidx.annotation.CallSuper
 import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import androidx.fragment.app.Fragment
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelLazy
 import de.trbnb.mvvmbase.events.Event
 import de.trbnb.mvvmbase.utils.findGenericSuperclass
 
 /**
- * Reference implementation of an [MvvmView] with [Fragment].
+ * Reference implementation of an [MvvmView] with [DialogFragment].
  *
  * This creates the binding during [onCreateView] and the ViewModel during [onCreate].
  */
-abstract class MvvmBindingFragment<VM, B>(@LayoutRes override val layoutId: Int = 0) : Fragment(), MvvmView<VM, B>
+abstract class MvvmBindingDialogFragment<VM, B>(@LayoutRes override val layoutId: Int = 0) : DialogFragment(), MvvmView<VM, B>
         where VM : ViewModel, VM : androidx.lifecycle.ViewModel, B : ViewDataBinding {
     override var binding: B? = null
 
@@ -32,7 +32,7 @@ abstract class MvvmBindingFragment<VM, B>(@LayoutRes override val layoutId: Int 
 
     @Suppress("UNCHECKED_CAST")
     override val viewModelClass: Class<VM>
-        get() = findGenericSuperclass<MvvmBindingFragment<VM, B>>()
+        get() = findGenericSuperclass<MvvmBindingDialogFragment<VM, B>>()
             ?.actualTypeArguments
             ?.firstOrNull() as? Class<VM>
             ?: throw IllegalStateException("viewModelClass does not equal Class<VM>")

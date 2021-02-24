@@ -1,9 +1,10 @@
 package de.trbnb.mvvmbase.legacy
 
 import androidx.databinding.ViewDataBinding
-import androidx.lifecycle.ViewModelProvider
 import de.trbnb.mvvmbase.MvvmBindingActivity
 import de.trbnb.mvvmbase.ViewModel
+import de.trbnb.mvvmbase.utils.findGenericSuperclass
+import de.trbnb.mvvmbase.viewmodel.asViewModelProviderFactory
 import javax.inject.Provider
 
 /**
@@ -22,10 +23,12 @@ abstract class LegacyMvvmBindingActivity<VM, B> : MvvmBindingActivity<VM, B>()
      */
     abstract val viewModelProvider: Provider<VM>
 
-    override fun getDefaultViewModelProviderFactory() = object : ViewModelProvider.Factory {
-        @Suppress("UNCHECKED_CAST")
-        override fun <T : androidx.lifecycle.ViewModel?> create(modelClass: Class<T>): T {
-            return viewModelProvider.get() as T
-        }
-    }
+    @Suppress("UNCHECKED_CAST")
+    override val viewModelClass: Class<VM>
+        get() = findGenericSuperclass<LegacyMvvmBindingActivity<VM, B>>()
+            ?.actualTypeArguments
+            ?.firstOrNull() as? Class<VM>
+            ?: throw IllegalStateException("viewModelClass does not equal Class<VM>")
+
+    override fun getDefaultViewModelProviderFactory() = viewModelProvider.asViewModelProviderFactory()
 }

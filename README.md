@@ -7,12 +7,7 @@ MvvmBase is available via JCenter. To use it put this in your `build.gradle`:
 
 ```gradle
 dependencies {
-    // Always needed, library depends on ViewModelLazy
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
-    // Necessary for SavedStateHandle
-    implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:2.2.0"
-
-    def mvvmbaseVersion = "2.0.0"
+    def mvvmbaseVersion = "2.1.0"
 
     [...]
     implementation de.trbnb.mvvmbase:mvvmbase:$mvvmbaseVersion"
@@ -49,8 +44,15 @@ The library also uses some Kotlin reflection features. The AAR is exported with 
 
 # Features
 This library comes with two major features:
-* `MvvmActivity<VM>` / `MvvmFragment<VM>`
-  View components that have a `ViewModel` instance associated with them and keep it alive during the entire lifecycle.
+* `MvvmView<VM, B>`
+  Interface for MVVM view components that have a `ViewModel` instance associated with them.  
+  Included implementations are:
+  - `MvvmBindingActivity`
+  - `MvvmBindingFragment`
+  - `MvvmBindingDialogFragment`
+  - `MvvmBindingBottomSheetDialogFragment`
+
+  All of those come with a typealias that omits the "Binding" part from the name and the "`B`" type parameter (uses `ViewDataBinding`).
 
 * `BindableProperty<T>`  
   A delegate property that calls `notfiyPropertyChanged(Int)` and finds the field ID in `BR.java` automatically. 
@@ -120,7 +122,18 @@ It is also recommended to migrate from a `BaseViewModel` to a `BaseStateSavingVi
 This will be called when the view model is "loaded". This is called after the view model has been created or retained in `onCreate`. The loading of the view model may not be synchronous, so don't try to access it in `onCreate`.
 
 * `onViewModelPropertyChanged(viewModel: VM, fieldId: Int)`  
-This is called when the view model calls `notifyPropertyChanged`. The associated view model and the field ID that was used to call `notifyPropertyChanged` will be passed.
+This is called when the view model calls `notifyPropertyChanged`. The associated view model and the field ID that was used to call `notifyPropertyChanged` will be passed.  
+**NOTE: This method is likely to be deprecated in the future.**  
+Use `KProperty0<T>.observe()` instead:
+```kotlin
+override fun onViewModelLoaded(viewModel: MainViewModel) {
+    super.onViewModelLoaded(viewModel)
+
+    viewModel::someProperty.observe { value ->
+        // Do something with new value
+    }
+}
+```
 
 ### ViewModel
 

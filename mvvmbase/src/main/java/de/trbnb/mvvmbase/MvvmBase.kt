@@ -1,5 +1,7 @@
 package de.trbnb.mvvmbase
 
+import de.trbnb.mvvmbase.bindableproperty.StateSaveOption
+
 /**
  * Object for containing library configurations.
  */
@@ -11,22 +13,40 @@ object MvvmBase {
      */
     private var brFieldIds: Map<String, Int> = emptyMap()
 
+    internal var defaultStateSaveOption: StateSaveOption = StateSaveOption.Automatic
+
+    internal var enforceViewModelLifecycleMainThread = true
+
     /**
      * Initializes the automatic field ID detection by providing the class inside BR.java.
      */
-    fun init(brClass: Class<*>) {
+    fun init(brClass: Class<*>): MvvmBase = apply {
         retrieveFieldIds(brClass)
     }
 
     /**
      * Initializes the automatic field ID detection by providing the class inside BR.java.
      */
-    inline fun <reified BR> init() {
-        init(BR::class.java)
+    inline fun <reified BR> init(): MvvmBase = init(BR::class.java)
+
+    /**
+     * Initializes the library with the BR class from itself (which will be expanded by the databinding compiler and so will contain every field id).
+     */
+    fun autoInit(): MvvmBase = init<BR>()
+
+    /**
+     * Sets the default [StateSaveOption] that will be used for bindable properties in [de.trbnb.mvvmbase.savedstate.StateSavingViewModel].
+     */
+    fun defaultStateSaveOption(stateSaveOption: StateSaveOption) = apply {
+        defaultStateSaveOption = stateSaveOption
     }
 
-    fun autoInit() {
-        init<BR>()
+    /**
+     * Starting with Androidx Lifecycle version 2.3.0 all Lifecycles are thread-safe (only usable from main-thread).
+     * This can be deactivated for [ViewModel.getLifecycle] to allow for initialization of ViewModels on other threads.
+     */
+    fun disableViewModelLifecycleThreadConstraints(): MvvmBase = apply {
+        enforceViewModelLifecycleMainThread = false
     }
 
     /**

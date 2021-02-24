@@ -57,26 +57,14 @@ dependencies {
     testAnnotationProcessor("androidx.databinding:databinding-compiler:$gradleToolsVersion")
     kaptTest("androidx.databinding:databinding-compiler:$gradleToolsVersion")
 
-    testImplementation("junit:junit:4.13")
-    androidTestImplementation("androidx.test:runner:1.2.0")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.2.0")
+    testImplementation("junit:junit:4.13.1")
+    androidTestImplementation("androidx.test:runner:1.3.0")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.3.0")
 }
 
 val sourcesJar = task<Jar>("sourcesJar") {
     archiveClassifier.set("sources")
     from(android.sourceSets["main"].java.srcDirs)
-}
-
-val javadoc = task<Javadoc>("javadoc") {
-    isFailOnError = false
-    source = android.sourceSets["main"].java.sourceFiles
-    classpath += project.files(android.bootClasspath.joinToString(separator = File.pathSeparator))
-}
-
-val javadocJar = task<Jar>("javadocJar") {
-    dependsOn(javadoc)
-    archiveClassifier.set("javadoc")
-    from(javadoc.destinationDir)
 }
 
 // Bintray
@@ -112,7 +100,6 @@ afterEvaluate {
                 from(components["release"])
 
                 artifact(sourcesJar)
-                artifact(javadocJar)
 
                 groupId = Publishing.groupId
                 artifactId = Publishing.rxJava2ArtifactId

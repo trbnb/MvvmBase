@@ -53,7 +53,8 @@ dependencies {
 
     // Support library
     implementation("androidx.appcompat:appcompat:1.2.0")
-    implementation("androidx.fragment:fragment-ktx:1.2.5")
+    implementation("com.google.android.material:material:1.3.0")
+    implementation("androidx.fragment:fragment-ktx:1.3.0")
     implementation("androidx.recyclerview:recyclerview:1.1.0")
 
     testAnnotationProcessor("androidx.databinding:databinding-compiler:$gradleToolsVersion")
@@ -61,16 +62,16 @@ dependencies {
 
     // Testing
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.6.2")
-    androidTestImplementation("androidx.test:runner:1.2.0")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.2.0")
+    androidTestImplementation("androidx.test:runner:1.3.0")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.3.0")
 
     // Kotlin
     implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
     implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
 
     // Lifecycle architecture components
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0")
-    api("androidx.lifecycle:lifecycle-viewmodel-savedstate:2.2.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0")
+    api("androidx.lifecycle:lifecycle-viewmodel-savedstate:2.3.0")
 
     // Java inject API for dependency injection
     api("javax.inject:javax.inject:1")
@@ -84,18 +85,6 @@ repositories {
 val sourcesJar = task<Jar>("sourcesJar") {
     archiveClassifier.set("sources")
     from(android.sourceSets["main"].java.srcDirs)
-}
-
-val javadoc = task<Javadoc>("javadoc") {
-    isFailOnError = false
-    source = android.sourceSets["main"].java.sourceFiles
-    classpath += project.files(android.bootClasspath.joinToString(separator = File.pathSeparator))
-}
-
-val javadocJar = task<Jar>("javadocJar") {
-    dependsOn(javadoc)
-    archiveClassifier.set("javadoc")
-    from(javadoc.destinationDir)
 }
 
 // Bintray
@@ -131,7 +120,6 @@ afterEvaluate {
                 from(components["release"])
 
                 artifact(sourcesJar)
-                artifact(javadocJar)
 
                 groupId = Publishing.groupId
                 artifactId = Publishing.mainArtifactId

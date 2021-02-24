@@ -96,7 +96,7 @@ class BindableFloatProperty private constructor(
 fun ViewModel.bindableFloat(
     defaultValue: Float = 0f,
     fieldId: Int? = null,
-    stateSaveOption: StateSaveOption = StateSaveOption.Automatic
+    stateSaveOption: StateSaveOption = (this as? StateSavingViewModel)?.defaultStateSaveOption ?: StateSaveOption.None
 ) = BindableFloatProperty.Provider(fieldId, defaultValue, when (this) {
     is StateSavingViewModel -> stateSaveOption
     else -> StateSaveOption.None
