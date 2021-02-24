@@ -4,9 +4,6 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
-import androidx.lifecycle.AbstractSavedStateViewModelFactory
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import com.bluelinelabs.conductor.Conductor
 import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
@@ -18,6 +15,7 @@ import de.trbnb.apptemplate.second.SecondActivity
 import de.trbnb.apptemplate.second.SecondController
 import de.trbnb.mvvmbase.MvvmActivity
 import de.trbnb.mvvmbase.events.Event
+import de.trbnb.mvvmbase.viewmodel.viewModelProviderFactory
 
 class MainActivity : MvvmActivity<MainViewModel>(R.layout.activity_main) {
     private lateinit var router: Router
@@ -76,9 +74,7 @@ class MainActivity : MvvmActivity<MainViewModel>(R.layout.activity_main) {
         }
     }
 
-    override fun getDefaultViewModelProviderFactory() = object : AbstractSavedStateViewModelFactory(this, intent?.extras) {
-        override fun <T : ViewModel?> create(key: String, modelClass: Class<T>, handle: SavedStateHandle): T {
-            return MainViewModel(handle, ResourceProviderImpl(this@MainActivity)) as T
-        }
+    override fun getDefaultViewModelProviderFactory() = viewModelProviderFactory { handle ->
+        MainViewModel(handle, ResourceProviderImpl(this@MainActivity))
     }
 }
