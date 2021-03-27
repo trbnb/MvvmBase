@@ -1,11 +1,14 @@
 package de.trbnb.mvvmbase.utils
 
+import androidx.compose.runtime.*
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.databinding.Observable
 import androidx.lifecycle.LifecycleOwner
 import de.trbnb.mvvmbase.BR
 import de.trbnb.mvvmbase.MvvmBase
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
+import kotlin.jvm.internal.CallableReference
 import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty0
 
@@ -58,21 +61,40 @@ internal fun KProperty<*>.brFieldName(): String {
  * Invokes [action] everytime notifyPropertyChanged is called for the receiver property.
  */
 internal inline fun <T> KProperty0<T>.observeBindable(
-    observable: Observable,
     lifecycleOwner: LifecycleOwner,
     invokeImmediately: Boolean = true,
     crossinline action: (T) -> Unit
-) {
+): () -> Unit {
+    val observableOwner = castSafely<CallableReference>()?.boundReceiver?.castSafely<Observable>()
+        ?: throw IllegalArgumentException("Property receiver is not an Observable")
+
     val propertyId = resolveFieldId().takeUnless { it == BR._all } ?: throw IllegalArgumentException("Property isn't bindable")
-    observable.addOnPropertyChangedCallback(lifecycleOwner, object : Observable.OnPropertyChangedCallback() {
+    val onPropertyChangedCallback = object : Observable.OnPropertyChangedCallback() {
         override fun onPropertyChanged(sender: Observable?, changedPropertyId: Int) {
             if (changedPropertyId == propertyId) {
                 action(get())
             }
         }
-    })
+    }
+    observableOwner.addOnPropertyChangedCallback(lifecycleOwner, onPropertyChangedCallback)
 
     if (invokeImmediately) {
         action(get())
     }
+
+    return { observableOwner.removeOnPropertyChangedCallback(onPropertyChangedCallback) }
 }
+
+@Composable
+fun <T> KProperty0<T>.observeAsState(): State<T> {
+    val state = remember { mutableStateOf(get()) }
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(key1 = this, lifecycleOwner) {
+        val dispose = observeBindable(lifecycleOwner, false) { state.value = it }
+        onDispose { dispose() }
+    }
+    return state
+}
+
+internal inline fun <reified T> Any?.cast() = this as T
+internal inline fun <reified T> Any?.castSafely() = this as? T

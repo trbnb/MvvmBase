@@ -1,7 +1,7 @@
 plugins {
     id("com.android.application")
-    kotlin("android")
-    kotlin("kapt")
+    id("kotlin-android")
+    id("kotlin-kapt")
 }
 
 android {
@@ -36,17 +36,20 @@ android {
         sourceCompatibility = javaVersion
         targetCompatibility = javaVersion
     }
-
     kotlinOptions {
-        jvmTarget = javaVersion.toString()
+        jvmTarget = "1.8"
+        useIR = true
     }
-
     buildFeatures {
         dataBinding = true
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = Versions.compose
     }
 
     packagingOptions {
-        exclude("META-INF/rxkotlin.kotlin_module")
+        resources.excludes.add("META-INF/rxkotlin.kotlin_module")
     }
 }
 

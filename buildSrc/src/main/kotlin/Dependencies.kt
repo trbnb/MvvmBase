@@ -2,13 +2,14 @@ import org.gradle.api.JavaVersion
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.extra
 
-const val kotlinVersion = "1.4.21"
+const val kotlinVersion = "1.4.31"
 
 const val gradleToolsVersion = "4.1.1"
 
 val javaVersion = JavaVersion.VERSION_1_8
 
 object Versions {
+    val compose = "1.0.0-beta03"
     const val dagger = "2.28-alpha"
 }
 

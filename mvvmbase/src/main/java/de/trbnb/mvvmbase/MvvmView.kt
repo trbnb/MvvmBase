@@ -96,6 +96,6 @@ interface MvvmView<VM, B : ViewDataBinding> : ViewModelStoreOwner, SavedStateReg
      * @param lifecycleOwner Lifecycle that determines when listening for notifyPropertyChanged stops.
      */
     fun <T> KProperty0<T>.observe(invokeImmediately: Boolean = true, lifecycleOwner: LifecycleOwner = this@MvvmView, action: (T) -> Unit) {
-        observeBindable(viewModel, lifecycleOwner, invokeImmediately, action)
+        observeBindable(lifecycleOwner, invokeImmediately, action)
     }
 }
