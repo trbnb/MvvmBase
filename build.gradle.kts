@@ -39,6 +39,10 @@ subprojects {
             } + File.separator + "detekt-config.yml")
         )
     }
+
+    tasks.withType<Test> {
+        useJUnitPlatform()
+    }
 }
 
 allprojects {

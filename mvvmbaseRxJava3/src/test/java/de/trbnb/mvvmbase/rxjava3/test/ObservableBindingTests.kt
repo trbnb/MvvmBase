@@ -8,13 +8,16 @@ import de.trbnb.mvvmbase.MvvmBase
 import de.trbnb.mvvmbase.rxjava3.RxViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.Test
 
 class ObservableBindingTests {
-    @Before
-    fun setup() {
-        MvvmBase.init<BR>().disableViewModelLifecycleThreadConstraints()
+    companion object {
+        @BeforeAll
+        @JvmStatic
+        fun setup() {
+            MvvmBase.disableViewModelLifecycleThreadConstraints()
+        }
     }
 
     @Test
@@ -91,25 +94,10 @@ class ObservableBindingTests {
 
         val newValue = 55
         observable.onNext(newValue)
-        assert(BR.property in propertyChangedCallback.changedPropertyIds)
+        assert("property" in propertyChangedCallback.changedPropertyIds)
     }
 
-    @Test
-    fun `is notifyPropertyChanged() called (manual field ID)`() {
-        val observable: PublishSubject<Int> = PublishSubject.create()
-
-        val viewModel = ViewModelWithBindable(observable, fieldId = BR.property)
-
-        val propertyChangedCallback = TestPropertyChangedCallback()
-        viewModel.addOnPropertyChangedCallback(propertyChangedCallback)
-
-        val newValue = 55
-        observable.onNext(newValue)
-        assert(BR.property in propertyChangedCallback.changedPropertyIds)
-    }
-
-    class ViewModelWithBindable(observable: Observable<Int>, fieldId: Int? = null) : BaseViewModel(), RxViewModel {
-        @get:Bindable
-        val property by observable.toBindable<Int>(defaultValue = 3, fieldId = fieldId)
+    class ViewModelWithBindable(observable: Observable<Int>) : BaseViewModel(), RxViewModel {
+                val property by observable.toBindable<Int>(defaultValue = 3)
     }
 }

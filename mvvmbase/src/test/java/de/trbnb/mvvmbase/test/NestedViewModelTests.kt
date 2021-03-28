@@ -2,11 +2,21 @@ package de.trbnb.mvvmbase.test
 
 import androidx.lifecycle.Lifecycle
 import de.trbnb.mvvmbase.BaseViewModel
+import de.trbnb.mvvmbase.MvvmBase
 import de.trbnb.mvvmbase.events.Event
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import java.io.Closeable
 
 class NestedViewModelTests {
+    companion object {
+        @BeforeAll
+        @JvmStatic
+        fun setup() {
+            MvvmBase.disableViewModelLifecycleThreadConstraints()
+        }
+    }
+
     @Test
     fun `autoDestroy() destroys ViewModels in a parent ViewModel`() {
         val childViewModel = SimpleViewModel()

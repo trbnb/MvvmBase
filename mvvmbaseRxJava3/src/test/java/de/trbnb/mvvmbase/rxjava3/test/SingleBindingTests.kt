@@ -8,13 +8,16 @@ import de.trbnb.mvvmbase.MvvmBase
 import de.trbnb.mvvmbase.rxjava3.RxViewModel
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.subjects.SingleSubject
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.Test
 
 class SingleBindingTests {
-    @Before
-    fun setup() {
-        MvvmBase.init<BR>().disableViewModelLifecycleThreadConstraints()
+    companion object {
+        @BeforeAll
+        @JvmStatic
+        fun setup() {
+            MvvmBase.disableViewModelLifecycleThreadConstraints()
+        }
     }
 
     @Test
@@ -77,25 +80,10 @@ class SingleBindingTests {
 
         val newValue = 55
         single.onSuccess(newValue)
-        assert(BR.property in propertyChangedCallback.changedPropertyIds)
+        assert("property" in propertyChangedCallback.changedPropertyIds)
     }
 
-    @Test
-    fun `is notifyPropertyChanged() called (manual field ID)`() {
-        val single: SingleSubject<Int> = SingleSubject.create()
-
-        val viewModel = ViewModelWithBindable(single, fieldId = BR.property)
-
-        val propertyChangedCallback = TestPropertyChangedCallback()
-        viewModel.addOnPropertyChangedCallback(propertyChangedCallback)
-
-        val newValue = 55
-        single.onSuccess(newValue)
-        assert(BR.property in propertyChangedCallback.changedPropertyIds)
-    }
-
-    class ViewModelWithBindable(single: Single<Int>, fieldId: Int? = null) : BaseViewModel(), RxViewModel {
-        @get:Bindable
-        val property by single.toBindable<Int>(defaultValue = 3, fieldId = fieldId)
+    class ViewModelWithBindable(single: Single<Int>) : BaseViewModel(), RxViewModel {
+                val property by single.toBindable<Int>(defaultValue = 3)
     }
 }

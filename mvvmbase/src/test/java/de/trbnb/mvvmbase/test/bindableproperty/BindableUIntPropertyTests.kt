@@ -11,7 +11,6 @@ import de.trbnb.mvvmbase.bindableproperty.bindableUInt
 import de.trbnb.mvvmbase.bindableproperty.distinct
 import de.trbnb.mvvmbase.bindableproperty.validate
 import de.trbnb.mvvmbase.savedstate.BaseStateSavingViewModel
-import de.trbnb.mvvmbase.test.BR
 import de.trbnb.mvvmbase.test.TestPropertyChangedCallback
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -115,46 +114,17 @@ class BindableUIntPropertyTests {
 
     @Test
     fun `is correct field ID used for notifyPropertyChanged()`() {
-        MvvmBase.init<BR>()
         val propertyChangedCallback = TestPropertyChangedCallback()
-        val manualFieldId = BR.vm
-        val viewModel = ViewModelWithBindable(manualFieldId)
+        val viewModel = ViewModelWithBindable()
         viewModel.addOnPropertyChangedCallback(propertyChangedCallback)
 
         viewModel.property = 5.toUInt()
-        assert(BR.property in propertyChangedCallback.changedPropertyIds)
-        propertyChangedCallback.clear()
-
-        viewModel.manualProperty = 7.toUInt()
-        assert(manualFieldId in propertyChangedCallback.changedPropertyIds)
+        assert("property" in propertyChangedCallback.changedPropertyIds)
         propertyChangedCallback.clear()
     }
 
-    @Test
-    fun `field ID falls back to _all`() {
-        // undo MvvmBase.init<BR>() call
-        MvvmBase.init<Unit>()
-
-        val propertyChangedCallback = TestPropertyChangedCallback()
-        val manualFieldId = BR.vm
-        val viewModel = ViewModelWithBindable(manualFieldId)
-        viewModel.addOnPropertyChangedCallback(propertyChangedCallback)
-
-        viewModel.property = 5.toUInt()
-        assert(BR._all in propertyChangedCallback.changedPropertyIds)
-        propertyChangedCallback.clear()
-
-        viewModel.manualProperty = 2.toUInt()
-        assert(manualFieldId in propertyChangedCallback.changedPropertyIds)
-        propertyChangedCallback.clear()
-    }
-
-    class ViewModelWithBindable(fieldId: Int) : BaseViewModel() {
-        @get:Bindable
-        var property by bindableUInt()
-
-        @get:Bindable
-        var manualProperty by bindableUInt(fieldId = fieldId)
+    class ViewModelWithBindable : BaseViewModel() {
+                var property by bindableUInt()
     }
 
     @Test
@@ -168,8 +138,7 @@ class BindableUIntPropertyTests {
     }
 
     class AutomaticSavedStateViewModel(savedStateHandle: SavedStateHandle = SavedStateHandle()) : BaseStateSavingViewModel(savedStateHandle) {
-        @get:Bindable
-        var supportedAutomatic by bindableUInt()
+                var supportedAutomatic by bindableUInt()
     }
 
     @Test
@@ -187,8 +156,7 @@ class BindableUIntPropertyTests {
         key: String,
         savedStateHandle: SavedStateHandle = SavedStateHandle()
     ) : BaseStateSavingViewModel(savedStateHandle) {
-        @get:Bindable
-        var property by bindableUInt(stateSaveOption = StateSaveOption.Manual(key))
+                var property by bindableUInt(stateSaveOption = StateSaveOption.Manual(key))
     }
 
     @Test
@@ -202,8 +170,7 @@ class BindableUIntPropertyTests {
     }
 
     class NoneSavedStateViewModel(savedStateHandle: SavedStateHandle = SavedStateHandle()) : BaseStateSavingViewModel(savedStateHandle) {
-        @get:Bindable
-        var property by bindableUInt(stateSaveOption = StateSaveOption.None)
+                var property by bindableUInt(stateSaveOption = StateSaveOption.None)
     }
 
     @Test
@@ -214,16 +181,15 @@ class BindableUIntPropertyTests {
         }
 
         viewModel.property = 3.toUInt()
-        assert(BR.property in propertyChangedCallback.changedPropertyIds)
+        assert("property" in propertyChangedCallback.changedPropertyIds)
         propertyChangedCallback.clear()
 
         viewModel.property = 3.toUInt()
-        assert(BR.property !in propertyChangedCallback.changedPropertyIds)
+        assert("property" !in propertyChangedCallback.changedPropertyIds)
     }
 
     class ViewModelWithDistinct : BaseViewModel() {
-        @get:Bindable
-        var property by bindableUInt()
+                var property by bindableUInt()
             .distinct()
     }
 }

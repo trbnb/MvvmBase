@@ -11,7 +11,6 @@ import de.trbnb.mvvmbase.bindableproperty.bindableLong
 import de.trbnb.mvvmbase.bindableproperty.distinct
 import de.trbnb.mvvmbase.bindableproperty.validate
 import de.trbnb.mvvmbase.savedstate.BaseStateSavingViewModel
-import de.trbnb.mvvmbase.test.BR
 import de.trbnb.mvvmbase.test.TestPropertyChangedCallback
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -114,46 +113,17 @@ class BindableLongPropertyTests {
 
     @Test
     fun `is correct field ID used for notifyPropertyChanged()`() {
-        MvvmBase.init<BR>()
         val propertyChangedCallback = TestPropertyChangedCallback()
-        val manualFieldId = BR.vm
-        val viewModel = ViewModelWithBindable(manualFieldId)
+        val viewModel = ViewModelWithBindable()
         viewModel.addOnPropertyChangedCallback(propertyChangedCallback)
 
         viewModel.property = 5.toLong()
-        assert(BR.property in propertyChangedCallback.changedPropertyIds)
-        propertyChangedCallback.clear()
-
-        viewModel.manualProperty = 7.toLong()
-        assert(manualFieldId in propertyChangedCallback.changedPropertyIds)
+        assert("property" in propertyChangedCallback.changedPropertyIds)
         propertyChangedCallback.clear()
     }
 
-    @Test
-    fun `field ID falls back to _all`() {
-        // undo MvvmBase.init<BR>() call
-        MvvmBase.init<Unit>()
-
-        val propertyChangedCallback = TestPropertyChangedCallback()
-        val manualFieldId = BR.vm
-        val viewModel = ViewModelWithBindable(manualFieldId)
-        viewModel.addOnPropertyChangedCallback(propertyChangedCallback)
-
-        viewModel.property = 5.toLong()
-        assert(BR._all in propertyChangedCallback.changedPropertyIds)
-        propertyChangedCallback.clear()
-
-        viewModel.manualProperty = 2.toLong()
-        assert(manualFieldId in propertyChangedCallback.changedPropertyIds)
-        propertyChangedCallback.clear()
-    }
-
-    class ViewModelWithBindable(fieldId: Int) : BaseViewModel() {
-        @get:Bindable
-        var property by bindableLong()
-
-        @get:Bindable
-        var manualProperty by bindableLong(fieldId = fieldId)
+    class ViewModelWithBindable : BaseViewModel() {
+                var property by bindableLong()
     }
 
     @Test
@@ -167,8 +137,7 @@ class BindableLongPropertyTests {
     }
 
     class AutomaticSavedStateViewModel(savedStateHandle: SavedStateHandle = SavedStateHandle()) : BaseStateSavingViewModel(savedStateHandle) {
-        @get:Bindable
-        var supportedAutomatic by bindableLong()
+                var supportedAutomatic by bindableLong()
     }
 
     @Test
@@ -186,8 +155,7 @@ class BindableLongPropertyTests {
         key: String,
         savedStateHandle: SavedStateHandle = SavedStateHandle()
     ) : BaseStateSavingViewModel(savedStateHandle) {
-        @get:Bindable
-        var property by bindableLong(stateSaveOption = StateSaveOption.Manual(key))
+                var property by bindableLong(stateSaveOption = StateSaveOption.Manual(key))
     }
 
     @Test
@@ -201,8 +169,7 @@ class BindableLongPropertyTests {
     }
 
     class NoneSavedStateViewModel(savedStateHandle: SavedStateHandle = SavedStateHandle()) : BaseStateSavingViewModel(savedStateHandle) {
-        @get:Bindable
-        var property by bindableLong(stateSaveOption = StateSaveOption.None)
+                var property by bindableLong(stateSaveOption = StateSaveOption.None)
     }
 
     @Test
@@ -213,16 +180,15 @@ class BindableLongPropertyTests {
         }
 
         viewModel.property = 3.toLong()
-        assert(BR.property in propertyChangedCallback.changedPropertyIds)
+        assert("property" in propertyChangedCallback.changedPropertyIds)
         propertyChangedCallback.clear()
 
         viewModel.property = 3.toLong()
-        assert(BR.property !in propertyChangedCallback.changedPropertyIds)
+        assert("property" !in propertyChangedCallback.changedPropertyIds)
     }
 
     class ViewModelWithDistinct : BaseViewModel() {
-        @get:Bindable
-        var property by bindableLong()
+                var property by bindableLong()
             .distinct()
     }
 }

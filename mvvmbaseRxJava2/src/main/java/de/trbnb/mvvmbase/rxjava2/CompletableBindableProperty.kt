@@ -5,7 +5,6 @@ import de.trbnb.mvvmbase.bindableproperty.AfterSet
 import de.trbnb.mvvmbase.bindableproperty.BeforeSet
 import de.trbnb.mvvmbase.bindableproperty.BindablePropertyBase
 import de.trbnb.mvvmbase.bindableproperty.Validate
-import de.trbnb.mvvmbase.utils.resolveFieldId
 import io.reactivex.Completable
 import io.reactivex.rxkotlin.plusAssign
 import kotlin.reflect.KProperty
@@ -15,14 +14,14 @@ import kotlin.reflect.KProperty
  */
 class CompletableBindableProperty private constructor(
     viewModel: ViewModel,
-    fieldId: Int,
+    propertyName: String,
     completable: Completable,
     onError: (Throwable) -> Unit,
     distinct: Boolean,
     afterSet: AfterSet<Boolean>?,
     beforeSet: BeforeSet<Boolean>?,
     validate: Validate<Boolean>?
-) : RxBindablePropertyBase<Boolean>(viewModel, false, fieldId, distinct, afterSet, beforeSet, validate) {
+) : RxBindablePropertyBase<Boolean>(viewModel, false, propertyName, distinct, afterSet, beforeSet, validate) {
     init {
         viewModel.compositeDisposable += completable.subscribe({ value = true }, onError)
     }
@@ -34,13 +33,12 @@ class CompletableBindableProperty private constructor(
      * @see CompletableBindableProperty
      */
     class Provider internal constructor(
-        private val fieldId: Int? = null,
         private val completable: Completable,
         private val onError: (Throwable) -> Unit
     ) : BindablePropertyBase.Provider<Boolean>() {
         override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>) = CompletableBindableProperty(
             viewModel = thisRef,
-            fieldId = fieldId ?: property.resolveFieldId(),
+            propertyName = property.name,
             completable = completable,
             onError = onError,
             distinct = distinct,

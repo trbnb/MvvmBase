@@ -7,7 +7,7 @@ import de.trbnb.mvvmbase.BaseViewModel
 import de.trbnb.mvvmbase.rxjava3.autoDispose
 import de.trbnb.mvvmbase.rxjava3.compositeDisposable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class DisposableTests {
     @Test

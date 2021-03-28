@@ -1,14 +1,10 @@
 package de.trbnb.mvvmbase
 
-import androidx.annotation.LayoutRes
-import androidx.databinding.DataBindingComponent
-import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import de.trbnb.mvvmbase.events.Event
-import de.trbnb.mvvmbase.utils.observeBindable
+import de.trbnb.mvvmbase.utils.observe
 import kotlin.reflect.KProperty0
 
 /**
@@ -20,14 +16,8 @@ import kotlin.reflect.KProperty0
  *
  * The [ViewModel] will be instantiated via the ViewModel API by Android X.
  */
-interface MvvmView<VM, B : ViewDataBinding> : ViewModelStoreOwner, SavedStateRegistryOwner
+interface MvvmView<VM> : ViewModelStoreOwner, SavedStateRegistryOwner
     where VM : ViewModel, VM : androidx.lifecycle.ViewModel {
-    /**
-     * The [ViewDataBinding] implementation for a specific layout.
-     * Nullable due to possible lifecycle circumstances.
-     */
-    val binding: B?
-
     /**
      * Delegate for [viewModel].
      *
@@ -49,42 +39,6 @@ interface MvvmView<VM, B : ViewDataBinding> : ViewModelStoreOwner, SavedStateReg
     val viewModelClass: Class<VM>
 
     /**
-     * The [de.trbnb.mvvmbase.BR] value that is used as parameter for the view model in the binding.
-     * Is always [de.trbnb.mvvmbase.BR.vm].
-     */
-    val viewModelBindingId: Int
-        get() = BR.vm
-
-    /**
-     * The layout resource ID for this Activity.
-     * Is used to create the [ViewDataBinding].
-     */
-    @get:LayoutRes
-    val layoutId: Int
-
-    /**
-     * Defines which [DataBindingComponent] will be used with [DataBindingUtil.inflate].
-     * Default is `null` and will lead to usage of [DataBindingUtil.getDefaultComponent].
-     */
-    val dataBindingComponent: DataBindingComponent?
-        get() = null
-
-    /**
-     * Called when the view model is loaded and is set as [viewModel].
-     *
-     * @param[viewModel] The [ViewModel] instance that was loaded.
-     */
-    fun onViewModelLoaded(viewModel: VM)
-
-    /**
-     * Called when the view model notifies listeners that a property has changed.
-     *
-     * @param[viewModel] The [ViewModel] instance whose property has changed.
-     * @param[fieldId] The ID of the field in the BR file that indicates which property in the view model has changed.
-     */
-    fun onViewModelPropertyChanged(viewModel: VM, fieldId: Int) { }
-
-    /**
      * Is called when the ViewModel sends an [Event].
      */
     fun onEvent(event: Event) { }
@@ -96,6 +50,6 @@ interface MvvmView<VM, B : ViewDataBinding> : ViewModelStoreOwner, SavedStateReg
      * @param lifecycleOwner Lifecycle that determines when listening for notifyPropertyChanged stops.
      */
     fun <T> KProperty0<T>.observe(invokeImmediately: Boolean = true, lifecycleOwner: LifecycleOwner = this@MvvmView, action: (T) -> Unit) {
-        observeBindable(lifecycleOwner, invokeImmediately, action)
+        observe(lifecycleOwner, invokeImmediately, action)
     }
 }

@@ -6,7 +6,6 @@ import de.trbnb.mvvmbase.bindableproperty.BeforeSet
 import de.trbnb.mvvmbase.bindableproperty.BindableProperty
 import de.trbnb.mvvmbase.bindableproperty.BindablePropertyBase
 import de.trbnb.mvvmbase.bindableproperty.Validate
-import de.trbnb.mvvmbase.utils.resolveFieldId
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -24,7 +23,7 @@ import kotlin.reflect.KProperty
 @ExperimentalCoroutinesApi
 class FlowBindable<T> private constructor(
     private val viewModel: ViewModel,
-    private val fieldId: Int,
+    private val propertyName: String,
     defaultValue: T,
     flow: Flow<T>,
     onException: OnException<T>?,
@@ -46,7 +45,7 @@ class FlowBindable<T> private constructor(
                 else -> validate(oldValue, value)
             }
 
-            viewModel.notifyPropertyChanged(fieldId)
+            viewModel.notifyPropertyChanged(propertyName)
             afterSet?.invoke(oldValue, field)
         }
 
@@ -70,16 +69,15 @@ class FlowBindable<T> private constructor(
         private val onException: OnException<T>?,
         private val onCompletion: OnCompletion<T>?,
         private val coroutineScope: CoroutineScope,
-        private val fieldId: Int? = null,
         private val defaultValue: T
     ) : BindablePropertyBase.Provider<T>() {
         override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>) = FlowBindable(
             viewModel = thisRef,
             flow = flow,
+            propertyName = property.name,
             onException = onException,
             onCompletion = onCompletion,
             coroutineScope = coroutineScope,
-            fieldId = fieldId ?: property.resolveFieldId(),
             defaultValue = defaultValue,
             distinct = distinct,
             afterSet = afterSet,

@@ -11,7 +11,6 @@ import de.trbnb.mvvmbase.bindableproperty.bindableDouble
 import de.trbnb.mvvmbase.bindableproperty.distinct
 import de.trbnb.mvvmbase.bindableproperty.validate
 import de.trbnb.mvvmbase.savedstate.BaseStateSavingViewModel
-import de.trbnb.mvvmbase.test.BR
 import de.trbnb.mvvmbase.test.TestPropertyChangedCallback
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -114,46 +113,17 @@ class BindableDoublePropertyTests {
 
     @Test
     fun `is correct field ID used for notifyPropertyChanged()`() {
-        MvvmBase.init<BR>()
         val propertyChangedCallback = TestPropertyChangedCallback()
-        val manualFieldId = BR.vm
-        val viewModel = ViewModelWithBindable(manualFieldId)
+        val viewModel = ViewModelWithBindable()
         viewModel.addOnPropertyChangedCallback(propertyChangedCallback)
 
         viewModel.property = 5.0
-        assert(BR.property in propertyChangedCallback.changedPropertyIds)
-        propertyChangedCallback.clear()
-
-        viewModel.manualProperty = 7.0
-        assert(manualFieldId in propertyChangedCallback.changedPropertyIds)
+        assert("property" in propertyChangedCallback.changedPropertyIds)
         propertyChangedCallback.clear()
     }
 
-    @Test
-    fun `field ID falls back to _all`() {
-        // undo MvvmBase.init<BR>() call
-        MvvmBase.init<Unit>()
-
-        val propertyChangedCallback = TestPropertyChangedCallback()
-        val manualFieldId = BR.vm
-        val viewModel = ViewModelWithBindable(manualFieldId)
-        viewModel.addOnPropertyChangedCallback(propertyChangedCallback)
-
-        viewModel.property = 5.0
-        assert(BR._all in propertyChangedCallback.changedPropertyIds)
-        propertyChangedCallback.clear()
-
-        viewModel.manualProperty = 2.0
-        assert(manualFieldId in propertyChangedCallback.changedPropertyIds)
-        propertyChangedCallback.clear()
-    }
-
-    class ViewModelWithBindable(fieldId: Int) : BaseViewModel() {
-        @get:Bindable
-        var property by bindableDouble()
-
-        @get:Bindable
-        var manualProperty by bindableDouble(fieldId = fieldId)
+    class ViewModelWithBindable : BaseViewModel() {
+                var property by bindableDouble()
     }
 
     @Test
@@ -167,8 +137,7 @@ class BindableDoublePropertyTests {
     }
 
     class AutomaticSavedStateViewModel(savedStateHandle: SavedStateHandle = SavedStateHandle()) : BaseStateSavingViewModel(savedStateHandle) {
-        @get:Bindable
-        var supportedAutomatic by bindableDouble()
+                var supportedAutomatic by bindableDouble()
     }
 
     @Test
@@ -186,8 +155,7 @@ class BindableDoublePropertyTests {
         key: String,
         savedStateHandle: SavedStateHandle = SavedStateHandle()
     ) : BaseStateSavingViewModel(savedStateHandle) {
-        @get:Bindable
-        var property by bindableDouble(stateSaveOption = StateSaveOption.Manual(key))
+                var property by bindableDouble(stateSaveOption = StateSaveOption.Manual(key))
     }
 
     @Test
@@ -201,8 +169,7 @@ class BindableDoublePropertyTests {
     }
 
     class NoneSavedStateViewModel(savedStateHandle: SavedStateHandle = SavedStateHandle()) : BaseStateSavingViewModel(savedStateHandle) {
-        @get:Bindable
-        var property by bindableDouble(stateSaveOption = StateSaveOption.None)
+                var property by bindableDouble(stateSaveOption = StateSaveOption.None)
     }
 
     @Test
@@ -213,16 +180,15 @@ class BindableDoublePropertyTests {
         }
 
         viewModel.property = 3.0
-        assert(BR.property in propertyChangedCallback.changedPropertyIds)
+        assert("property" in propertyChangedCallback.changedPropertyIds)
         propertyChangedCallback.clear()
 
         viewModel.property = 3.0
-        assert(BR.property !in propertyChangedCallback.changedPropertyIds)
+        assert("property" !in propertyChangedCallback.changedPropertyIds)
     }
 
     class ViewModelWithDistinct : BaseViewModel() {
-        @get:Bindable
-        var property by bindableDouble()
+                var property by bindableDouble()
             .distinct()
     }
 }

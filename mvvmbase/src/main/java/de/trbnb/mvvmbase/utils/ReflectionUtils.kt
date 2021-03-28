@@ -1,15 +1,18 @@
 package de.trbnb.mvvmbase.utils
 
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.databinding.Observable
 import androidx.lifecycle.LifecycleOwner
-import de.trbnb.mvvmbase.BR
-import de.trbnb.mvvmbase.MvvmBase
+import de.trbnb.mvvmbase.OnPropertyChangedCallback
+import de.trbnb.mvvmbase.observable.ObservableContainer
+import de.trbnb.mvvmbase.observable.addOnPropertyChangedCallback
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 import kotlin.jvm.internal.CallableReference
-import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty0
 
 /**
@@ -35,54 +38,33 @@ tailrec fun <T> Type.findGenericSuperclass(targetType: Class<T>): ParameterizedT
 }
 
 /**
- * Finds the field ID of the given property.
- *
- * @see MvvmBase.init
- */
-fun KProperty<*>.resolveFieldId(): Int = MvvmBase.lookupFieldIdByName(brFieldName()) ?: BR._all
-
-/**
- * Converts a property name to a field name like the data binding compiler.
- *
- * See also:
- * https://android.googlesource.com/platform/frameworks/data-binding/+/master/compiler/src/main/java/android/databinding/annotationprocessor/ProcessBindable.java#216
- */
-@Suppress("MagicNumber")
-internal fun KProperty<*>.brFieldName(): String {
-    val isBoolean = returnType.classifier == Boolean::class && !returnType.isMarkedNullable
-    if (name.startsWith("is") && Character.isJavaIdentifierStart(name[2]) && isBoolean) {
-        return name[2].toLowerCase() + name.substring(3)
-    }
-
-    return name
-}
-
-/**
  * Invokes [action] everytime notifyPropertyChanged is called for the receiver property.
  */
-internal inline fun <T> KProperty0<T>.observeBindable(
-    lifecycleOwner: LifecycleOwner,
-    invokeImmediately: Boolean = true,
+internal inline fun <T> KProperty0<T>.observe(
+    lifecycleOwner: LifecycleOwner? = null,
+    invokeImmediately: Boolean = false,
     crossinline action: (T) -> Unit
 ): () -> Unit {
-    val observableOwner = castSafely<CallableReference>()?.boundReceiver?.castSafely<Observable>()
+    val observableContainer = castSafely<CallableReference>()?.boundReceiver?.castSafely<ObservableContainer>()
         ?: throw IllegalArgumentException("Property receiver is not an Observable")
 
-    val propertyId = resolveFieldId().takeUnless { it == BR._all } ?: throw IllegalArgumentException("Property isn't bindable")
-    val onPropertyChangedCallback = object : Observable.OnPropertyChangedCallback() {
-        override fun onPropertyChanged(sender: Observable?, changedPropertyId: Int) {
-            if (changedPropertyId == propertyId) {
-                action(get())
-            }
+    val onPropertyChangedCallback = OnPropertyChangedCallback { _, propertyName ->
+        if (propertyName == name) {
+            action(get())
         }
     }
-    observableOwner.addOnPropertyChangedCallback(lifecycleOwner, onPropertyChangedCallback)
+
+    if (lifecycleOwner != null) {
+        observableContainer.addOnPropertyChangedCallback(lifecycleOwner, onPropertyChangedCallback)
+    } else {
+        observableContainer.addOnPropertyChangedCallback(onPropertyChangedCallback)
+    }
 
     if (invokeImmediately) {
         action(get())
     }
 
-    return { observableOwner.removeOnPropertyChangedCallback(onPropertyChangedCallback) }
+    return { observableContainer.removeOnPropertyChangedCallback(onPropertyChangedCallback) }
 }
 
 @Composable
@@ -90,8 +72,8 @@ fun <T> KProperty0<T>.observeAsState(): State<T> {
     val state = remember { mutableStateOf(get()) }
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(key1 = this, lifecycleOwner) {
-        val dispose = observeBindable(lifecycleOwner, false) { state.value = it }
-        onDispose { dispose() }
+        val dispose = observe(lifecycleOwner, false) { state.value = it }
+        onDispose(dispose::invoke)
     }
     return state
 }

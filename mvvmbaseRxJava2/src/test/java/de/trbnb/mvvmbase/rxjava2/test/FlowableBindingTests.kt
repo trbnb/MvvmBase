@@ -2,7 +2,6 @@
 
 package de.trbnb.mvvmbase.rxjava2.test
 
-import androidx.databinding.Bindable
 import de.trbnb.mvvmbase.BaseViewModel
 import de.trbnb.mvvmbase.MvvmBase
 import de.trbnb.mvvmbase.rxjava2.RxViewModel
@@ -10,14 +9,18 @@ import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.Test
 
 class FlowableBindingTests {
-    @Before
-    fun setup() {
-        MvvmBase.init<BR>().disableViewModelLifecycleThreadConstraints()
+    companion object {
+        @BeforeAll
+        @JvmStatic
+        fun setup() {
+            MvvmBase.disableViewModelLifecycleThreadConstraints()
+        }
     }
+
 
     @Test
     fun `is the given default value used`() {
@@ -99,26 +102,10 @@ class FlowableBindingTests {
 
         val newValue = 55
         observable.onNext(newValue)
-        assert(BR.property in propertyChangedCallback.changedPropertyIds)
+        assert("property" in propertyChangedCallback.changedPropertyIds)
     }
 
-    @Test
-    fun `is notifyPropertyChanged() called (manual field ID)`() {
-        val observable: PublishSubject<Int> = PublishSubject.create()
-        val flowable = observable.toFlowable(BackpressureStrategy.LATEST)
-
-        val viewModel = ViewModelWithBindable(flowable, fieldId = BR.property)
-
-        val propertyChangedCallback = TestPropertyChangedCallback()
-        viewModel.addOnPropertyChangedCallback(propertyChangedCallback)
-
-        val newValue = 55
-        observable.onNext(newValue)
-        assert(BR.property in propertyChangedCallback.changedPropertyIds)
-    }
-
-    class ViewModelWithBindable(flowable: Flowable<Int>, fieldId: Int? = null) : BaseViewModel(), RxViewModel {
-        @get:Bindable
-        val property by flowable.toBindable<Int>(defaultValue = 3, fieldId = fieldId)
+    class ViewModelWithBindable(flowable: Flowable<Int>) : BaseViewModel(), RxViewModel {
+        val property by flowable.toBindable<Int>(defaultValue = 3)
     }
 }

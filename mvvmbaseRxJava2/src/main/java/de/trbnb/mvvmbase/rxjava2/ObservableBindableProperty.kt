@@ -5,7 +5,6 @@ import de.trbnb.mvvmbase.bindableproperty.AfterSet
 import de.trbnb.mvvmbase.bindableproperty.BeforeSet
 import de.trbnb.mvvmbase.bindableproperty.BindablePropertyBase
 import de.trbnb.mvvmbase.bindableproperty.Validate
-import de.trbnb.mvvmbase.utils.resolveFieldId
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.plusAssign
 import kotlin.reflect.KProperty
@@ -16,7 +15,7 @@ import kotlin.reflect.KProperty
 class ObservableBindableProperty<T> private constructor(
     viewModel: ViewModel,
     defaultValue: T,
-    fieldId: Int,
+    propertyName: String,
     observable: Observable<out T>,
     onError: (Throwable) -> Unit,
     onComplete: () -> Unit,
@@ -24,7 +23,7 @@ class ObservableBindableProperty<T> private constructor(
     afterSet: AfterSet<T>?,
     beforeSet: BeforeSet<T>?,
     validate: Validate<T>?
-) : RxBindablePropertyBase<T>(viewModel, defaultValue, fieldId, distinct, afterSet, beforeSet, validate) {
+) : RxBindablePropertyBase<T>(viewModel, defaultValue, propertyName, distinct, afterSet, beforeSet, validate) {
     init {
         viewModel.compositeDisposable += observable.subscribe({ value = it }, onError, onComplete)
     }
@@ -36,7 +35,6 @@ class ObservableBindableProperty<T> private constructor(
      * @see ObservableBindableProperty
      */
     class Provider<T> internal constructor(
-        private val fieldId: Int? = null,
         private val defaultValue: T,
         private val observable: Observable<out T>,
         private val onError: (Throwable) -> Unit,
@@ -44,7 +42,7 @@ class ObservableBindableProperty<T> private constructor(
     ) : BindablePropertyBase.Provider<T>() {
         override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>) = ObservableBindableProperty(
             viewModel = thisRef,
-            fieldId = fieldId ?: property.resolveFieldId(),
+            propertyName = property.name,
             defaultValue = defaultValue,
             observable = observable,
             onError = onError,

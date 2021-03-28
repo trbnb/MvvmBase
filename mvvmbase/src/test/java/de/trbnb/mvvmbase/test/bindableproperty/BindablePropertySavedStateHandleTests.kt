@@ -20,16 +20,11 @@ class BindablePropertySavedStateHandleTests {
     }
 
     class TestViewModel(savedStateHandle: SavedStateHandle = SavedStateHandle()) : BaseStateSavingViewModel(savedStateHandle) {
-        @get:Bindable
-        var text: String by bindable("foo")
-        @get:Bindable
-        var userSetting: Boolean by bindable(false)
-        @get:Bindable
-        var nullableBoolean: Boolean? by bindable()
-        @get:Bindable
-        var isDone: Boolean by bindableBoolean()
-        @get:Bindable
-        var isDoneTwo: Boolean by bindable(false)
+                var text: String by bindable("foo")
+                var userSetting: Boolean by bindable(false)
+                var nullableBoolean: Boolean? by bindable()
+                var isDone: Boolean by bindableBoolean()
+                var isDoneTwo: Boolean by bindable(false)
         var property: String? by bindable()
     }
 

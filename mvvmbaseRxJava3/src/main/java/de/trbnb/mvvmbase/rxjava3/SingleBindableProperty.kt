@@ -5,7 +5,6 @@ import de.trbnb.mvvmbase.bindableproperty.AfterSet
 import de.trbnb.mvvmbase.bindableproperty.BeforeSet
 import de.trbnb.mvvmbase.bindableproperty.BindablePropertyBase
 import de.trbnb.mvvmbase.bindableproperty.Validate
-import de.trbnb.mvvmbase.utils.resolveFieldId
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlin.reflect.KProperty
@@ -16,14 +15,14 @@ import kotlin.reflect.KProperty
 class SingleBindableProperty<T> private constructor(
     viewModel: ViewModel,
     defaultValue: T,
-    fieldId: Int,
+    propertyName: String,
     single: Single<out T>,
     onError: (Throwable) -> Unit,
     distinct: Boolean,
     afterSet: AfterSet<T>?,
     beforeSet: BeforeSet<T>?,
     validate: Validate<T>?
-) : RxBindablePropertyBase<T>(viewModel, defaultValue, fieldId, distinct, afterSet, beforeSet, validate) {
+) : RxBindablePropertyBase<T>(viewModel, defaultValue, propertyName, distinct, afterSet, beforeSet, validate) {
     init {
         viewModel.compositeDisposable += single.subscribe({ value = it }, onError)
     }
@@ -35,14 +34,13 @@ class SingleBindableProperty<T> private constructor(
      * @see SingleBindableProperty
      */
     class Provider<T> internal constructor(
-        private val fieldId: Int? = null,
         private val defaultValue: T,
         private val single: Single<out T>,
         private val onError: (Throwable) -> Unit
     ) : BindablePropertyBase.Provider<T>() {
         override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>) = SingleBindableProperty(
             viewModel = thisRef,
-            fieldId = fieldId ?: property.resolveFieldId(),
+            propertyName = property.name,
             defaultValue = defaultValue,
             single = single,
             onError = onError,

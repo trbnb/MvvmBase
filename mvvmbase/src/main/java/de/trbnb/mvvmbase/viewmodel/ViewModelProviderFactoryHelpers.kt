@@ -3,16 +3,16 @@ package de.trbnb.mvvmbase.viewmodel
 import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
-import de.trbnb.mvvmbase.MvvmBindingActivity
-import de.trbnb.mvvmbase.MvvmBindingFragment
+import de.trbnb.mvvmbase.MvvmActivity
+import de.trbnb.mvvmbase.MvvmFragment
 import de.trbnb.mvvmbase.ViewModel
 import javax.inject.Provider
 
 /**
- * Convenience function to create a [ViewModelProvider.Factory] for an [MvvmBindingFragment].
- * Can be useful for overriding [MvvmBindingActivity.getDefaultViewModelProviderFactory].
+ * Convenience function to create a [ViewModelProvider.Factory] for an [MvvmFragment].
+ * Can be useful for overriding [MvvmActivity.getDefaultViewModelProviderFactory].
  */
-fun <VM> MvvmBindingFragment<VM, *>.viewModelProviderFactory(factory: (handle: SavedStateHandle) -> VM): ViewModelProvider.Factory
+fun <VM> MvvmFragment<VM>.viewModelProviderFactory(factory: (handle: SavedStateHandle) -> VM): ViewModelProvider.Factory
     where VM : ViewModel, VM : androidx.lifecycle.ViewModel = object : AbstractSavedStateViewModelFactory(this, arguments) {
         @Suppress("UNCHECKED_CAST")
         override fun <T : androidx.lifecycle.ViewModel?> create(key: String, modelClass: Class<T>, handle: SavedStateHandle): T {
@@ -21,10 +21,10 @@ fun <VM> MvvmBindingFragment<VM, *>.viewModelProviderFactory(factory: (handle: S
     }
 
 /**
- * Convenience function to create a [ViewModelProvider.Factory] for an [MvvmBindingActivity].
- * Can be useful for overriding [MvvmBindingActivity.getDefaultViewModelProviderFactory].
+ * Convenience function to create a [ViewModelProvider.Factory] for an [MvvmActivity].
+ * Can be useful for overriding [MvvmActivity.getDefaultViewModelProviderFactory].
  */
-fun <VM> MvvmBindingActivity<VM, *>.viewModelProviderFactory(factory: (handle: SavedStateHandle) -> VM): ViewModelProvider.Factory
+fun <VM> MvvmActivity<VM>.viewModelProviderFactory(factory: (handle: SavedStateHandle) -> VM): ViewModelProvider.Factory
     where VM : ViewModel, VM : androidx.lifecycle.ViewModel = object : AbstractSavedStateViewModelFactory(this, intent?.extras) {
         @Suppress("UNCHECKED_CAST")
         override fun <T : androidx.lifecycle.ViewModel?> create(key: String, modelClass: Class<T>, handle: SavedStateHandle): T {

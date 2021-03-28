@@ -14,7 +14,7 @@ import kotlin.reflect.KProperty
 open class RxBindablePropertyBase<T> protected constructor(
     private val viewModel: ViewModel,
     defaultValue: T,
-    private var fieldId: Int,
+    private var propertyName: String,
     distinct: Boolean,
     afterSet: AfterSet<T>?,
     beforeSet: BeforeSet<T>?,
@@ -31,7 +31,7 @@ open class RxBindablePropertyBase<T> protected constructor(
                 else -> validate(oldValue, value)
             }
 
-            viewModel.notifyPropertyChanged(fieldId)
+            viewModel.notifyPropertyChanged(propertyName)
             afterSet?.invoke(oldValue, field)
         }
 

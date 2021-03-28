@@ -2,7 +2,6 @@
 
 package de.trbnb.mvvmbase.coroutines.test
 
-import androidx.databinding.Bindable
 import de.trbnb.mvvmbase.BaseViewModel
 import de.trbnb.mvvmbase.MvvmBase
 import de.trbnb.mvvmbase.coroutines.CoroutineViewModel
@@ -24,7 +23,7 @@ class FlowBindableTests {
     @BeforeEach
     fun setup() {
         Dispatchers.setMain(TestCoroutineDispatcher())
-        MvvmBase.init<BR>().disableViewModelLifecycleThreadConstraints()
+        MvvmBase.disableViewModelLifecycleThreadConstraints()
     }
 
     @Test
@@ -107,25 +106,10 @@ class FlowBindableTests {
 
         val newValue = 55
         flow.value = newValue
-        assert(BR.property in propertyChangedCallback.changedPropertyIds)
+        assert("property" in propertyChangedCallback.changedPropertyIds)
     }
 
-    @Test
-    fun `is notifyPropertyChanged() called (manual field ID)`() {
-        val flow = MutableStateFlow(4)
-
-        val viewModel = ViewModelWithBindable(flow, fieldId = BR.property)
-
-        val propertyChangedCallback = TestPropertyChangedCallback()
-        viewModel.addOnPropertyChangedCallback(propertyChangedCallback)
-
-        val newValue = 55
-        flow.value = newValue
-        assert(BR.property in propertyChangedCallback.changedPropertyIds)
-    }
-
-    class ViewModelWithBindable(flow: Flow<Int>, fieldId: Int? = null) : BaseViewModel(), CoroutineViewModel {
-        @get:Bindable
-        val property by flow.toBindable(defaultValue = 3, fieldId = fieldId)
+    class ViewModelWithBindable(flow: Flow<Int>) : BaseViewModel(), CoroutineViewModel {
+        val property by flow.toBindable(defaultValue = 3)
     }
 }

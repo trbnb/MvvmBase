@@ -1,9 +1,6 @@
 package de.trbnb.mvvmbase
 
 import androidx.annotation.CallSuper
-import androidx.databinding.BaseObservable
-import androidx.databinding.Observable
-import androidx.databinding.PropertyChangeRegistry
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.destroyInternal
@@ -11,8 +8,9 @@ import androidx.lifecycle.getTagFromViewModel
 import androidx.lifecycle.setTagIfAbsentForViewModel
 import de.trbnb.mvvmbase.events.EventChannel
 import de.trbnb.mvvmbase.events.EventChannelImpl
-import de.trbnb.mvvmbase.utils.resolveFieldId
-import kotlin.reflect.KProperty
+import de.trbnb.mvvmbase.observable.PropertyChangeRegistry
+import kotlin.reflect.full.findAnnotation
+import kotlin.reflect.full.memberProperties
 import androidx.lifecycle.ViewModel as ArchitectureViewModel
 
 /**
@@ -22,8 +20,7 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel, LifecycleOwne
     /**
      * Callback registry for [Observable].
      */
-    @Transient
-    private var callbacks = PropertyChangeRegistry()
+    private val callbacks: PropertyChangeRegistry
 
     /**
      * [EventChannel] implementation that can be used to send non-state information to a view component.
@@ -41,40 +38,27 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel, LifecycleOwne
      */
     private val lifecycleOwner = ViewModelLifecycleOwner(MvvmBase.enforceViewModelLifecycleMainThread)
 
-    final override fun addOnPropertyChangedCallback(callback: Observable.OnPropertyChangedCallback) {
+    init {
+        val pairs = javaClass.kotlin.memberProperties.mapNotNull { property ->
+            when (val annotation = property.findAnnotation<Bindable>()) {
+                null -> null
+                else -> property.name to annotation.value
+            }
+        }
+
+        callbacks = PropertyChangeRegistry(pairs)
+    }
+
+    final override fun addOnPropertyChangedCallback(callback: OnPropertyChangedCallback) {
         callbacks.add(callback)
     }
 
-    final override fun removeOnPropertyChangedCallback(callback: Observable.OnPropertyChangedCallback) {
+    final override fun removeOnPropertyChangedCallback(callback: OnPropertyChangedCallback) {
         callbacks.remove(callback)
     }
 
-    final override fun notifyChange() {
-        callbacks.notifyCallbacks(this, 0, null)
-    }
-
-    final override fun notifyPropertyChanged(fieldId: Int) {
-        callbacks.notifyCallbacks(this, fieldId, null)
-    }
-
-    final override fun notifyPropertyChanged(property: KProperty<*>) {
-        notifyPropertyChanged(property.resolveFieldId())
-    }
-
-    /**
-     * Is called when the view model is bound to an activity/layout.
-     */
-    @CallSuper
-    override fun onBind() {
-        lifecycleOwner.onEvent(ViewModelLifecycleOwner.Event.BOUND)
-    }
-
-    /**
-     * Is called when the view model is no longer bound to an activity/layout.
-     */
-    @CallSuper
-    override fun onUnbind() {
-        lifecycleOwner.onEvent(ViewModelLifecycleOwner.Event.UNBOUND)
+    final override fun notifyPropertyChanged(propertyName: String) {
+        callbacks.notifyChange(this, propertyName)
     }
 
     override fun destroy() {
@@ -87,10 +71,6 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel, LifecycleOwne
      */
     @CallSuper
     protected open fun onDestroy() {
-        if (lifecycleOwner.getInternalState() == ViewModelLifecycleOwner.State.BOUND) {
-            onUnbind()
-        }
-
         super.onCleared()
         lifecycleOwner.onEvent(ViewModelLifecycleOwner.Event.DESTROYED)
     }

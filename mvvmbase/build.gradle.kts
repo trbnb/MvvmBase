@@ -1,7 +1,6 @@
 plugins {
     id("com.android.library")
     kotlin("android")
-    kotlin("kapt")
     id("com.jfrog.bintray")
     `maven-publish`
 }
@@ -26,18 +25,6 @@ android {
         }
     }
 
-    buildFeatures {
-        dataBinding = true
-    }
-
-    dataBinding {
-        // This is necessary to allow the data binding annotation processor to generate
-        // the BR fields from Bindable annotations
-        testOptions.unitTests.isIncludeAndroidResources = true
-
-        isEnabledForTests = true
-    }
-
     compileOptions {
         sourceCompatibility = javaVersion
         targetCompatibility = javaVersion
@@ -48,7 +35,6 @@ android {
         useIR = true
     }
     buildFeatures {
-        dataBinding = true
         compose = true
     }
     composeOptions {
@@ -67,10 +53,6 @@ dependencies {
 
     implementation("androidx.compose.runtime:runtime:${Versions.compose}")
     implementation("androidx.compose.ui:ui:${Versions.compose}")
-    //implementation("androidx.compose.runtime:runtime-livedata:${Versions.compose}")
-
-    testAnnotationProcessor("androidx.databinding:databinding-compiler:$gradleToolsVersion")
-    kaptTest("androidx.databinding:databinding-compiler:$gradleToolsVersion")
 
     // Testing
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.6.2")

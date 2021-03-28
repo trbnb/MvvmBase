@@ -5,7 +5,6 @@ import de.trbnb.mvvmbase.bindableproperty.AfterSet
 import de.trbnb.mvvmbase.bindableproperty.BeforeSet
 import de.trbnb.mvvmbase.bindableproperty.BindablePropertyBase
 import de.trbnb.mvvmbase.bindableproperty.Validate
-import de.trbnb.mvvmbase.utils.resolveFieldId
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlin.reflect.KProperty
@@ -16,7 +15,7 @@ import kotlin.reflect.KProperty
 class MaybeBindableProperty<T> private constructor(
     viewModel: ViewModel,
     defaultValue: T,
-    fieldId: Int,
+    propertyName: String,
     maybe: Maybe<out T>,
     onError: (Throwable) -> Unit,
     onComplete: () -> Unit,
@@ -24,7 +23,7 @@ class MaybeBindableProperty<T> private constructor(
     afterSet: AfterSet<T>?,
     beforeSet: BeforeSet<T>?,
     validate: Validate<T>?
-) : RxBindablePropertyBase<T>(viewModel, defaultValue, fieldId, distinct, afterSet, beforeSet, validate) {
+) : RxBindablePropertyBase<T>(viewModel, defaultValue, propertyName, distinct, afterSet, beforeSet, validate) {
     init {
         viewModel.compositeDisposable += maybe.subscribe({ value = it }, onError, onComplete)
     }
@@ -36,7 +35,6 @@ class MaybeBindableProperty<T> private constructor(
      * @see MaybeBindableProperty
      */
     class Provider<T> internal constructor(
-        private val fieldId: Int? = null,
         private val defaultValue: T,
         private val maybe: Maybe<out T>,
         private val onError: (Throwable) -> Unit,
@@ -44,7 +42,7 @@ class MaybeBindableProperty<T> private constructor(
     ) : BindablePropertyBase.Provider<T>() {
         override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>) = MaybeBindableProperty(
             viewModel = thisRef,
-            fieldId = fieldId ?: property.resolveFieldId(),
+            propertyName = property.name,
             defaultValue = defaultValue,
             maybe = maybe,
             onError = onError,

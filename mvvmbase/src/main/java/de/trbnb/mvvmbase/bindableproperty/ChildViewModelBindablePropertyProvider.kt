@@ -3,7 +3,6 @@ package de.trbnb.mvvmbase.bindableproperty
 import de.trbnb.mvvmbase.ViewModel
 import de.trbnb.mvvmbase.list.destroyAll
 import de.trbnb.mvvmbase.savedstate.StateSavingViewModel
-import de.trbnb.mvvmbase.utils.resolveFieldId
 import de.trbnb.mvvmbase.utils.savingStateInBindableSupports
 import kotlin.reflect.KProperty
 
@@ -14,13 +13,11 @@ import kotlin.reflect.KProperty
  * @see BindableProperty
  */
 class ChildViewModelBindablePropertyProvider<C : Collection<ViewModel>>(
-    private val fieldId: Int? = null,
     private val defaultValue: C,
     private val stateSaveOption: StateSaveOption
 ) : BindablePropertyBase.Provider<C>() {
-    override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>): BindableProperty<C> = BindableProperty<C>(
+    override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>): BindableProperty<C> = BindableProperty(
         viewModel = thisRef,
-        fieldId = fieldId ?: property.resolveFieldId(),
         defaultValue = defaultValue,
         stateSavingKey = stateSaveOption.resolveKey(property),
         distinct = distinct,
@@ -41,14 +38,12 @@ class ChildViewModelBindablePropertyProvider<C : Collection<ViewModel>>(
  * Creates a new BindableProperty instance.
  *
  * @param defaultValue Value of the property from the start.
- * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  * @param stateSaveOption Specifies if the state of the property should be saved and with which key.
  */
 inline fun <reified C : Collection<ViewModel>> ViewModel.childrenBindable(
     defaultValue: C,
-    fieldId: Int? = null,
     stateSaveOption: StateSaveOption? = null
-): ChildViewModelBindablePropertyProvider<C> = ChildViewModelBindablePropertyProvider(fieldId, defaultValue, when (this) {
+): ChildViewModelBindablePropertyProvider<C> = ChildViewModelBindablePropertyProvider(defaultValue, when (this) {
     is StateSavingViewModel -> when (stateSaveOption) {
         null -> when (savingStateInBindableSupports<C>()) {
             true -> defaultStateSaveOption

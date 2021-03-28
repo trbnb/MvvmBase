@@ -8,13 +8,16 @@ import de.trbnb.mvvmbase.MvvmBase
 import de.trbnb.mvvmbase.rxjava3.RxViewModel
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.subjects.MaybeSubject
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.Test
 
 class MaybeBindingTests {
-    @Before
-    fun setup() {
-        MvvmBase.init<BR>().disableViewModelLifecycleThreadConstraints()
+    companion object {
+        @BeforeAll
+        @JvmStatic
+        fun setup() {
+            MvvmBase.disableViewModelLifecycleThreadConstraints()
+        }
     }
 
     @Test
@@ -91,25 +94,10 @@ class MaybeBindingTests {
 
         val newValue = 55
         maybe.onSuccess(newValue)
-        assert(BR.property in propertyChangedCallback.changedPropertyIds)
+        assert("property" in propertyChangedCallback.changedPropertyIds)
     }
 
-    @Test
-    fun `is notifyPropertyChanged() called (manual field ID)`() {
-        val maybe: MaybeSubject<Int> = MaybeSubject.create()
-
-        val viewModel = ViewModelWithBindable(maybe, fieldId = BR.property)
-
-        val propertyChangedCallback = TestPropertyChangedCallback()
-        viewModel.addOnPropertyChangedCallback(propertyChangedCallback)
-
-        val newValue = 55
-        maybe.onSuccess(newValue)
-        assert(BR.property in propertyChangedCallback.changedPropertyIds)
-    }
-
-    class ViewModelWithBindable(maybe: Maybe<Int>, fieldId: Int? = null) : BaseViewModel(), RxViewModel {
-        @get:Bindable
-        val property by maybe.toBindable<Int>(defaultValue = 3, fieldId = fieldId)
+    class ViewModelWithBindable(maybe: Maybe<Int>) : BaseViewModel(), RxViewModel {
+                val property by maybe.toBindable<Int>(defaultValue = 3)
     }
 }

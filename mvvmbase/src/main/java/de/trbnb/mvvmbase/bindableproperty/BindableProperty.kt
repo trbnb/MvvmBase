@@ -1,9 +1,7 @@
 package de.trbnb.mvvmbase.bindableproperty
 
-import androidx.databinding.BaseObservable
 import de.trbnb.mvvmbase.ViewModel
 import de.trbnb.mvvmbase.savedstate.StateSavingViewModel
-import de.trbnb.mvvmbase.utils.resolveFieldId
 import de.trbnb.mvvmbase.utils.savingStateInBindableSupports
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
@@ -13,7 +11,6 @@ import kotlin.reflect.KProperty
  * via [StateSavingViewModel.savedStateHandle].
  *
  * @param T Type of the stored value.
- * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  * @param defaultValue Value that will be used at start if value can not be restored from [StateSavingViewModel.savedStateHandle].
  * @param distinct See [BindablePropertyBase.distinct].
  * @param stateSavingKey Specifies with which key the value will be state-saved. No state-saving if `null`.
@@ -23,7 +20,6 @@ import kotlin.reflect.KProperty
  */
 class BindableProperty<T> internal constructor(
     viewModel: ViewModel,
-    private val fieldId: Int,
     defaultValue: T,
     distinct: Boolean,
     private val stateSavingKey: String?,
@@ -53,7 +49,7 @@ class BindableProperty<T> internal constructor(
             else -> validate(oldValue, value)
         }
 
-        thisRef.notifyPropertyChanged(fieldId)
+        thisRef.notifyPropertyChanged(property.name)
         if (thisRef is StateSavingViewModel && stateSavingKey != null) {
             thisRef.savedStateHandle[stateSavingKey] = this.value
         }
@@ -67,13 +63,11 @@ class BindableProperty<T> internal constructor(
      * @see BindableProperty
      */
     class Provider<T>(
-        private val fieldId: Int? = null,
         private val defaultValue: T,
         private val stateSaveOption: StateSaveOption
     ) : BindablePropertyBase.Provider<T>() {
         override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>) = BindableProperty(
             viewModel = thisRef,
-            fieldId = fieldId ?: property.resolveFieldId(),
             defaultValue = defaultValue,
             stateSavingKey = stateSaveOption.resolveKey(property),
             distinct = distinct,
@@ -88,14 +82,12 @@ class BindableProperty<T> internal constructor(
  * Creates a new BindableProperty instance.
  *
  * @param defaultValue Value of the property from the start.
- * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  * @param stateSaveOption Specifies if the state of the property should be saved and with which key.
  */
 inline fun <reified T> ViewModel.bindable(
     defaultValue: T,
-    fieldId: Int? = null,
     stateSaveOption: StateSaveOption? = null
-): BindableProperty.Provider<T> = BindableProperty.Provider(fieldId, defaultValue, when (this) {
+): BindableProperty.Provider<T> = BindableProperty.Provider(defaultValue, when (this) {
     is StateSavingViewModel -> when (stateSaveOption) {
         null -> when (savingStateInBindableSupports<T>()) {
             true -> defaultStateSaveOption
@@ -109,10 +101,8 @@ inline fun <reified T> ViewModel.bindable(
 /**
  * Creates a new BindableProperty instance with `null` as default value.
  *
- * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  * @param stateSaveOption Specifies if the state of the property should be saved and with which key.
  */
 inline fun <reified T> ViewModel.bindable(
-    fieldId: Int? = null,
     stateSaveOption: StateSaveOption? = null
-): BindableProperty.Provider<T?> = bindable(null, fieldId, stateSaveOption)
+): BindableProperty.Provider<T?> = bindable(null, stateSaveOption)

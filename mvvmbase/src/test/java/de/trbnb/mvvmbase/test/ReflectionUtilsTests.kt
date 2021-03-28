@@ -1,11 +1,6 @@
 package de.trbnb.mvvmbase.test
 
-import androidx.databinding.Bindable
-import de.trbnb.mvvmbase.BaseViewModel
-import de.trbnb.mvvmbase.MvvmBase
-import de.trbnb.mvvmbase.utils.brFieldName
 import de.trbnb.mvvmbase.utils.findGenericSuperclass
-import de.trbnb.mvvmbase.utils.resolveFieldId
 import org.junit.jupiter.api.Test
 
 class ReflectionUtilsTests {
@@ -26,39 +21,5 @@ class ReflectionUtilsTests {
         assert(Any::class.java.findGenericSuperclass(List::class.java) == null)
         assert(B::class.java.findGenericSuperclass(A::class.java)?.rawType == A::class.java)
         assert(B::class.java.findGenericSuperclass(A::class.java)?.actualTypeArguments?.first() == String::class.java)
-    }
-
-    @Test
-    fun `BR field name from property`() {
-        val viewModel = TestViewModel()
-
-        assert(viewModel::amount.brFieldName() == "amount")
-        assert(viewModel::isAmount.brFieldName() == "isAmount")
-        assert(viewModel::isLoading.brFieldName() == "loading")
-        assert(viewModel::loading.brFieldName() == "loading")
-        assert(viewModel::isLoadingNullable.brFieldName() == "isLoadingNullable")
-    }
-
-    @Test
-    fun `BR field integer from property`() {
-        MvvmBase.init<BR>()
-        val viewModel = TestViewModel()
-
-        assert(viewModel::amount.resolveFieldId() == BR.amount)
-        assert(viewModel::isAmount.resolveFieldId() == BR._all)
-        assert(viewModel::isLoading.resolveFieldId() == BR.loading)
-        assert(viewModel::loading.resolveFieldId() == BR.loading)
-        assert(viewModel::isLoadingNullable.resolveFieldId() == BR._all)
-
-        // reset MvvmBase for other tests
-        MvvmBase.init<Unit>()
-    }
-
-    class TestViewModel : BaseViewModel() {
-        @get:Bindable val amount = 4
-        /* No bindable as it violates JavaBeans convention */ val isAmount = 4
-        @get:Bindable val isLoading = false
-        @get:Bindable val loading = false
-        /* No bindable as it violates JavaBeans convention */ val isLoadingNullable: Boolean? = null
     }
 }

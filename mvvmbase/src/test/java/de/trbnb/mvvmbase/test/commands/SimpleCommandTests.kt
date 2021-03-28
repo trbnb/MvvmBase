@@ -1,12 +1,10 @@
 package de.trbnb.mvvmbase.test.commands
 
-import androidx.databinding.Observable
 import de.trbnb.mvvmbase.commands.DisabledCommandInvocationException
-import de.trbnb.mvvmbase.commands.EnabledListener
 import de.trbnb.mvvmbase.commands.SimpleCommand
 import de.trbnb.mvvmbase.commands.invoke
 import de.trbnb.mvvmbase.commands.invokeSafely
-import de.trbnb.mvvmbase.test.BR
+import de.trbnb.mvvmbase.utils.observe
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
@@ -27,10 +25,10 @@ class SimpleCommandTests {
 
     @Test
     fun `enabledListener is triggered`() {
-        val command = SimpleCommand<Unit, Unit>(isEnabled = true) { Unit }
+        val command = SimpleCommand<Unit, Unit>(isEnabled = true) { }
         var wasDisabled = false
         var wasReEnabled = false
-        command.addEnabledListener { enabled ->
+        command::isEnabled.observe { enabled ->
             when {
                 enabled -> wasReEnabled = true
                 else -> wasDisabled = true
@@ -45,10 +43,10 @@ class SimpleCommandTests {
 
     @Test
     fun `enabledListener is not triggered when isEnabled is set to previous value`() = booleanArrayOf(true, false).forEach { bool ->
-        val command = SimpleCommand<Unit, Unit>(isEnabled = bool) { Unit }
+        val command = SimpleCommand<Unit, Unit>(isEnabled = bool) { }
 
         var listenerWasTriggered = false
-        command.addEnabledListener { listenerWasTriggered = true }
+        command::isEnabled.observe { listenerWasTriggered = true }
         command.isEnabled = bool
 
         assert(!listenerWasTriggered)
@@ -56,12 +54,10 @@ class SimpleCommandTests {
 
     @Test
     fun `removing enabledListener works`() {
-        val command = SimpleCommand<Unit, Unit> { Unit }
+        val command = SimpleCommand<Unit, Unit> { }
 
         var listenerWasTriggered = false
-        val listener: EnabledListener = { listenerWasTriggered = true }
-        command.addEnabledListener(listener)
-        command.removeEnabledListener(listener)
+        command::isEnabled.observe { listenerWasTriggered = true }()
         command.isEnabled = !command.isEnabled
 
         assert(!listenerWasTriggered)
@@ -69,9 +65,9 @@ class SimpleCommandTests {
 
     @Test
     fun `clearing enabledListeners works`() {
-        val command = SimpleCommand<Unit, Unit> { Unit }
+        val command = SimpleCommand<Unit, Unit> { }
 
-        fun newListener() = object : EnabledListener {
+        fun newListener() = object : (Boolean) -> Unit {
             var wasTriggered = false
                 private set
 
@@ -80,26 +76,20 @@ class SimpleCommandTests {
             }
         }
 
-        val listeners = List(3) { newListener() }.onEach { command.addEnabledListener(it) }
+        val listeners = List(3) { newListener() }.map { it to command::isEnabled.observe(action = it) }
 
-        command.clearEnabledListeners()
+        listeners.forEach { it.second() }
         command.isEnabled = !command.isEnabled
 
-        assert(listeners.all { !it.wasTriggered })
+        assert(listeners.all { !it.first.wasTriggered })
     }
 
     @Test
     fun `changing enabled invokes notifyPropertyChanged`() {
-        val command = SimpleCommand<Unit, Unit>(false) { Unit }
+        val command = SimpleCommand<Unit, Unit>(false) { }
 
         var callbackWasTriggered = false
-        command.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
-            override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
-                if (propertyId == BR.enabled) {
-                    callbackWasTriggered = true
-                }
-            }
-        })
+        command::isEnabled.observe { callbackWasTriggered = true }
 
         command.isEnabled = true
         assert(callbackWasTriggered)

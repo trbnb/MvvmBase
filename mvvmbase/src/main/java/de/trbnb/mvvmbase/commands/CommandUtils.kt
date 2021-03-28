@@ -1,43 +1,14 @@
 package de.trbnb.mvvmbase.commands
 
-import androidx.databinding.Observable
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.LifecycleOwner
+import de.trbnb.mvvmbase.observable.ObservableContainer
 
-internal fun Command<*, *>.observeLifecycle(lifecycleOwner: LifecycleOwner) {
-    lifecycleOwner.lifecycle.addObserver(object : LifecycleEventObserver {
-        override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
-            if (event == Lifecycle.Event.ON_PAUSE) {
-                clearEnabledListenersForViews()
-            }
+internal fun RuleCommand<*, *>.dependsOn(observable: ObservableContainer, dependencyPropertyNames: List<String>?) {
+    if (dependencyPropertyNames.isNullOrEmpty()) return
+    observable.addOnPropertyChangedCallback { _, propertyName ->
+        if (propertyName in dependencyPropertyNames) {
+            onEnabledChanged()
         }
-    })
-}
-
-internal fun RuleCommand<*, *>.dependsOn(observable: Observable, dependentFieldIds: IntArray?) {
-    if (dependentFieldIds?.isEmpty() != false) return
-    observable.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
-        override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
-            if (propertyId in dependentFieldIds) {
-                onEnabledChanged()
-            }
-        }
-    })
-}
-
-/**
- * Calls [Command.addEnabledListener] and removes the listener if the lifecycle of [lifecycleOwner] is destroyed.
- */
-fun Command<*, *>.addEnabledListener(lifecycleOwner: LifecycleOwner, listener: (enabled: Boolean) -> Unit) {
-    addEnabledListener(listener)
-    lifecycleOwner.lifecycle.addObserver(object : LifecycleEventObserver {
-        override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
-            if (event == Lifecycle.Event.ON_DESTROY) {
-                removeEnabledListener(listener)
-            }
-        }
-    })
+    }
 }
 
 /**

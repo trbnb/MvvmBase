@@ -11,7 +11,6 @@ import de.trbnb.mvvmbase.bindableproperty.bindableByte
 import de.trbnb.mvvmbase.bindableproperty.distinct
 import de.trbnb.mvvmbase.bindableproperty.validate
 import de.trbnb.mvvmbase.savedstate.BaseStateSavingViewModel
-import de.trbnb.mvvmbase.test.BR
 import de.trbnb.mvvmbase.test.TestPropertyChangedCallback
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -114,46 +113,17 @@ class BindableBytePropertyTests {
 
     @Test
     fun `is correct field ID used for notifyPropertyChanged()`() {
-        MvvmBase.init<BR>()
         val propertyChangedCallback = TestPropertyChangedCallback()
-        val manualFieldId = BR.vm
-        val viewModel = ViewModelWithBindable(manualFieldId)
+        val viewModel = ViewModelWithBindable()
         viewModel.addOnPropertyChangedCallback(propertyChangedCallback)
 
         viewModel.property = 5.toByte()
-        assert(BR.property in propertyChangedCallback.changedPropertyIds)
-        propertyChangedCallback.clear()
-
-        viewModel.manualProperty = 7.toByte()
-        assert(manualFieldId in propertyChangedCallback.changedPropertyIds)
+        assert("property" in propertyChangedCallback.changedPropertyIds)
         propertyChangedCallback.clear()
     }
 
-    @Test
-    fun `field ID falls back to _all`() {
-        // undo MvvmBase.init<BR>() call
-        MvvmBase.init<Unit>()
-
-        val propertyChangedCallback = TestPropertyChangedCallback()
-        val manualFieldId = BR.vm
-        val viewModel = ViewModelWithBindable(manualFieldId)
-        viewModel.addOnPropertyChangedCallback(propertyChangedCallback)
-
-        viewModel.property = 5.toByte()
-        assert(BR._all in propertyChangedCallback.changedPropertyIds)
-        propertyChangedCallback.clear()
-
-        viewModel.manualProperty = 2.toByte()
-        assert(manualFieldId in propertyChangedCallback.changedPropertyIds)
-        propertyChangedCallback.clear()
-    }
-
-    class ViewModelWithBindable(fieldId: Int) : BaseViewModel() {
-        @get:Bindable
-        var property by bindableByte()
-
-        @get:Bindable
-        var manualProperty by bindableByte(fieldId = fieldId)
+    class ViewModelWithBindable : BaseViewModel() {
+                var property by bindableByte()
     }
 
     @Test
@@ -167,8 +137,7 @@ class BindableBytePropertyTests {
     }
 
     class AutomaticSavedStateViewModel(savedStateHandle: SavedStateHandle = SavedStateHandle()) : BaseStateSavingViewModel(savedStateHandle) {
-        @get:Bindable
-        var supportedAutomatic by bindableByte()
+                var supportedAutomatic by bindableByte()
     }
 
     @Test
@@ -186,8 +155,7 @@ class BindableBytePropertyTests {
         key: String,
         savedStateHandle: SavedStateHandle = SavedStateHandle()
     ) : BaseStateSavingViewModel(savedStateHandle) {
-        @get:Bindable
-        var property by bindableByte(stateSaveOption = StateSaveOption.Manual(key))
+                var property by bindableByte(stateSaveOption = StateSaveOption.Manual(key))
     }
 
     @Test
@@ -201,8 +169,7 @@ class BindableBytePropertyTests {
     }
 
     class NoneSavedStateViewModel(savedStateHandle: SavedStateHandle = SavedStateHandle()) : BaseStateSavingViewModel(savedStateHandle) {
-        @get:Bindable
-        var property by bindableByte(stateSaveOption = StateSaveOption.None)
+                var property by bindableByte(stateSaveOption = StateSaveOption.None)
     }
 
     @Test
@@ -213,16 +180,15 @@ class BindableBytePropertyTests {
         }
 
         viewModel.property = 3.toByte()
-        assert(BR.property in propertyChangedCallback.changedPropertyIds)
+        assert("property" in propertyChangedCallback.changedPropertyIds)
         propertyChangedCallback.clear()
 
         viewModel.property = 3.toByte()
-        assert(BR.property !in propertyChangedCallback.changedPropertyIds)
+        assert("property" !in propertyChangedCallback.changedPropertyIds)
     }
 
     class ViewModelWithDistinct : BaseViewModel() {
-        @get:Bindable
-        var property by bindableByte()
+                var property by bindableByte()
             .distinct()
     }
 }

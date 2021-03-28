@@ -1,18 +1,16 @@
 package de.trbnb.mvvmbase.test
 
-import androidx.databinding.BaseObservable
-import androidx.databinding.Observable
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
-import de.trbnb.mvvmbase.BR
-import de.trbnb.mvvmbase.utils.addOnPropertyChangedCallback
+import de.trbnb.mvvmbase.BaseViewModel
+import de.trbnb.mvvmbase.observable.addOnPropertyChangedCallback
 import org.junit.jupiter.api.Test
 
 class ObservableTests {
     @Test
     fun `property changed callback with Lifecycle`() {
-        val observable = BaseObservable()
+        val observable = object : BaseViewModel() {}
 
         val lifecycleOwner = object : LifecycleOwner {
             private val lifecycle = LifecycleRegistry.createUnsafe(this).apply {
@@ -23,14 +21,10 @@ class ObservableTests {
         }
 
         var callbackWasTriggered = false
-        observable.addOnPropertyChangedCallback(lifecycleOwner, object : Observable.OnPropertyChangedCallback() {
-            override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
-                callbackWasTriggered = true
-            }
-        })
+        observable.addOnPropertyChangedCallback(lifecycleOwner) { _, _ -> callbackWasTriggered = true }
 
         lifecycleOwner.destroy()
-        observable.notifyPropertyChanged(BR.enabled)
+        observable.notifyPropertyChanged("")
         assert(!callbackWasTriggered)
     }
 }

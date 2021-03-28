@@ -1,9 +1,7 @@
 package de.trbnb.apptemplate.main
 
-import androidx.databinding.Bindable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import de.trbnb.apptemplate.resource.ResourceProvider
 import de.trbnb.mvvmbase.bindableproperty.bindable
 import de.trbnb.mvvmbase.bindableproperty.distinct
 import de.trbnb.mvvmbase.commands.simpleCommand
@@ -14,14 +12,11 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class MainViewModel(
-    savedStateHandle: SavedStateHandle,
-    resourceProvider: ResourceProvider
+    savedStateHandle: SavedStateHandle
 ) : BaseStateSavingViewModel(savedStateHandle), RxViewModel {
-    @get:Bindable
     var textInput by bindable("")
         .distinct()
 
-    @get:Bindable
     val title: String by Observable.create<String> { emitter ->
         viewModelScope.launch {
             delay(5000)

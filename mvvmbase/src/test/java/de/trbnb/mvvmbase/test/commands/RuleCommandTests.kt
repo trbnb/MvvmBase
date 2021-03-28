@@ -1,12 +1,10 @@
 package de.trbnb.mvvmbase.test.commands
 
-import androidx.databinding.Observable
 import de.trbnb.mvvmbase.commands.DisabledCommandInvocationException
-import de.trbnb.mvvmbase.commands.EnabledListener
 import de.trbnb.mvvmbase.commands.RuleCommand
 import de.trbnb.mvvmbase.commands.invoke
 import de.trbnb.mvvmbase.commands.invokeSafely
-import de.trbnb.mvvmbase.test.BR
+import de.trbnb.mvvmbase.utils.observe
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
@@ -31,7 +29,7 @@ class RuleCommandTests {
         val command = RuleCommand<Unit, Unit>(enabledRule = { isEnabled }, action = { Unit })
         var wasDisabled = false
         var wasReEnabled = false
-        command.addEnabledListener { enabled ->
+        command::isEnabled.observe { enabled ->
             when {
                 enabled -> wasReEnabled = true
                 else -> wasDisabled = true
@@ -49,10 +47,10 @@ class RuleCommandTests {
     @Test
     fun `enabledListener is not triggered when isEnabled is set to previous value`() = booleanArrayOf(true, false).forEach { bool ->
         var isEnabled = bool
-        val command = RuleCommand<Unit, Unit>(enabledRule = { isEnabled }, action = { Unit })
+        val command = RuleCommand<Unit, Unit>(enabledRule = { isEnabled }, action = { })
 
         var listenerWasTriggered = false
-        command.addEnabledListener { listenerWasTriggered = true }
+        command::isEnabled.observe { listenerWasTriggered = true }
         isEnabled = bool
         command.onEnabledChanged()
 
@@ -62,12 +60,10 @@ class RuleCommandTests {
     @Test
     fun `removing enabledListener works`() {
         var isEnabled = true
-        val command = RuleCommand<Unit, Unit>(enabledRule = { isEnabled }, action = { Unit })
+        val command = RuleCommand<Unit, Unit>(enabledRule = { isEnabled }, action = { })
 
         var listenerWasTriggered = false
-        val listener: EnabledListener = { listenerWasTriggered = true }
-        command.addEnabledListener(listener)
-        command.removeEnabledListener(listener)
+        command::isEnabled.observe { listenerWasTriggered = true }()
         isEnabled = !isEnabled
         command.onEnabledChanged()
 
@@ -77,9 +73,9 @@ class RuleCommandTests {
     @Test
     fun `clearing enabledListeners works`() {
         var isEnabled = false
-        val command = RuleCommand<Unit, Unit>(enabledRule = { isEnabled }, action = { Unit })
+        val command = RuleCommand<Unit, Unit>(enabledRule = { isEnabled }, action = { })
 
-        fun newListener() = object : EnabledListener {
+        fun newListener() = object : (Boolean) -> Unit {
             var wasTriggered = false
                 private set
 
@@ -88,28 +84,22 @@ class RuleCommandTests {
             }
         }
 
-        val listeners = List(3) { newListener() }.onEach { command.addEnabledListener(it) }
+        val listeners = List(3) { newListener() }.map { it to command::isEnabled.observe(action = it) }
 
-        command.clearEnabledListeners()
+        listeners.forEach { it.second() }
         isEnabled = !isEnabled
         command.onEnabledChanged()
 
-        assert(listeners.all { !it.wasTriggered })
+        assert(listeners.all { !it.first.wasTriggered })
     }
 
     @Test
     fun `changing enabled invokes notifyPropertyChanged`() {
         var isEnabled = false
-        val command = RuleCommand<Unit, Unit>(enabledRule = { isEnabled }, action = { Unit })
+        val command = RuleCommand<Unit, Unit>(enabledRule = { isEnabled }, action = { })
 
         var callbackWasTriggered = false
-        command.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
-            override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
-                if (propertyId == BR.enabled) {
-                    callbackWasTriggered = true
-                }
-            }
-        })
+        command::isEnabled.observe { callbackWasTriggered = true }
 
         isEnabled = true
         command.onEnabledChanged()

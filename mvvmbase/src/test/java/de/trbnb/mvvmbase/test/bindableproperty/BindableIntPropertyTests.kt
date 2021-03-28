@@ -1,6 +1,5 @@
 package de.trbnb.mvvmbase.test.bindableproperty
 
-import androidx.databinding.Bindable
 import androidx.lifecycle.SavedStateHandle
 import de.trbnb.mvvmbase.BaseViewModel
 import de.trbnb.mvvmbase.MvvmBase
@@ -11,7 +10,6 @@ import de.trbnb.mvvmbase.bindableproperty.bindableInt
 import de.trbnb.mvvmbase.bindableproperty.distinct
 import de.trbnb.mvvmbase.bindableproperty.validate
 import de.trbnb.mvvmbase.savedstate.BaseStateSavingViewModel
-import de.trbnb.mvvmbase.test.BR
 import de.trbnb.mvvmbase.test.TestPropertyChangedCallback
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -114,46 +112,17 @@ class BindableIntPropertyTests {
 
     @Test
     fun `is correct field ID used for notifyPropertyChanged()`() {
-        MvvmBase.init<BR>()
         val propertyChangedCallback = TestPropertyChangedCallback()
-        val manualFieldId = BR.vm
-        val viewModel = ViewModelWithBindable(manualFieldId)
+        val viewModel = ViewModelWithBindable()
         viewModel.addOnPropertyChangedCallback(propertyChangedCallback)
 
         viewModel.property = 5
-        assert(BR.property in propertyChangedCallback.changedPropertyIds)
-        propertyChangedCallback.clear()
-
-        viewModel.manualProperty = 7
-        assert(manualFieldId in propertyChangedCallback.changedPropertyIds)
+        assert("property" in propertyChangedCallback.changedPropertyIds)
         propertyChangedCallback.clear()
     }
 
-    @Test
-    fun `field ID falls back to _all`() {
-        // undo MvvmBase.init<BR>() call
-        MvvmBase.init<Unit>()
-
-        val propertyChangedCallback = TestPropertyChangedCallback()
-        val manualFieldId = BR.vm
-        val viewModel = ViewModelWithBindable(manualFieldId)
-        viewModel.addOnPropertyChangedCallback(propertyChangedCallback)
-
-        viewModel.property = 5
-        assert(BR._all in propertyChangedCallback.changedPropertyIds)
-        propertyChangedCallback.clear()
-
-        viewModel.manualProperty = 2
-        assert(manualFieldId in propertyChangedCallback.changedPropertyIds)
-        propertyChangedCallback.clear()
-    }
-
-    class ViewModelWithBindable(fieldId: Int) : BaseViewModel() {
-        @get:Bindable
+    class ViewModelWithBindable : BaseViewModel() {
         var property by bindableInt()
-
-        @get:Bindable
-        var manualProperty by bindableInt(fieldId = fieldId)
     }
 
     @Test
@@ -167,7 +136,6 @@ class BindableIntPropertyTests {
     }
 
     class AutomaticSavedStateViewModel(savedStateHandle: SavedStateHandle = SavedStateHandle()) : BaseStateSavingViewModel(savedStateHandle) {
-        @get:Bindable
         var supportedAutomatic by bindableInt()
     }
 
@@ -186,7 +154,6 @@ class BindableIntPropertyTests {
         key: String,
         savedStateHandle: SavedStateHandle = SavedStateHandle()
     ) : BaseStateSavingViewModel(savedStateHandle) {
-        @get:Bindable
         var property by bindableInt(stateSaveOption = StateSaveOption.Manual(key))
     }
 
@@ -201,8 +168,7 @@ class BindableIntPropertyTests {
     }
 
     class NoneSavedStateViewModel(savedStateHandle: SavedStateHandle = SavedStateHandle()) : BaseStateSavingViewModel(savedStateHandle) {
-        @get:Bindable
-        var property by bindableInt(stateSaveOption = StateSaveOption.None)
+                var property by bindableInt(stateSaveOption = StateSaveOption.None)
     }
 
     @Test
@@ -213,16 +179,15 @@ class BindableIntPropertyTests {
         }
 
         viewModel.property = 3
-        assert(BR.property in propertyChangedCallback.changedPropertyIds)
+        assert("property" in propertyChangedCallback.changedPropertyIds)
         propertyChangedCallback.clear()
 
         viewModel.property = 3
-        assert(BR.property !in propertyChangedCallback.changedPropertyIds)
+        assert("property" !in propertyChangedCallback.changedPropertyIds)
     }
 
     class ViewModelWithDistinct : BaseViewModel() {
-        @get:Bindable
-        var property by bindableInt()
+                var property by bindableInt()
             .distinct()
     }
 }

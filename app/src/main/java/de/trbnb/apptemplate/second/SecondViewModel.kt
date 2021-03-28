@@ -1,6 +1,5 @@
 package de.trbnb.apptemplate.second
 
-import androidx.databinding.Bindable
 import androidx.lifecycle.SavedStateHandle
 import de.trbnb.apptemplate.R
 import de.trbnb.apptemplate.resource.ResourceProvider
@@ -14,10 +13,8 @@ class SecondViewModel(
     savedStateHandle: SavedStateHandle,
     resourceProvider: ResourceProvider
 ) : BaseStateSavingViewModel(savedStateHandle) {
-    @get:Bindable
     var text by bindable(resourceProvider.getString(R.string.not_restored))
 
-    @get:Bindable
     var progress by bindableInt()
         .distinct()
         .validate { _, new -> new.coerceAtMost(100) }

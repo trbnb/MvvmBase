@@ -14,7 +14,7 @@ import io.reactivex.disposables.Disposable
     replaceWith = ReplaceWith("autoDispose(lifecycleOwner)")
 )
 fun Disposable.autoDispose(lifecycle: Lifecycle) {
-    autoDispose(LifecycleOwner { lifecycle })
+    autoDispose { lifecycle }
 }
 
 /**

@@ -17,83 +17,74 @@ interface RxViewModel : ViewModel {
      * Converts an [Observable] of non-nullable type `T` into a bindable property of nullable type `T`.
      */
     fun <T> Observable<out T>.toBindable(
-        fieldId: Int? = null,
         onError: (Throwable) -> Unit = onErrorStub,
         onComplete: () -> Unit = onCompleteStub
-    ): ObservableBindableProperty.Provider<T?> = ObservableBindableProperty.Provider(fieldId, null, this, onError, onComplete)
+    ): ObservableBindableProperty.Provider<T?> = ObservableBindableProperty.Provider(null, this, onError, onComplete)
 
     /**
      * Converts an [Observable] of non-nullable type `T` into a bindable property.
      */
     fun <T> Observable<out T>.toBindable(
         defaultValue: T,
-        fieldId: Int? = null,
         onError: (Throwable) -> Unit = onErrorStub,
         onComplete: () -> Unit = onCompleteStub
-    ): ObservableBindableProperty.Provider<T> = ObservableBindableProperty.Provider(fieldId, defaultValue, this, onError, onComplete)
+    ): ObservableBindableProperty.Provider<T> = ObservableBindableProperty.Provider(defaultValue, this, onError, onComplete)
 
     /**
      * Converts a [Flowable] of non-nullable type `T` into a bindable property of nullable type `T`.
      */
     fun <T> Flowable<out T>.toBindable(
-        fieldId: Int? = null,
         onError: (Throwable) -> Unit = onErrorStub,
         onComplete: () -> Unit = onCompleteStub
-    ): FlowableBindableProperty.Provider<T?> = FlowableBindableProperty.Provider(fieldId, null, this, onError, onComplete)
+    ): FlowableBindableProperty.Provider<T?> = FlowableBindableProperty.Provider(null, this, onError, onComplete)
 
     /**
      * Converts a [Flowable] of non-nullable type `T` into a bindable property.
      */
     fun <T> Flowable<out T>.toBindable(
         defaultValue: T,
-        fieldId: Int? = null,
         onError: (Throwable) -> Unit = onErrorStub,
         onComplete: () -> Unit = onCompleteStub
-    ): FlowableBindableProperty.Provider<T> = FlowableBindableProperty.Provider(fieldId, defaultValue, this, onError, onComplete)
+    ): FlowableBindableProperty.Provider<T> = FlowableBindableProperty.Provider(defaultValue, this, onError, onComplete)
 
     /**
      * Converts a [Single] of non-nullable type `T` into a bindable property of nullable type `T`.
      */
     fun <T> Single<out T>.toBindable(
-        fieldId: Int? = null,
         onError: (Throwable) -> Unit = onErrorStub
-    ): SingleBindableProperty.Provider<T?> = SingleBindableProperty.Provider(fieldId, null, this, onError)
+    ): SingleBindableProperty.Provider<T?> = SingleBindableProperty.Provider(null, this, onError)
 
     /**
      * Converts a [Single] of non-nullable type `T` into a bindable property.
      */
     fun <T> Single<out T>.toBindable(
         defaultValue: T,
-        fieldId: Int? = null,
         onError: (Throwable) -> Unit = onErrorStub
-    ): SingleBindableProperty.Provider<T> = SingleBindableProperty.Provider(fieldId, defaultValue, this, onError)
+    ): SingleBindableProperty.Provider<T> = SingleBindableProperty.Provider(defaultValue, this, onError)
 
     /**
      * Converts a [Maybe] of non-nullable type `T` into a bindable property of nullable type `T`.
      */
     fun <T> Maybe<out T>.toBindable(
-        fieldId: Int? = null,
         onError: (Throwable) -> Unit = onErrorStub,
         onComplete: () -> Unit = onCompleteStub
-    ): MaybeBindableProperty.Provider<T?> = MaybeBindableProperty.Provider(fieldId, null, this, onError, onComplete)
+    ): MaybeBindableProperty.Provider<T?> = MaybeBindableProperty.Provider(null, this, onError, onComplete)
 
     /**
      * Converts a [Maybe] of non-nullable type `T` into a bindable property.
      */
     fun <T> Maybe<T>.toBindable(
         defaultValue: T,
-        fieldId: Int? = null,
         onError: (Throwable) -> Unit = onErrorStub,
         onComplete: () -> Unit = onCompleteStub
-    ): MaybeBindableProperty.Provider<T> = MaybeBindableProperty.Provider(fieldId, defaultValue, this, onError, onComplete)
+    ): MaybeBindableProperty.Provider<T> = MaybeBindableProperty.Provider(defaultValue, this, onError, onComplete)
 
     /**
      * Converts a [Completable] without type into a bindable property of the primitive boolean type.
      */
     fun Completable.toBindable(
-        fieldId: Int? = null,
         onError: (Throwable) -> Unit = onErrorStub
-    ): CompletableBindableProperty.Provider = CompletableBindableProperty.Provider(fieldId, this, onError)
+    ): CompletableBindableProperty.Provider = CompletableBindableProperty.Provider(this, onError)
 
     /**
      * Automatically disposes a [Disposable] in the ViewModels [onDestroy].

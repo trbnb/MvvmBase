@@ -3,12 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-        <variable
-            name="vm"
-            type="de.trbnb.apptemplate.main.MainViewModel" />
-    </data>
-
     <FrameLayout
         android:id="@+id/main_frame"
         android:layout_width="match_parent"
@@ -25,55 +19,46 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="@{vm.title}"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title"
                 tools:text="Foo bar"/>
 
             <EditText
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@={vm.textInput}"/>
+                android:layout_height="wrap_content"/>
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:clickCommand="@{vm.showDialogCommand}"
                 android:text="Show Dialog" />
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:clickCommand="@{vm.showSnackbarCommand}"
                 android:text="Show Snackbar" />
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Toast example"
-                app:clickCommand="@{vm.showToastCommand}"/>
+                android:text="Toast example"/>
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:clickCommand="@{vm.showFragmentExampleCommand}"
                 android:text="Show Fragment example" />
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Show Conductor example"
-                app:clickCommand="@{vm.showConductorEvent}"/>
+                android:text="Show Conductor example"/>
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Show List example"
-                app:clickCommand="@{vm.showListCommand}"/>
+                android:text="Show List example"/>
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:clickCommand="@{vm.showMainActivityAgain}"
                 android:text="Show this activity again!"
                 style="@style/Widget.AppCompat.Button.Colored" />
 

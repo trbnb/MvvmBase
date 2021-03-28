@@ -10,13 +10,16 @@ import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.Test
 
 class FlowableBindingTests {
-    @Before
-    fun setup() {
-        MvvmBase.init<BR>().disableViewModelLifecycleThreadConstraints()
+    companion object {
+        @BeforeAll
+        @JvmStatic
+        fun setup() {
+            MvvmBase.disableViewModelLifecycleThreadConstraints()
+        }
     }
 
     @Test
@@ -99,26 +102,10 @@ class FlowableBindingTests {
 
         val newValue = 55
         observable.onNext(newValue)
-        assert(BR.property in propertyChangedCallback.changedPropertyIds)
+        assert("property" in propertyChangedCallback.changedPropertyIds)
     }
 
-    @Test
-    fun `is notifyPropertyChanged() called (manual field ID)`() {
-        val observable: PublishSubject<Int> = PublishSubject.create()
-        val flowable = observable.toFlowable(BackpressureStrategy.LATEST)
-
-        val viewModel = ViewModelWithBindable(flowable, fieldId = BR.property)
-
-        val propertyChangedCallback = TestPropertyChangedCallback()
-        viewModel.addOnPropertyChangedCallback(propertyChangedCallback)
-
-        val newValue = 55
-        observable.onNext(newValue)
-        assert(BR.property in propertyChangedCallback.changedPropertyIds)
-    }
-
-    class ViewModelWithBindable(flowable: Flowable<Int>, fieldId: Int? = null) : BaseViewModel(), RxViewModel {
-        @get:Bindable
-        val property by flowable.toBindable<Int>(defaultValue = 3, fieldId = fieldId)
+    class ViewModelWithBindable(flowable: Flowable<Int>) : BaseViewModel(), RxViewModel {
+                val property by flowable.toBindable<Int>(defaultValue = 3)
     }
 }

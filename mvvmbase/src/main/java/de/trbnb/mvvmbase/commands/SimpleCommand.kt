@@ -1,6 +1,5 @@
 package de.trbnb.mvvmbase.commands
 
-import androidx.databinding.Bindable
 import de.trbnb.mvvmbase.ViewModel
 
 /**
@@ -10,7 +9,6 @@ import de.trbnb.mvvmbase.ViewModel
  * @param isEnabled Has to be `true` if this Command should be enabled, otherwise `false`.
  */
 class SimpleCommand<in P, out R> internal constructor(isEnabled: Boolean = true, action: (P) -> R) : BaseCommandImpl<P, R>(action) {
-    @get:Bindable
     override var isEnabled: Boolean = isEnabled
         set(value) {
             if (field == value) return
@@ -27,9 +25,7 @@ class SimpleCommand<in P, out R> internal constructor(isEnabled: Boolean = true,
 fun <P, R> ViewModel.simpleCommand(
     isEnabled: Boolean = true,
     action: (P) -> R
-): SimpleCommand<P, R> = SimpleCommand(isEnabled, action).apply {
-    observeLifecycle(this@simpleCommand)
-}
+): SimpleCommand<P, R> = SimpleCommand(isEnabled, action)
 
 /**
  * Helper function to create a parameter-less [SimpleCommand] that clears all it's listeners automatically when

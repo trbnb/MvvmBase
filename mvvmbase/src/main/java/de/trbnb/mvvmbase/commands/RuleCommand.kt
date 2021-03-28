@@ -1,8 +1,6 @@
 package de.trbnb.mvvmbase.commands
 
-import androidx.databinding.Bindable
 import de.trbnb.mvvmbase.ViewModel
-import de.trbnb.mvvmbase.utils.resolveFieldId
 import kotlin.reflect.KProperty
 
 /**
@@ -18,7 +16,6 @@ class RuleCommand<in P, out R> internal constructor(
     action: (P) -> R,
     private val enabledRule: () -> Boolean
 ) : BaseCommandImpl<P, R>(action) {
-    @get:Bindable
     override var isEnabled: Boolean = enabledRule()
         private set(value) {
             if (field == value) return
@@ -39,26 +36,36 @@ class RuleCommand<in P, out R> internal constructor(
  * Helper function to create a [RuleCommand] that clears all it's listeners automatically when
  * [ViewModel.onUnbind] is called.
  */
-@JvmName("parameterizedRuleCommand")
+@JvmName("parameterizedRuleCommand0")
 fun <P, R> ViewModel.ruleCommand(
     action: (P) -> R,
     enabledRule: () -> Boolean,
-    dependentFieldIds: IntArray? = null
+    dependencyPropertyNames: List<String>? = null
 ): RuleCommand<P, R> = RuleCommand(action, enabledRule).apply {
-    observeLifecycle(this@ruleCommand)
-    dependsOn(this@ruleCommand, dependentFieldIds)
+    dependsOn(this@ruleCommand, dependencyPropertyNames)
 }
 
 /**
  * Helper function to create a [RuleCommand] that clears all it's listeners automatically when
  * [ViewModel.onUnbind] is called.
  */
-@JvmName("parameterizedRuleCommand")
+@JvmName("parameterizedRuleCommand1")
 fun <P, R> ViewModel.ruleCommand(
     action: (P) -> R,
     enabledRule: () -> Boolean,
-    dependentFields: List<KProperty<*>>
-): RuleCommand<P, R> = ruleCommand(action, enabledRule, dependentFields.map { it.resolveFieldId() }.toIntArray())
+    dependencyProperties: List<KProperty<*>>
+): RuleCommand<P, R> = ruleCommand(action, enabledRule, dependencyProperties.map { it.name })
+
+/**
+ * Helper function to create a parameter-less [RuleCommand] that clears all it's listeners automatically when
+ * [ViewModel.onUnbind] is called.
+ */
+@JvmName("parameterizedRuleCommand2")
+fun <R> ViewModel.ruleCommand(
+    action: (Unit) -> R,
+    enabledRule: () -> Boolean,
+    dependencyPropertyNames: List<String>? = null
+): RuleCommand<Unit, R> = ruleCommand<Unit, R>(action, enabledRule, dependencyPropertyNames)
 
 /**
  * Helper function to create a parameter-less [RuleCommand] that clears all it's listeners automatically when
@@ -67,15 +74,5 @@ fun <P, R> ViewModel.ruleCommand(
 fun <R> ViewModel.ruleCommand(
     action: (Unit) -> R,
     enabledRule: () -> Boolean,
-    dependentFieldIds: IntArray? = null
-): RuleCommand<Unit, R> = ruleCommand<Unit, R>(action, enabledRule, dependentFieldIds)
-
-/**
- * Helper function to create a parameter-less [RuleCommand] that clears all it's listeners automatically when
- * [ViewModel.onUnbind] is called.
- */
-fun <R> ViewModel.ruleCommand(
-    action: (Unit) -> R,
-    enabledRule: () -> Boolean,
-    dependentFields: List<KProperty<*>>
-): RuleCommand<Unit, R> = ruleCommand<Unit, R>(action, enabledRule, dependentFields)
+    dependencyProperties: List<KProperty<*>>
+): RuleCommand<Unit, R> = ruleCommand<Unit, R>(action, enabledRule, dependencyProperties)

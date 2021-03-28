@@ -1,13 +1,14 @@
 package de.trbnb.mvvmbase.test
 
-import androidx.databinding.Observable
+import de.trbnb.mvvmbase.OnPropertyChangedCallback
+import de.trbnb.mvvmbase.observable.ObservableContainer
 
-class TestPropertyChangedCallback : Observable.OnPropertyChangedCallback() {
-    var changedPropertyIds: List<Int> = emptyList()
+class TestPropertyChangedCallback : OnPropertyChangedCallback {
+    var changedPropertyIds: List<String> = emptyList()
         private set
 
-    override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
-        changedPropertyIds = changedPropertyIds.toMutableList().apply { add(propertyId) }
+    override fun onPropertyChanged(sender: ObservableContainer, propertyName: String) {
+        changedPropertyIds = changedPropertyIds.toMutableList().apply { add(propertyName) }
     }
 
     fun clear() {
