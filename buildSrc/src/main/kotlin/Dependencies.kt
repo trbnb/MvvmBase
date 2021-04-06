@@ -9,8 +9,8 @@ const val gradleToolsVersion = "4.1.1"
 val javaVersion = JavaVersion.VERSION_1_8
 
 object Versions {
-    val compose = "1.0.0-beta03"
-    const val dagger = "2.28-alpha"
+    const val compose = "1.0.0-beta03"
+    const val daggerHilt = "2.33-beta"
 }
 
 object Android {

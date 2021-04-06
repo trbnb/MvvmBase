@@ -11,6 +11,12 @@ typealias EventListener = Listener<Event>
  * and MVVM view components.
  */
 interface EventChannel {
+    object NoOp : EventChannel {
+        override fun invoke(event: Event) {}
+        override fun addListener(eventListener: EventListener): EventListener = {}
+        override fun removeListener(eventListener: EventListener) {}
+    }
+
     /**
      * Invokes all listeners with given [event].
      */

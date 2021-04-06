@@ -1,6 +1,8 @@
 plugins {
     id("com.android.application")
     kotlin("android")
+    kotlin("kapt")
+    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -73,8 +75,8 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3")
 
     // Dagger 2
-    /*kapt("com.google.dagger:dagger-compiler:${Versions.dagger}")
-    implementation("com.google.dagger:dagger:${Versions.dagger}")*/
+    implementation("com.google.dagger:hilt-android:${Versions.daggerHilt}")
+    kapt("com.google.dagger:hilt-compiler:${Versions.daggerHilt}")
     compileOnly("javax.annotation:jsr250-api:1.0")
 
     implementation("io.reactivex.rxjava2:rxkotlin:2.4.0")
@@ -103,7 +105,8 @@ dependencies {
     // Integration with observables
     implementation("androidx.compose.runtime:runtime-livedata:1.0.0-beta03")
     implementation("androidx.compose.runtime:runtime-rxjava2:1.0.0-beta03")
-
+    // Hilt integration
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0-alpha01")
     // UI Tests
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.0.0-beta03")
 }

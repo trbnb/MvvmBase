@@ -2,6 +2,7 @@ package de.trbnb.mvvmbase.utils
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -13,6 +14,7 @@ import de.trbnb.mvvmbase.observable.addOnPropertyChangedCallback
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 import kotlin.jvm.internal.CallableReference
+import kotlin.reflect.KMutableProperty0
 import kotlin.reflect.KProperty0
 
 /**
@@ -78,5 +80,28 @@ fun <T> KProperty0<T>.observeAsState(): State<T> {
     return state
 }
 
+@Composable
+fun <T> KMutableProperty0<T>.observeAsMutableState(): MutableState<T> {
+    return ViewModelMutableState(observeAsState(), this)
+}
+
+class ViewModelMutableState<T>(
+    private val state: State<T>,
+    private val property: KMutableProperty0<T>
+) : MutableState<T>, State<T> by state {
+    private val setter: (T) -> Unit = { value: T -> property.setter.call(value) }
+
+    override var value: T
+        get() = state.value
+        set(value) {
+            setter(value)
+        }
+
+    override fun component1(): T = value
+    override fun component2(): (T) -> Unit = setter
+}
+
 internal inline fun <reified T> Any?.cast() = this as T
 internal inline fun <reified T> Any?.castSafely() = this as? T
+
+inline val <T> MutableState<T>.setter: (T) -> Unit get() = component2()

@@ -1,4 +1,4 @@
-package de.trbnb.apptemplate.resource
+package de.trbnb.apptemplate.app.resource
 
 import androidx.annotation.StringRes
 

@@ -9,16 +9,13 @@
         android:name=".app.App"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="de.trbnb.apptemplate.main.MainActivity">
+        <activity android:name="de.trbnb.apptemplate.app.Activity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".second.SecondActivity"/>
-        <activity android:name=".list.ListActivity"/>
     </application>
 
 </manifest>
