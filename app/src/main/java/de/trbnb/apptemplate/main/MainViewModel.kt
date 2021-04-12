@@ -27,10 +27,6 @@ class MainViewModel @Inject constructor(
         }
     }.toBindable(defaultValue = "foo")
 
-    val showDialogCommand = simpleCommand { eventChannel(MainEvent.ShowDialog) }
-
-    val showSnackbarCommand = simpleCommand { eventChannel(MainEvent.ShowSnackbar("This is a sample Snackbar made with binding.")) }
-
     val showToastCommand = simpleCommand {
         eventChannel(MainEvent.ShowToast)
     }
