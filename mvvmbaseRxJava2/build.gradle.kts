@@ -2,8 +2,8 @@ plugins {
     id("com.android.library")
     kotlin("android")
     kotlin("kapt")
-    id("com.jfrog.bintray")
     `maven-publish`
+    signing
 }
 
 android {
@@ -38,24 +38,24 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = javaVersion
-        targetCompatibility = javaVersion
+        sourceCompatibility = Versions.java
+        targetCompatibility = Versions.java
     }
 
     kotlinOptions {
-        jvmTarget = javaVersion.toString()
+        jvmTarget = Versions.java.toString()
     }
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:${Versions.kotlin}")
 
     implementation(project(":mvvmbase"))
 
     implementation("io.reactivex.rxjava2:rxkotlin:2.4.0")
 
-    testAnnotationProcessor("androidx.databinding:databinding-compiler:$gradleToolsVersion")
-    kaptTest("androidx.databinding:databinding-compiler:$gradleToolsVersion")
+    testAnnotationProcessor("androidx.databinding:databinding-compiler:${Versions.gradleTools}")
+    kaptTest("androidx.databinding:databinding-compiler:${Versions.gradleTools}")
 
     testImplementation("junit:junit:4.13.1")
     androidTestImplementation("androidx.test:runner:1.3.0")
@@ -67,65 +67,17 @@ val sourcesJar = task<Jar>("sourcesJar") {
     from(android.sourceSets["main"].java.srcDirs)
 }
 
-// Bintray
-bintray.apply {
-    user = Publishing.getBintrayUser(rootProject)
-    key = Publishing.getBintrayApiKey(rootProject)
-    publish = true
-    setPublications("release")
-
-    pkg.apply {
-        repo = Publishing.groupId
-        name = Publishing.rxJava2ArtifactId
-        desc = Publishing.rxJava2Description
-        websiteUrl = Publishing.url
-        vcsUrl = Publishing.gitUrl
-        setLicenses("Apache-2.0")
-        publicDownloadNumbers = true
-        version.apply {
-            name = Publishing.versionName
-            desc = Publishing.rxJava2Description
-            gpg.apply {
-                sign = true
-                passphrase = Publishing.getBintrayGpgPassphrase(rootProject)
-            }
-        }
-    }
+signing {
+    sign(publishing.publications)
 }
 
 afterEvaluate {
     publishing {
+        repositories {
+            mavenCentralUpload(project)
+        }
         publications {
-            create<MavenPublication>("release") {
-                from(components["release"])
-
-                artifact(sourcesJar)
-
-                groupId = Publishing.groupId
-                artifactId = Publishing.rxJava2ArtifactId
-                version = Publishing.versionName
-
-                pom {
-                    packaging = "aar"
-
-                    name.set(Publishing.rxJava2ArtifactId)
-                    description.set(Publishing.rxJava2Description)
-                    url.set(Publishing.url)
-
-                    licenses {
-                        license {
-                            name.set("The Apache Software License, Version 2.0")
-                            url.set(Publishing.licenseUrl)
-                        }
-                    }
-
-                    scm {
-                        connection.set(Publishing.gitUrl)
-                        developerConnection.set(Publishing.gitUrl)
-                        url.set(Publishing.url)
-                    }
-                }
-            }
+            create(Publication.RX_JAVA_2, this@afterEvaluate)
         }
     }
 }

@@ -2,8 +2,8 @@ plugins {
     id("com.android.library")
     kotlin("android")
     kotlin("kapt")
-    id("com.jfrog.bintray")
     `maven-publish`
+    signing
 }
 
 android {
@@ -30,17 +30,17 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = javaVersion
-        targetCompatibility = javaVersion
+        sourceCompatibility = Versions.java
+        targetCompatibility = Versions.java
     }
 
     kotlinOptions {
-        jvmTarget = javaVersion.toString()
+        jvmTarget = Versions.java.toString()
     }
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:${Versions.kotlin}")
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:2.3.0")
@@ -60,34 +60,24 @@ val sourcesJar = task<Jar>("sourcesJar") {
     from(android.sourceSets["main"].java.srcDirs)
 }
 
-// Bintray
-bintray.apply {
-    user = Publishing.getBintrayUser(rootProject)
-    key = Publishing.getBintrayApiKey(rootProject)
-    publish = true
-    setPublications("release")
-
-    pkg.apply {
-        repo = Publishing.groupId
-        name = Publishing.conductorArtifactId
-        desc = Publishing.conductorDescription
-        websiteUrl = Publishing.url
-        vcsUrl = Publishing.gitUrl
-        setLicenses("Apache-2.0")
-        publicDownloadNumbers = true
-        version.apply {
-            name = Publishing.versionName
-            desc = Publishing.conductorDescription
-            gpg.apply {
-                sign = true
-                passphrase = Publishing.getBintrayGpgPassphrase(rootProject)
-            }
-        }
-    }
+signing {
+    sign(publishing.publications)
 }
 
 afterEvaluate {
     publishing {
+        repositories {
+            maven {
+                val releaseRepo = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+                val snapshotRepo = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+                name = "Sonatype"
+                setUrl(releaseRepo)
+                credentials {
+                    username = Publishing.getOssrhUsername(rootProject)
+                    password = Publishing.getOssrhPassword(rootProject)
+                }
+            }
+        }
         publications {
             create<MavenPublication>("release") {
                 from(components["release"])
@@ -104,6 +94,15 @@ afterEvaluate {
                     name.set(Publishing.conductorArtifactId)
                     description.set(Publishing.conductorDescription)
                     url.set(Publishing.url)
+
+                    developers {
+                        developer {
+                            id.set("trbnb")
+                            name.set("Thorben Buchta")
+                            email.set("thorbenbuchta@gmail.com")
+                            url.set("https://www.trbnb.de")
+                        }
+                    }
 
                     licenses {
                         license {

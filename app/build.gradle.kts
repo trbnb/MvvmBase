@@ -33,12 +33,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = javaVersion
-        targetCompatibility = javaVersion
+        sourceCompatibility = Versions.java
+        targetCompatibility = Versions.java
     }
 
     kotlinOptions {
-        jvmTarget = javaVersion.toString()
+        jvmTarget = Versions.java.toString()
     }
 
     buildFeatures {
@@ -73,7 +73,7 @@ dependencies {
     implementation("androidx.navigation:navigation-ui-ktx:2.2.2")
 
     // Kotlin
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:${Versions.kotlin}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.7")
 
     // Dagger 2
