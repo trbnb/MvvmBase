@@ -59,19 +59,19 @@ android {
 dependencies {
     implementation(fileTree("dir" to "libs", "include" to listOf("*.jar")))
 
-    implementation(project(":mvvmbase"))
-    implementation(project(":mvvmbaseRxJava2"))
-    implementation(project(":mvvmbaseRxJava3"))
+    implementation(project(":core"))
+    implementation(project(":rxjava2"))
+    implementation(project(":rxjava3"))
 
     // Support library
     implementation("androidx.appcompat:appcompat:1.2.0")
     implementation("com.google.android.material:material:1.3.0")
-    implementation("androidx.recyclerview:recyclerview:1.1.0")
+    implementation("androidx.recyclerview:recyclerview:1.2.0")
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1")
     implementation("androidx.fragment:fragment-ktx:1.3.2")
-    implementation("androidx.navigation:navigation-fragment-ktx:2.3.4")
-    implementation("androidx.navigation:navigation-ui-ktx:2.3.4")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.3.5")
+    implementation("androidx.navigation:navigation-ui-ktx:2.3.5")
 
     // Kotlin
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${Versions.kotlin}")
@@ -87,31 +87,31 @@ dependencies {
 
 
     implementation("androidx.compose.ui:ui:${Versions.compose}")
-    implementation("androidx.activity:activity-compose:1.3.0-alpha05")
+    implementation("androidx.activity:activity-compose:1.3.0-alpha06")
     implementation("androidx.compose.material:material:${Versions.compose}")
     implementation("androidx.compose.ui:ui-tooling:${Versions.compose}")
 
-    implementation("androidx.compose.ui:ui:1.0.0-beta03")
+    implementation("androidx.compose.ui:ui:${Versions.compose}")
     // Tooling support (Previews, etc.)
-    implementation("androidx.compose.ui:ui-tooling:1.0.0-beta03")
+    implementation("androidx.compose.ui:ui-tooling:${Versions.compose}")
     // Foundation (Border, Background, Box, Image, Scroll, shapes, animations, etc.)
-    implementation("androidx.compose.foundation:foundation:1.0.0-beta03")
+    implementation("androidx.compose.foundation:foundation:${Versions.compose}")
     // Material Design
-    implementation("androidx.compose.material:material:1.0.0-beta03")
+    implementation("androidx.compose.material:material:${Versions.compose}")
     // Material design icons
-    implementation("androidx.compose.material:material-icons-core:1.0.0-beta03")
-    implementation("androidx.compose.material:material-icons-extended:1.0.0-beta03")
+    implementation("androidx.compose.material:material-icons-core:${Versions.compose}")
+    implementation("androidx.compose.material:material-icons-extended:${Versions.compose}")
     // Integration with activities
-    implementation("androidx.activity:activity-compose:1.3.0-alpha05")
+    implementation("androidx.activity:activity-compose:1.3.0-alpha06")
     // Integration with ViewModels
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha03")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha04")
     // Integration with observables
-    implementation("androidx.compose.runtime:runtime-livedata:1.0.0-beta03")
-    implementation("androidx.compose.runtime:runtime-rxjava2:1.0.0-beta03")
+    implementation("androidx.compose.runtime:runtime-livedata:${Versions.compose}")
+    implementation("androidx.compose.runtime:runtime-rxjava2:${Versions.compose}")
     // Hilt integration
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0-alpha01")
     // UI Tests
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.0.0-beta03")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:${Versions.compose}")
 }
 
 repositories {

@@ -38,9 +38,9 @@ android {
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${Versions.kotlin}")
 
-    implementation(project(":mvvmbase"))
+    implementation(project(":core"))
 
-    implementation("io.reactivex.rxjava3:rxkotlin:3.0.0")
+    implementation("io.reactivex.rxjava2:rxkotlin:2.4.0")
 
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.6.2")
     androidTestImplementation("androidx.test:runner:1.3.0")
@@ -62,7 +62,7 @@ afterEvaluate {
             mavenCentralUpload(project)
         }
         publications {
-            create(Publication.RX_JAVA_3, this@afterEvaluate)
+            create(Publication.RX_JAVA_2, this@afterEvaluate)
         }
     }
 }
