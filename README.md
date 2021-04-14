@@ -3,26 +3,26 @@ MvvmBase is a library to help work with data binding and the MVVM pattern on And
 
 # Setup
 
-MvvmBase is available via JCenter. To use it put this in your `build.gradle`:
+MvvmBase is available via Maven Central. To use it put this in your `build.gradle`:
 
 ```gradle
 dependencies {
     def mvvmbaseVersion = "2.1.0"
 
     [...]
-    implementation de.trbnb.mvvmbase:mvvmbase:$mvvmbaseVersion"
+    implementation de.trbnb:mvvmbase-core:$mvvmbaseVersion"
 
     // RxJava 2 extensions
-    implementation de.trbnb.mvvmbase:mvvmbaseRxJava2:$mvvmbaseVersion"
+    implementation de.trbnb:mvvmbase-rxjava2:$mvvmbaseVersion"
     
     // RxJava 3 extensions
-    implementation "de.trbnb.mvvmbase:mvvmbaseRxJava3:$mvvmbaseVersion"
+    implementation "de.trbnb:mvvmbase-rxjava3:$mvvmbaseVersion"
 
     // Coroutines extensions
-    implementation "de.trbnb.mvvmbase:mvvmbaseCoroutines:$mvvmbaseVersion"
+    implementation "de.trbnb:mvvmbase-coroutines:$mvvmbaseVersion"
 
     // Conductor support
-    implementation "de.trbnb.mvvmbase:mvvmbaseConductor:$mvvmbaseVersion"
+    implementation "de.trbnb:mvvmbase-conductor:$mvvmbaseVersion"
 }
 ```
 

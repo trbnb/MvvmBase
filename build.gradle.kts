@@ -6,8 +6,8 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath(group = "com.android.tools.build", name = "gradle", version = "7.0.0-alpha12")
-        classpath(kotlin("gradle-plugin", version = kotlinVersion))
+        classpath(group = "com.android.tools.build", name = "gradle", version = Versions.gradleTools)
+        classpath(kotlin("gradle-plugin", version = Versions.kotlin))
         classpath("com.google.dagger:hilt-android-gradle-plugin:${Versions.daggerHilt}")
 
         // NOTE: Do not place your application dependencies here; they belong
@@ -16,8 +16,7 @@ buildscript {
 }
 
 plugins {
-    id("com.jfrog.bintray") version "1.8.5" // jCenter
-    kotlin("jvm") version kotlinVersion
+    kotlin("jvm") version Versions.kotlin
     id("io.gitlab.arturbosch.detekt") version "1.9.1"
     id("org.jlleitschuh.gradle.ktlint") version "9.2.1"
 }
@@ -53,3 +52,5 @@ allprojects {
         jcenter()
     }
 }
+
+Publishing.setupSigning(project)

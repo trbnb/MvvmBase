@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "de.trbnb.apptemplate"
-        minSdkVersion(21)
+        minSdkVersion(Android.minSdk)
         targetSdkVersion(Android.compileSdk)
         versionCode = 1
         versionName = "1.0"
@@ -34,16 +34,19 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = javaVersion
-        targetCompatibility = javaVersion
+        sourceCompatibility = Versions.java
+        targetCompatibility = Versions.java
     }
+
     kotlinOptions {
-        jvmTarget = "1.8"
         useIR = true
+        jvmTarget = Versions.java.toString()
     }
+
     buildFeatures {
         compose = true
     }
+
     composeOptions {
         kotlinCompilerExtensionVersion = Versions.compose
     }
@@ -71,7 +74,7 @@ dependencies {
     implementation("androidx.navigation:navigation-ui-ktx:2.3.4")
 
     // Kotlin
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:${Versions.kotlin}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3")
 
     // Dagger 2

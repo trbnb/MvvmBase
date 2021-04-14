@@ -1,8 +1,9 @@
 plugins {
     id("com.android.library")
     kotlin("android")
-    id("com.jfrog.bintray")
+    kotlin("kapt")
     `maven-publish`
+    signing
 }
 
 android {
@@ -26,17 +27,19 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = javaVersion
-        targetCompatibility = javaVersion
+        sourceCompatibility = Versions.java
+        targetCompatibility = Versions.java
     }
 
     kotlinOptions {
-        jvmTarget = javaVersion.toString()
+        jvmTarget = Versions.java.toString()
         useIR = true
     }
+
     buildFeatures {
         compose = true
     }
+
     composeOptions {
         kotlinCompilerExtensionVersion = Versions.compose
     }
@@ -60,8 +63,8 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.3.0")
 
     // Kotlin
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
-    implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:${Versions.kotlin}")
+    implementation("org.jetbrains.kotlin:kotlin-reflect:${Versions.kotlin}")
 
     // Lifecycle architecture components
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1")
@@ -81,65 +84,17 @@ val sourcesJar = task<Jar>("sourcesJar") {
     from(android.sourceSets["main"].java.srcDirs)
 }
 
-// Bintray
-bintray.apply {
-    user = Publishing.getBintrayUser(rootProject)
-    key = Publishing.getBintrayApiKey(rootProject)
-    publish = true
-    setPublications("release")
-
-    pkg.apply {
-        repo = Publishing.groupId
-        name = Publishing.mainArtifactId
-        desc = Publishing.mainDescription
-        websiteUrl = Publishing.url
-        vcsUrl = Publishing.gitUrl
-        setLicenses("Apache-2.0")
-        publicDownloadNumbers = true
-        version.apply {
-            name = Publishing.versionName
-            desc = Publishing.mainDescription
-            gpg.apply {
-                sign = true
-                passphrase = Publishing.getBintrayGpgPassphrase(rootProject)
-            }
-        }
-    }
+signing {
+    sign(publishing.publications)
 }
 
 afterEvaluate {
     publishing {
+        repositories {
+            mavenCentralUpload(project)
+        }
         publications {
-            create<MavenPublication>("release") {
-                from(components["release"])
-
-                artifact(sourcesJar)
-
-                groupId = Publishing.groupId
-                artifactId = Publishing.mainArtifactId
-                version = Publishing.versionName
-
-                pom {
-                    packaging = "aar"
-
-                    name.set(Publishing.mainArtifactId)
-                    description.set(Publishing.mainDescription)
-                    url.set(Publishing.url)
-
-                    licenses {
-                        license {
-                            name.set("The Apache Software License, Version 2.0")
-                            url.set(Publishing.licenseUrl)
-                        }
-                    }
-
-                    scm {
-                        connection.set(Publishing.gitUrl)
-                        developerConnection.set(Publishing.gitUrl)
-                        url.set(Publishing.url)
-                    }
-                }
-            }
+            create(Publication.CORE, this@afterEvaluate)
         }
     }
 }

@@ -1,8 +1,9 @@
 plugins {
     id("com.android.library")
     kotlin("android")
-    id("com.jfrog.bintray")
+    kotlin("kapt")
     `maven-publish`
+    signing
 }
 
 android {
@@ -25,17 +26,17 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = javaVersion
-        targetCompatibility = javaVersion
+        sourceCompatibility = Versions.java
+        targetCompatibility = Versions.java
     }
 
     kotlinOptions {
-        jvmTarget = javaVersion.toString()
+        jvmTarget = Versions.java.toString()
     }
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:${Versions.kotlin}")
 
     implementation(project(":mvvmbase"))
 
@@ -51,65 +52,17 @@ val sourcesJar = task<Jar>("sourcesJar") {
     from(android.sourceSets["main"].java.srcDirs)
 }
 
-// Bintray
-bintray.apply {
-    user = Publishing.getBintrayUser(rootProject)
-    key = Publishing.getBintrayApiKey(rootProject)
-    publish = true
-    setPublications("release")
-
-    pkg.apply {
-        repo = Publishing.groupId
-        name = Publishing.rxJava3ArtifactId
-        desc = Publishing.rxJava3Description
-        websiteUrl = Publishing.url
-        vcsUrl = Publishing.gitUrl
-        setLicenses("Apache-2.0")
-        publicDownloadNumbers = true
-        version.apply {
-            name = Publishing.versionName
-            desc = Publishing.rxJava3Description
-            gpg.apply {
-                sign = true
-                passphrase = Publishing.getBintrayGpgPassphrase(rootProject)
-            }
-        }
-    }
+signing {
+    sign(publishing.publications)
 }
 
 afterEvaluate {
     publishing {
+        repositories {
+            mavenCentralUpload(project)
+        }
         publications {
-            create<MavenPublication>("release") {
-                from(components["release"])
-
-                artifact(sourcesJar)
-
-                groupId = Publishing.groupId
-                artifactId = Publishing.rxJava3ArtifactId
-                version = Publishing.versionName
-
-                pom {
-                    packaging = "aar"
-
-                    name.set(Publishing.rxJava3ArtifactId)
-                    description.set(Publishing.rxJava3Description)
-                    url.set(Publishing.url)
-
-                    licenses {
-                        license {
-                            name.set("The Apache Software License, Version 2.0")
-                            url.set(Publishing.licenseUrl)
-                        }
-                    }
-
-                    scm {
-                        connection.set(Publishing.gitUrl)
-                        developerConnection.set(Publishing.gitUrl)
-                        url.set(Publishing.url)
-                    }
-                }
-            }
+            create(Publication.RX_JAVA_3, this@afterEvaluate)
         }
     }
 }
