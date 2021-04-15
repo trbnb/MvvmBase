@@ -1,4 +1,4 @@
-package de.trbnb.apptemplate.main
+package de.trbnb.mvvmbase.sample.main
 
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
@@ -36,7 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.navigate
-import de.trbnb.apptemplate.app.AppTheme
+import de.trbnb.mvvmbase.sample.app.AppTheme
 import de.trbnb.mvvmbase.commands.Command
 import de.trbnb.mvvmbase.commands.invoke
 import de.trbnb.mvvmbase.commands.invokeSafely

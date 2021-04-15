@@ -1,4 +1,4 @@
-package de.trbnb.apptemplate.app
+package de.trbnb.mvvmbase.sample.app
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp

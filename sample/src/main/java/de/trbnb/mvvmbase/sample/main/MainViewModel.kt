@@ -1,4 +1,4 @@
-package de.trbnb.apptemplate.main
+package de.trbnb.mvvmbase.sample.main
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope

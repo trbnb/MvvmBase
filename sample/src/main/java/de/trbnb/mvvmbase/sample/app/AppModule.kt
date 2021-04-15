@@ -1,11 +1,11 @@
-package de.trbnb.apptemplate.app
+package de.trbnb.mvvmbase.sample.app
 
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import de.trbnb.apptemplate.app.resource.ResourceProvider
-import de.trbnb.apptemplate.app.resource.ResourceProviderImpl
+import de.trbnb.mvvmbase.sample.app.resource.ResourceProvider
+import de.trbnb.mvvmbase.sample.app.resource.ResourceProviderImpl
 import javax.inject.Singleton
 
 @Module

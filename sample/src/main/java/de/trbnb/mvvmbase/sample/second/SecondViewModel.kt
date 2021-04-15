@@ -1,9 +1,9 @@
-package de.trbnb.apptemplate.second
+package de.trbnb.mvvmbase.sample.second
 
 import androidx.lifecycle.SavedStateHandle
 import dagger.hilt.android.lifecycle.HiltViewModel
-import de.trbnb.apptemplate.R
-import de.trbnb.apptemplate.app.resource.ResourceProvider
+import de.trbnb.mvvmbase.sample.R
+import de.trbnb.mvvmbase.sample.app.resource.ResourceProvider
 import de.trbnb.mvvmbase.bindableproperty.bindable
 import de.trbnb.mvvmbase.bindableproperty.bindableInt
 import de.trbnb.mvvmbase.bindableproperty.distinct

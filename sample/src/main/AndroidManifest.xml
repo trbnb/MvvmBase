@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="de.trbnb.apptemplate">
+    package="de.trbnb.mvvmbase.sample">
 
     <application
         android:allowBackup="true"
@@ -9,7 +9,7 @@
         android:name=".app.App"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="de.trbnb.apptemplate.app.Activity">
+        <activity android:name=".app.Activity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

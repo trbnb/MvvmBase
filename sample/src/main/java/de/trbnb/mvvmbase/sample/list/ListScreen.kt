@@ -1,4 +1,4 @@
-package de.trbnb.apptemplate.list
+package de.trbnb.mvvmbase.sample.list
 
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -8,7 +8,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
-import de.trbnb.apptemplate.app.AppTheme
+import de.trbnb.mvvmbase.sample.app.AppTheme
 import de.trbnb.mvvmbase.utils.observeAsState
 
 @Composable

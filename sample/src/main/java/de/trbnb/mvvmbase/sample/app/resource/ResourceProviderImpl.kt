@@ -1,4 +1,4 @@
-package de.trbnb.apptemplate.app.resource
+package de.trbnb.mvvmbase.sample.app.resource
 
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext

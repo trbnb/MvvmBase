@@ -1,4 +1,4 @@
-package de.trbnb.apptemplate.main
+package de.trbnb.mvvmbase.sample.main
 
 import de.trbnb.mvvmbase.events.Event
 

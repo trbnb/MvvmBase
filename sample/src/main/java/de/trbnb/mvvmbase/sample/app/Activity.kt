@@ -1,4 +1,4 @@
-package de.trbnb.apptemplate.app
+package de.trbnb.mvvmbase.sample.app
 
 import android.os.Bundle
 import androidx.activity.compose.setContent

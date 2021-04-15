@@ -1,4 +1,4 @@
-package de.trbnb.apptemplate.list
+package de.trbnb.mvvmbase.sample.list
 
 import de.trbnb.mvvmbase.BaseViewModel
 import de.trbnb.mvvmbase.bindableproperty.bindable

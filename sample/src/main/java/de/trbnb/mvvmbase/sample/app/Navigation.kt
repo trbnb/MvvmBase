@@ -1,12 +1,12 @@
-package de.trbnb.apptemplate.app
+package de.trbnb.mvvmbase.sample.app
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import de.trbnb.apptemplate.list.ListScreen
-import de.trbnb.apptemplate.main.MainScreen
-import de.trbnb.apptemplate.second.SecondScreen
+import de.trbnb.mvvmbase.sample.list.ListScreen
+import de.trbnb.mvvmbase.sample.main.MainScreen
+import de.trbnb.mvvmbase.sample.second.SecondScreen
 
 @Composable
 fun Navigation() {

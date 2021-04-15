@@ -1,4 +1,4 @@
-package de.trbnb.apptemplate.second
+package de.trbnb.mvvmbase.sample.second
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
