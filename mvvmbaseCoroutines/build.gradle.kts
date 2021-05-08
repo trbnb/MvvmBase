@@ -52,9 +52,9 @@ dependencies {
 
     implementation(project(":mvvmbase"))
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.2")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.2")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.3")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1")
 
     testAnnotationProcessor("androidx.databinding:databinding-compiler:${Versions.gradleTools}")
     kaptTest("androidx.databinding:databinding-compiler:${Versions.gradleTools}")
