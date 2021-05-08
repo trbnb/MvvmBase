@@ -74,7 +74,5 @@ class MainActivity : MvvmActivity<MainViewModel>(R.layout.activity_main) {
         }
     }
 
-    override fun getDefaultViewModelProviderFactory() = viewModelProviderFactory { handle ->
-        MainViewModel(handle, ResourceProviderImpl(this@MainActivity))
-    }
+    override fun getDefaultViewModelProviderFactory() = viewModelProviderFactory(::MainViewModel)
 }

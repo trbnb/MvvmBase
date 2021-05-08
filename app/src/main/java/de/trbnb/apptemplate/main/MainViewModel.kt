@@ -14,8 +14,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class MainViewModel(
-    savedStateHandle: SavedStateHandle,
-    resourceProvider: ResourceProvider
+    savedStateHandle: SavedStateHandle
 ) : BaseStateSavingViewModel(savedStateHandle), RxViewModel {
     @get:Bindable
     var textInput by bindable("")
