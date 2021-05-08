@@ -15,20 +15,10 @@ android {
         versionName = "1.0"
     }
 
-    signingConfigs {
-        register("releaseConfig") {
-            keyAlias = "androiddebugkey"
-            keyPassword = "android"
-            storeFile = file("/Users/thorben/.android/debug.keystore")
-            storePassword = "android"
-        }
-    }
-
     buildTypes {
         named("release").configure {
             isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
-            signingConfig = signingConfigs.getByName("releaseConfig")
         }
     }
 
