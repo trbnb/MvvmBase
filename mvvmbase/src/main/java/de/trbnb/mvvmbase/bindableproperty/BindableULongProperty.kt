@@ -18,7 +18,6 @@ import kotlin.reflect.KProperty
  * @param validate [BindablePropertyBase.validate]
  * @param beforeSet [BindablePropertyBase.beforeSet]
  */
-@ExperimentalUnsignedTypes
 class BindableULongProperty private constructor(
     viewModel: ViewModel,
     private val fieldId: Int,
@@ -94,7 +93,6 @@ class BindableULongProperty private constructor(
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  * @param stateSaveOption Specifies if the state of the property should be saved and with which key.
  */
-@ExperimentalUnsignedTypes
 fun ViewModel.bindableULong(
     defaultValue: ULong = 0.toULong(),
     fieldId: Int? = null,

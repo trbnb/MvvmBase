@@ -48,7 +48,7 @@ fun KProperty<*>.resolveFieldId(): Int = MvvmBase.lookupFieldIdByName(brFieldNam
 internal fun KProperty<*>.brFieldName(): String {
     val isBoolean = returnType.classifier == Boolean::class && !returnType.isMarkedNullable
     if (name.startsWith("is") && Character.isJavaIdentifierStart(name[2]) && isBoolean) {
-        return name[2].toLowerCase() + name.substring(3)
+        return name[2].lowercaseChar() + name.substring(3)
     }
 
     return name
