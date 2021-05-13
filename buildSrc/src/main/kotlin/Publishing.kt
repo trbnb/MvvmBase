@@ -7,8 +7,8 @@ import org.gradle.kotlin.dsl.get
 import java.nio.file.Paths
 
 object Publishing {
-    const val versionName = "2.1.0"
-    const val versionCode = 42
+    const val versionName = "2.1.1"
+    const val versionCode = 43
 
     const val url = "https://github.com/trbnb/MvvmBase"
     const val gitUrl = "https://github.com/trbnb/MvvmBase.git"
