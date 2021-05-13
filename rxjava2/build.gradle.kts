@@ -7,13 +7,11 @@ plugins {
 }
 
 android {
-    compileSdkVersion(Android.compileSdk)
+    compileSdk = Android.compileSdk
 
     defaultConfig {
-        minSdkVersion(Android.minSdk)
-        targetSdkVersion(Android.compileSdk)
-        versionCode = Publishing.versionCode
-        versionName = Publishing.versionName
+        minSdk = Android.minSdk
+        targetSdk = Android.compileSdk
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -49,7 +47,7 @@ dependencies {
 
 val sourcesJar = task<Jar>("sourcesJar") {
     archiveClassifier.set("sources")
-    from(android.sourceSets["main"].java.srcDirs)
+    from((android.sourceSets["main"].java as com.android.build.gradle.internal.api.DefaultAndroidSourceDirectorySet).srcDirs)
 }
 
 signing {

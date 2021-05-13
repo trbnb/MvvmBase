@@ -6,12 +6,12 @@ plugins {
 }
 
 android {
-    compileSdkVersion(Android.compileSdk)
+    compileSdk = Android.compileSdk
 
     defaultConfig {
         applicationId = "de.trbnb.apptemplate"
-        minSdkVersion(Android.minSdk)
-        targetSdkVersion(Android.compileSdk)
+        minSdk = Android.minSdk
+        targetSdk = Android.compileSdk
         versionCode = 1
         versionName = "1.0"
     }

@@ -7,13 +7,11 @@ plugins {
 }
 
 android {
-    compileSdkVersion(Android.compileSdk)
+    compileSdk = Android.compileSdk
 
     defaultConfig {
-        minSdkVersion(Android.minSdk)
-        targetSdkVersion(Android.compileSdk)
-        versionCode = Publishing.versionCode
-        versionName = Publishing.versionName
+        minSdk = Android.minSdk
+        targetSdk = Android.compileSdk
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFile("proguard-rules.pro")
@@ -51,8 +49,8 @@ dependencies {
     // Support library
     implementation("androidx.appcompat:appcompat:1.2.0")
     implementation("com.google.android.material:material:1.3.0")
-    implementation("androidx.fragment:fragment-ktx:1.3.2")
-    implementation("androidx.recyclerview:recyclerview:1.1.0")
+    implementation("androidx.fragment:fragment-ktx:1.3.3")
+    implementation("androidx.recyclerview:recyclerview:1.2.0")
 
     implementation("androidx.compose.runtime:runtime:${Versions.compose}")
     implementation("androidx.compose.ui:ui:${Versions.compose}")
@@ -81,7 +79,7 @@ repositories {
 
 val sourcesJar = task<Jar>("sourcesJar") {
     archiveClassifier.set("sources")
-    from(android.sourceSets["main"].java.srcDirs)
+    from((android.sourceSets["main"].java as com.android.build.gradle.internal.api.DefaultAndroidSourceDirectorySet).srcDirs)
 }
 
 signing {
