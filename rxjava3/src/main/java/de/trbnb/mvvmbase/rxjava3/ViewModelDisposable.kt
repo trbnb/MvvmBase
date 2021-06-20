@@ -1,6 +1,6 @@
 package de.trbnb.mvvmbase.rxjava3
 
-import de.trbnb.mvvmbase.ViewModel
+import de.trbnb.mvvmbase.databinding.ViewModel
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import java.io.Closeable
 

@@ -6,8 +6,6 @@ import androidx.lifecycle.LifecycleOwner
 import de.trbnb.mvvmbase.OnPropertyChangedCallback
 import kotlin.reflect.KProperty
 
-fun ObservableContainer.notifyPropertyChanged(property: KProperty<*>) = notifyPropertyChanged(property.name)
-
 /**
  * Adds an [OnPropertyChangedCallback] and removes it when the lifecycle of [lifecycleOwner] is destroyed.
  */

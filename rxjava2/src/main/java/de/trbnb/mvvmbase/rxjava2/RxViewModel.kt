@@ -1,6 +1,6 @@
 package de.trbnb.mvvmbase.rxjava2
 
-import de.trbnb.mvvmbase.ViewModel
+import de.trbnb.mvvmbase.databinding.ViewModel
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Maybe

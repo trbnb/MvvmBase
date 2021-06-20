@@ -1,11 +1,12 @@
 package de.trbnb.mvvmbase.coroutines.flow
 
-import de.trbnb.mvvmbase.ViewModel
-import de.trbnb.mvvmbase.bindableproperty.AfterSet
-import de.trbnb.mvvmbase.bindableproperty.BeforeSet
-import de.trbnb.mvvmbase.bindableproperty.BindableProperty
-import de.trbnb.mvvmbase.bindableproperty.BindablePropertyBase
-import de.trbnb.mvvmbase.bindableproperty.Validate
+import de.trbnb.mvvmbase.databinding.ViewModel
+import de.trbnb.mvvmbase.databinding.bindableproperty.AfterSet
+import de.trbnb.mvvmbase.databinding.bindableproperty.BeforeSet
+import de.trbnb.mvvmbase.databinding.bindableproperty.BindableProperty
+import de.trbnb.mvvmbase.databinding.bindableproperty.BindablePropertyBase
+import de.trbnb.mvvmbase.databinding.bindableproperty.Validate
+import de.trbnb.mvvmbase.databinding.utils.resolveFieldId
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -23,7 +24,7 @@ import kotlin.reflect.KProperty
 @ExperimentalCoroutinesApi
 class FlowBindable<T> private constructor(
     private val viewModel: ViewModel,
-    private val propertyName: String,
+    private val fieldId: Int,
     defaultValue: T,
     flow: Flow<T>,
     onException: OnException<T>?,
@@ -45,7 +46,7 @@ class FlowBindable<T> private constructor(
                 else -> validate(oldValue, value)
             }
 
-            viewModel.notifyPropertyChanged(propertyName)
+            viewModel.notifyPropertyChanged(fieldId)
             afterSet?.invoke(oldValue, field)
         }
 
@@ -70,11 +71,11 @@ class FlowBindable<T> private constructor(
         private val onCompletion: OnCompletion<T>?,
         private val coroutineScope: CoroutineScope,
         private val defaultValue: T
-    ) : BindablePropertyBase.Provider<T>() {
+    ) : BindablePropertyBase.Provider<ViewModel, T>() {
         override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>) = FlowBindable(
             viewModel = thisRef,
             flow = flow,
-            propertyName = property.name,
+            fieldId = property.resolveFieldId(),
             onException = onException,
             onCompletion = onCompletion,
             coroutineScope = coroutineScope,

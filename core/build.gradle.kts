@@ -31,7 +31,6 @@ android {
 
     kotlinOptions {
         jvmTarget = Versions.java.toString()
-        useIR = true
     }
 
     buildFeatures {

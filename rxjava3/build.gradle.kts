@@ -36,7 +36,7 @@ android {
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${Versions.kotlin}")
 
-    implementation(project(":core"))
+    implementation(project(":databinding"))
 
     implementation("io.reactivex.rxjava3:rxkotlin:3.0.0")
 

@@ -1,6 +1,6 @@
 package de.trbnb.mvvmbase.test
 
-import de.trbnb.mvvmbase.utils.findGenericSuperclass
+import de.trbnb.mvvmbase.databinding.utils.findGenericSuperclass
 import org.junit.jupiter.api.Test
 
 class ReflectionUtilsTests {

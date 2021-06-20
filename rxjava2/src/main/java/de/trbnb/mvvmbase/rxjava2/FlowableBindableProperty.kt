@@ -1,10 +1,11 @@
 package de.trbnb.mvvmbase.rxjava2
 
-import de.trbnb.mvvmbase.ViewModel
-import de.trbnb.mvvmbase.bindableproperty.AfterSet
-import de.trbnb.mvvmbase.bindableproperty.BeforeSet
-import de.trbnb.mvvmbase.bindableproperty.BindablePropertyBase
-import de.trbnb.mvvmbase.bindableproperty.Validate
+import de.trbnb.mvvmbase.databinding.ViewModel
+import de.trbnb.mvvmbase.databinding.bindableproperty.AfterSet
+import de.trbnb.mvvmbase.databinding.bindableproperty.BeforeSet
+import de.trbnb.mvvmbase.databinding.bindableproperty.BindablePropertyBase
+import de.trbnb.mvvmbase.databinding.bindableproperty.Validate
+import de.trbnb.mvvmbase.databinding.utils.resolveFieldId
 import io.reactivex.Flowable
 import io.reactivex.rxkotlin.plusAssign
 import kotlin.reflect.KProperty
@@ -15,7 +16,7 @@ import kotlin.reflect.KProperty
 class FlowableBindableProperty<T> private constructor(
     viewModel: ViewModel,
     defaultValue: T,
-    propertyName: String,
+    fieldId: Int,
     flowable: Flowable<out T>,
     onError: (Throwable) -> Unit,
     onComplete: () -> Unit,
@@ -23,7 +24,7 @@ class FlowableBindableProperty<T> private constructor(
     afterSet: AfterSet<T>?,
     beforeSet: BeforeSet<T>?,
     validate: Validate<T>?
-) : RxBindablePropertyBase<T>(viewModel, defaultValue, propertyName, distinct, afterSet, beforeSet, validate) {
+) : RxBindablePropertyBase<T>(viewModel, defaultValue, fieldId, distinct, afterSet, beforeSet, validate) {
     init {
         viewModel.compositeDisposable += flowable.subscribe({ value = it }, onError, onComplete)
     }
@@ -39,10 +40,10 @@ class FlowableBindableProperty<T> private constructor(
         private val flowable: Flowable<out T>,
         private val onError: (Throwable) -> Unit,
         private val onComplete: () -> Unit
-    ) : BindablePropertyBase.Provider<T>() {
+    ) : BindablePropertyBase.Provider<ViewModel, T>() {
         override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>) = FlowableBindableProperty(
             viewModel = thisRef,
-            propertyName = property.name,
+            fieldId = property.resolveFieldId(),
             defaultValue = defaultValue,
             flowable = flowable,
             onError = onError,

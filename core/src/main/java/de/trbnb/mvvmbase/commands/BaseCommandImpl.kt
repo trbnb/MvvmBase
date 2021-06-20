@@ -2,7 +2,6 @@ package de.trbnb.mvvmbase.commands
 
 import de.trbnb.mvvmbase.OnPropertyChangedCallback
 import de.trbnb.mvvmbase.observable.PropertyChangeRegistry
-import de.trbnb.mvvmbase.observable.notifyPropertyChanged
 
 /**
  * Base class for standard [Command] implementations.

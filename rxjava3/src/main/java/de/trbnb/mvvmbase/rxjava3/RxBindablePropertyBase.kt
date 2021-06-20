@@ -1,10 +1,10 @@
 package de.trbnb.mvvmbase.rxjava3
 
-import de.trbnb.mvvmbase.ViewModel
-import de.trbnb.mvvmbase.bindableproperty.AfterSet
-import de.trbnb.mvvmbase.bindableproperty.BeforeSet
-import de.trbnb.mvvmbase.bindableproperty.BindablePropertyBase
-import de.trbnb.mvvmbase.bindableproperty.Validate
+import de.trbnb.mvvmbase.databinding.ViewModel
+import de.trbnb.mvvmbase.databinding.bindableproperty.AfterSet
+import de.trbnb.mvvmbase.databinding.bindableproperty.BeforeSet
+import de.trbnb.mvvmbase.databinding.bindableproperty.BindablePropertyBase
+import de.trbnb.mvvmbase.databinding.bindableproperty.Validate
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
@@ -14,7 +14,7 @@ import kotlin.reflect.KProperty
 open class RxBindablePropertyBase<T> protected constructor(
     private val viewModel: ViewModel,
     defaultValue: T,
-    private var propertyName: String,
+    private val fieldId: Int,
     distinct: Boolean,
     afterSet: AfterSet<T>?,
     beforeSet: BeforeSet<T>?,
@@ -31,7 +31,7 @@ open class RxBindablePropertyBase<T> protected constructor(
                 else -> validate(oldValue, value)
             }
 
-            viewModel.notifyPropertyChanged(propertyName)
+            viewModel.notifyPropertyChanged(fieldId)
             afterSet?.invoke(oldValue, field)
         }
 

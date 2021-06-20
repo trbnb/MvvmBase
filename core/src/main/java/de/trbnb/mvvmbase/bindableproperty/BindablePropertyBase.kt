@@ -1,6 +1,7 @@
 package de.trbnb.mvvmbase.bindableproperty
 
 import de.trbnb.mvvmbase.ViewModel
+import kotlin.properties.PropertyDelegateProvider
 import kotlin.reflect.KProperty
 
 typealias BeforeSet<T> = (old: T, new: T) -> Unit
@@ -35,7 +36,7 @@ abstract class BindablePropertyBase<T>(
     /**
      * Base delegate provider for [BindablePropertyBase].
      */
-    abstract class Provider<T> {
+    abstract class Provider<VM : ViewModel, T> : PropertyDelegateProvider<VM, BindablePropertyBase<T>> {
         protected var distinct: Boolean = false
         protected var afterSet: AfterSet<T>? = null
         protected var beforeSet: BeforeSet<T>? = null
@@ -49,26 +50,26 @@ abstract class BindablePropertyBase<T>(
         /**
          * Creates a property delegate with the given arguments.
          */
-        abstract operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>): BindablePropertyBase<T>
+        abstract override operator fun provideDelegate(thisRef: VM, property: KProperty<*>): BindablePropertyBase<T>
     }
 }
 
 /**
  * Sets [BindablePropertyBase.distinct] to `true` and returns that instance.
  */
-fun <T, P : BindablePropertyBase.Provider<T>> P.distinct(): P = apply { internalDistinct() }
+fun <T, P : BindablePropertyBase.Provider<*, T>> P.distinct(): P = apply { internalDistinct() }
 
 /**
  * Sets [BindablePropertyBase.beforeSet] to a given function and returns that instance.
  */
-fun <T, P : BindablePropertyBase.Provider<T>> P.beforeSet(action: BeforeSet<T>): P = apply { internalBeforeSet(action) }
+fun <T, P : BindablePropertyBase.Provider<*, T>> P.beforeSet(action: BeforeSet<T>): P = apply { internalBeforeSet(action) }
 
 /**
  * Sets [BindablePropertyBase.validate] to a given function and returns that instance.
  */
-fun <T, P : BindablePropertyBase.Provider<T>> P.validate(action: Validate<T>): P = apply { internalValidate(action) }
+fun <T, P : BindablePropertyBase.Provider<*, T>> P.validate(action: Validate<T>): P = apply { internalValidate(action) }
 
 /**
  * Sets [BindablePropertyBase.afterSet] to a given function and returns that instance.
  */
-fun <T, P : BindablePropertyBase.Provider<T>> P.afterSet(action: AfterSet<T>): P = apply { internalAfterSet(action) }
+fun <T, P : BindablePropertyBase.Provider<*, T>> P.afterSet(action: AfterSet<T>): P = apply { internalAfterSet(action) }

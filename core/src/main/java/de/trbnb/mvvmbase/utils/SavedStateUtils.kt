@@ -2,8 +2,6 @@ package de.trbnb.mvvmbase.utils
 
 import android.annotation.SuppressLint
 import android.os.Binder
-import android.os.Build
-import android.os.Build.VERSION_CODES.LOLLIPOP
 import android.os.Bundle
 import android.os.Parcelable
 import android.util.Size
@@ -33,8 +31,10 @@ inline fun <reified T> savingStateInBindableSupports(): Boolean {
         Bundle::class.java.isAssignableFrom(clazz) ||
         Parcelable::class.java.isAssignableFrom(clazz) ||
         Array<Parcelable>::class.java.isAssignableFrom(clazz) ||
-        Serializable::class.java.isAssignableFrom(clazz) -> true
+        Serializable::class.java.isAssignableFrom(clazz) ||
+        Size::class.java.isAssignableFrom(clazz) ||
+        SizeF::class.java.isAssignableFrom(clazz) -> true
 
-        else -> Build.VERSION.SDK_INT >= LOLLIPOP && (Size::class.java.isAssignableFrom(clazz) || SizeF::class.java.isAssignableFrom(clazz))
+        else -> false
     }
 }

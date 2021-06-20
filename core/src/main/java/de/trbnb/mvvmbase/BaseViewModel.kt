@@ -9,6 +9,7 @@ import androidx.lifecycle.setTagIfAbsentForViewModel
 import de.trbnb.mvvmbase.events.EventChannel
 import de.trbnb.mvvmbase.events.EventChannelImpl
 import de.trbnb.mvvmbase.observable.PropertyChangeRegistry
+import kotlin.reflect.KProperty
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.memberProperties
 import androidx.lifecycle.ViewModel as ArchitectureViewModel
@@ -61,7 +62,11 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel, LifecycleOwne
         callbacks.notifyChange(this, propertyName)
     }
 
-    override fun destroy() {
+    final override fun notifyPropertyChanged(property: KProperty<*>) {
+        notifyPropertyChanged(property.name)
+    }
+
+    final override fun destroy() {
         destroyInternal()
     }
 
@@ -79,9 +84,9 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel, LifecycleOwne
         onDestroy()
     }
 
+    final override operator fun <T : Any> get(key: String): T? = getTagFromViewModel(key)
+
+    final override fun <T : Any> initTag(key: String, newValue: T): T = setTagIfAbsentForViewModel(key, newValue)
+
     override fun getLifecycle(): Lifecycle = lifecycleOwner.lifecycle
-
-    override operator fun <T : Any> get(key: String): T? = getTagFromViewModel(key)
-
-    override fun <T : Any> initTag(key: String, newValue: T): T = setTagIfAbsentForViewModel(key, newValue)
 }

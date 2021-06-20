@@ -36,7 +36,7 @@ android {
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${Versions.kotlin}")
 
-    implementation(project(":core"))
+    implementation(project(":databinding"))
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.3")

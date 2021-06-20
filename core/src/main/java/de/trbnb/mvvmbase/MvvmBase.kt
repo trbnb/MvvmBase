@@ -6,9 +6,11 @@ import de.trbnb.mvvmbase.bindableproperty.StateSaveOption
  * Object for containing library configurations.
  */
 object MvvmBase {
-    internal var defaultStateSaveOption: StateSaveOption = StateSaveOption.Automatic
+    var defaultStateSaveOption: StateSaveOption = StateSaveOption.Automatic
+        private set
 
-    internal var enforceViewModelLifecycleMainThread = true
+    var enforceViewModelLifecycleMainThread = true
+        private set
 
     /**
      * Sets the default [StateSaveOption] that will be used for bindable properties in [de.trbnb.mvvmbase.savedstate.StateSavingViewModel].

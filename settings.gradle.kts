@@ -5,5 +5,6 @@ include(
     ":core",
     ":rxjava2",
     ":rxjava3",
-    ":coroutines"
+    ":coroutines",
+    ":databinding"
 )

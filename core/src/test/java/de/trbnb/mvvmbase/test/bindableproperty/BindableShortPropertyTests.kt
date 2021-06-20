@@ -1,6 +1,5 @@
 package de.trbnb.mvvmbase.test.bindableproperty
 
-import androidx.databinding.Bindable
 import androidx.lifecycle.SavedStateHandle
 import de.trbnb.mvvmbase.BaseViewModel
 import de.trbnb.mvvmbase.MvvmBase

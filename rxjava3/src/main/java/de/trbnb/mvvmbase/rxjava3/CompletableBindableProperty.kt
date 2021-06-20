@@ -1,10 +1,11 @@
 package de.trbnb.mvvmbase.rxjava3
 
-import de.trbnb.mvvmbase.ViewModel
-import de.trbnb.mvvmbase.bindableproperty.AfterSet
-import de.trbnb.mvvmbase.bindableproperty.BeforeSet
-import de.trbnb.mvvmbase.bindableproperty.BindablePropertyBase
-import de.trbnb.mvvmbase.bindableproperty.Validate
+import de.trbnb.mvvmbase.databinding.ViewModel
+import de.trbnb.mvvmbase.databinding.bindableproperty.AfterSet
+import de.trbnb.mvvmbase.databinding.bindableproperty.BeforeSet
+import de.trbnb.mvvmbase.databinding.bindableproperty.BindablePropertyBase
+import de.trbnb.mvvmbase.databinding.bindableproperty.Validate
+import de.trbnb.mvvmbase.databinding.utils.resolveFieldId
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlin.reflect.KProperty
@@ -14,14 +15,14 @@ import kotlin.reflect.KProperty
  */
 class CompletableBindableProperty private constructor(
     viewModel: ViewModel,
-    propertyName: String,
+    fieldId: Int,
     completable: Completable,
     onError: (Throwable) -> Unit,
     distinct: Boolean,
     afterSet: AfterSet<Boolean>?,
     beforeSet: BeforeSet<Boolean>?,
     validate: Validate<Boolean>?
-) : RxBindablePropertyBase<Boolean>(viewModel, false, propertyName, distinct, afterSet, beforeSet, validate) {
+) : RxBindablePropertyBase<Boolean>(viewModel, false, fieldId, distinct, afterSet, beforeSet, validate) {
     init {
         viewModel.compositeDisposable += completable.subscribe({ value = true }, onError)
     }
@@ -35,10 +36,10 @@ class CompletableBindableProperty private constructor(
     class Provider internal constructor(
         private val completable: Completable,
         private val onError: (Throwable) -> Unit
-    ) : BindablePropertyBase.Provider<Boolean>() {
+    ) : BindablePropertyBase.Provider<ViewModel, Boolean>() {
         override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>) = CompletableBindableProperty(
             viewModel = thisRef,
-            propertyName = property.name,
+            fieldId = property.resolveFieldId(),
             completable = completable,
             onError = onError,
             distinct = distinct,

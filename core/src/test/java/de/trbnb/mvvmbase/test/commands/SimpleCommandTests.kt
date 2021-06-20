@@ -4,7 +4,7 @@ import de.trbnb.mvvmbase.commands.DisabledCommandInvocationException
 import de.trbnb.mvvmbase.commands.SimpleCommand
 import de.trbnb.mvvmbase.commands.invoke
 import de.trbnb.mvvmbase.commands.invokeSafely
-import de.trbnb.mvvmbase.utils.observe
+import de.trbnb.mvvmbase.databinding.utils.observe
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 

@@ -2,14 +2,13 @@ package de.trbnb.mvvmbase.test.bindableproperty
 
 import android.util.Size
 import android.util.SizeF
-import androidx.databinding.Bindable
 import androidx.lifecycle.SavedStateHandle
 import de.trbnb.mvvmbase.MvvmBase
 import de.trbnb.mvvmbase.bindableproperty.bindable
 import de.trbnb.mvvmbase.bindableproperty.bindableBoolean
 import de.trbnb.mvvmbase.savedstate.BaseStateSavingViewModel
 import de.trbnb.mvvmbase.test.setSdkVersion
-import de.trbnb.mvvmbase.utils.savingStateInBindableSupports
+import de.trbnb.mvvmbase.databinding.utils.savingStateInBindableSupports
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 

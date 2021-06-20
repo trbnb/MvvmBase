@@ -3,8 +3,12 @@ package de.trbnb.mvvmbase
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
-import de.trbnb.mvvmbase.events.EventChannel
+import de.trbnb.mvvmbase.bindableproperty.BeforeSet
+import de.trbnb.mvvmbase.bindableproperty.BindablePropertyBase
+import de.trbnb.mvvmbase.bindableproperty.beforeSet
+import de.trbnb.mvvmbase.events.EventChannelOwner
 import de.trbnb.mvvmbase.events.addListener
+import de.trbnb.mvvmbase.list.destroyAll
 import de.trbnb.mvvmbase.observable.ObservableContainer
 
 /**
@@ -16,12 +20,7 @@ import de.trbnb.mvvmbase.observable.ObservableContainer
  * It extends the [ObservableContainer] interface provided by the Android data binding library. This means
  * that implementations have to handle [OnPropertyChangedCallback]s..
  */
-interface ViewModel : ObservableContainer, LifecycleOwner {
-    /**
-     * Object that can be used to send one-time or not-state information to the UI.
-     */
-    val eventChannel: EventChannel
-
+interface ViewModel : ObservableContainer, LifecycleOwner, EventChannelOwner {
     /**
      * Is called when this instance is about to be removed from memory.
      * This means that this object is no longer bound to a view and will never be. It is about to
@@ -75,5 +74,16 @@ interface ViewModel : ObservableContainer, LifecycleOwner {
      */
     fun <VM : ViewModel> VM.bindEvents(): VM = also { child ->
         child.eventChannel.addListener(this@ViewModel) { event -> this@ViewModel.eventChannel.invoke(event) }
+    }
+
+    /**
+     * Sets [BindablePropertyBase.afterSet] to a given function and returns that instance.
+     */
+    fun <T : Collection<ViewModel>, P : BindablePropertyBase.Provider<*, T>> P.asChildren(beforeSet: BeforeSet<T>? = null): P = apply {
+        beforeSet { old, new ->
+            old.destroyAll()
+            new.autoDestroy().bindEvents()
+            beforeSet?.invoke(old, new)
+        }
     }
 }

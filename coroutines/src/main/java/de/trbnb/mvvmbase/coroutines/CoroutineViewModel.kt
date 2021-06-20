@@ -1,10 +1,10 @@
 package de.trbnb.mvvmbase.coroutines
 
 import androidx.lifecycle.viewModelScope
-import de.trbnb.mvvmbase.ViewModel
 import de.trbnb.mvvmbase.coroutines.flow.FlowBindable
 import de.trbnb.mvvmbase.coroutines.flow.OnCompletion
 import de.trbnb.mvvmbase.coroutines.flow.OnException
+import de.trbnb.mvvmbase.databinding.ViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow

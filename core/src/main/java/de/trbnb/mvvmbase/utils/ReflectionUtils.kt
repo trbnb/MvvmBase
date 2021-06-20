@@ -101,7 +101,7 @@ class ViewModelMutableState<T>(
     override fun component2(): (T) -> Unit = setter
 }
 
-internal inline fun <reified T> Any?.cast() = this as T
-internal inline fun <reified T> Any?.castSafely() = this as? T
+inline fun <reified T> Any?.cast() = this as T
+inline fun <reified T> Any?.castSafely() = this as? T
 
 inline val <T> MutableState<T>.setter: (T) -> Unit get() = component2()

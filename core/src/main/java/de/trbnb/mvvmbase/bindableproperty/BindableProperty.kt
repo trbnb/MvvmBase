@@ -1,7 +1,7 @@
 package de.trbnb.mvvmbase.bindableproperty
 
 import de.trbnb.mvvmbase.ViewModel
-import de.trbnb.mvvmbase.savedstate.StateSavingViewModel
+import de.trbnb.mvvmbase.savedstate.SavedStateHandleOwner
 import de.trbnb.mvvmbase.utils.savingStateInBindableSupports
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
@@ -29,7 +29,7 @@ class BindableProperty<T> internal constructor(
 ) : BindablePropertyBase<T>(distinct, afterSet, beforeSet, validate), ReadWriteProperty<ViewModel, T> {
     @Suppress("UNCHECKED_CAST")
     private var value: T = when {
-        stateSavingKey != null && viewModel is StateSavingViewModel && stateSavingKey in viewModel.savedStateHandle -> {
+        stateSavingKey != null && viewModel is SavedStateHandleOwner && stateSavingKey in viewModel.savedStateHandle -> {
             viewModel.savedStateHandle.get<T>(stateSavingKey) as T
         }
         else -> defaultValue
@@ -49,8 +49,8 @@ class BindableProperty<T> internal constructor(
             else -> validate(oldValue, value)
         }
 
-        thisRef.notifyPropertyChanged(property.name)
-        if (thisRef is StateSavingViewModel && stateSavingKey != null) {
+        thisRef.notifyPropertyChanged(property)
+        if (thisRef is SavedStateHandleOwner && stateSavingKey != null) {
             thisRef.savedStateHandle[stateSavingKey] = this.value
         }
         afterSet?.invoke(oldValue, this.value)
@@ -65,7 +65,7 @@ class BindableProperty<T> internal constructor(
     class Provider<T>(
         private val defaultValue: T,
         private val stateSaveOption: StateSaveOption
-    ) : BindablePropertyBase.Provider<T>() {
+    ) : BindablePropertyBase.Provider<ViewModel, T>() {
         override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>) = BindableProperty(
             viewModel = thisRef,
             defaultValue = defaultValue,
@@ -88,7 +88,7 @@ inline fun <reified T> ViewModel.bindable(
     defaultValue: T,
     stateSaveOption: StateSaveOption? = null
 ): BindableProperty.Provider<T> = BindableProperty.Provider(defaultValue, when (this) {
-    is StateSavingViewModel -> when (stateSaveOption) {
+    is SavedStateHandleOwner -> when (stateSaveOption) {
         null -> when (savingStateInBindableSupports<T>()) {
             true -> defaultStateSaveOption
             false -> StateSaveOption.None

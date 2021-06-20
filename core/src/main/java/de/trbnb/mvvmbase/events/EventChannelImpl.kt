@@ -6,7 +6,7 @@ package de.trbnb.mvvmbase.events
  * @param memorizeNotReceivedEvents Defines if events that can't be received by listeners because none are registered are sent later
  * when a listener is registered.
  */
-internal class EventChannelImpl(memorizeNotReceivedEvents: Boolean = true) : EventChannel {
+class EventChannelImpl(memorizeNotReceivedEvents: Boolean = true) : EventChannel {
     private val eventHandler = DefaultEventHandler<Event>(memorizeNotReceivedEvents)
 
     override operator fun invoke(event: Event) {
