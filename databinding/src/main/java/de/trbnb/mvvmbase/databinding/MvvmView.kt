@@ -77,14 +77,6 @@ interface MvvmView<VM, B : ViewDataBinding> : ViewModelStoreOwner, SavedStateReg
     fun onViewModelLoaded(viewModel: VM)
 
     /**
-     * Called when the view model notifies listeners that a property has changed.
-     *
-     * @param[viewModel] The [ViewModel] instance whose property has changed.
-     * @param[fieldId] The ID of the field in the BR file that indicates which property in the view model has changed.
-     */
-    fun onViewModelPropertyChanged(viewModel: VM, fieldId: Int) { }
-
-    /**
      * Is called when the ViewModel sends an [Event].
      */
     fun onEvent(event: Event) { }

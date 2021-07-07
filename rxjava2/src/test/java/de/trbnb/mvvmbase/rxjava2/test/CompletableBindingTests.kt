@@ -2,8 +2,10 @@
 
 package de.trbnb.mvvmbase.rxjava2.test
 
-import de.trbnb.mvvmbase.BaseViewModel
+import androidx.databinding.Bindable
 import de.trbnb.mvvmbase.MvvmBase
+import de.trbnb.mvvmbase.databinding.BaseViewModel
+import de.trbnb.mvvmbase.databinding.initDataBinding
 import de.trbnb.mvvmbase.rxjava2.RxViewModel
 import io.reactivex.Completable
 import io.reactivex.subjects.CompletableSubject
@@ -15,7 +17,7 @@ class CompletableBindingTests {
         @BeforeAll
         @JvmStatic
         fun setup() {
-            MvvmBase.disableViewModelLifecycleThreadConstraints()
+            MvvmBase.initDataBinding().disableViewModelLifecycleThreadConstraints()
         }
     }
 
@@ -66,10 +68,11 @@ class CompletableBindingTests {
         viewModel.addOnPropertyChangedCallback(propertyChangedCallback)
 
         completable.onComplete()
-        assert("property" in propertyChangedCallback.changedPropertyIds)
+        assert(BR.property in propertyChangedCallback.changedPropertyIds)
     }
 
     class ViewModelWithBindable(completable: Completable) : BaseViewModel(), RxViewModel {
+        @get:Bindable
         val property by completable.toBindable()
     }
 }

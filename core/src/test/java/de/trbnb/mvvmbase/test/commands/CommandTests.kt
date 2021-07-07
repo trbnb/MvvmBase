@@ -10,7 +10,7 @@ import de.trbnb.mvvmbase.commands.Command
 import de.trbnb.mvvmbase.commands.SimpleCommand
 import de.trbnb.mvvmbase.commands.ruleCommand
 import de.trbnb.mvvmbase.commands.simpleCommand
-import de.trbnb.mvvmbase.databinding.utils.observe
+import de.trbnb.mvvmbase.utils.observe
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test

@@ -35,7 +35,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.navigate
 import de.trbnb.mvvmbase.sample.app.AppTheme
 import de.trbnb.mvvmbase.commands.Command
 import de.trbnb.mvvmbase.commands.invoke
@@ -121,32 +120,5 @@ fun MainScreen(navController: NavController) {
         navigateToSecondScreen = { navController.navigate("second") },
         lastEventState = viewModel.lastEventAsState(),
         navigateToListScreen = { navController.navigate("list") }
-    )
-}
-
-@Composable
-fun Button(
-    command: Command<Unit, *>,
-    modifier: Modifier = Modifier,
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-    elevation: ButtonElevation? = ButtonDefaults.elevation(),
-    shape: Shape = MaterialTheme.shapes.small,
-    border: BorderStroke? = null,
-    colors: ButtonColors = ButtonDefaults.buttonColors(),
-    contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
-    content: @Composable RowScope.() -> Unit
-) {
-    val isEnabled by command::isEnabled.observeAsState()
-    Button(
-        onClick = command::invokeSafely,
-        modifier = modifier,
-        enabled = isEnabled,
-        interactionSource = interactionSource,
-        elevation = elevation,
-        shape = shape,
-        border = border,
-        colors = colors,
-        contentPadding = contentPadding,
-        content = content
     )
 }

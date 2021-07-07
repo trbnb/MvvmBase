@@ -7,9 +7,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModelLazy
+import de.trbnb.mvvmbase.databinding.utils.findGenericSuperclass
 import de.trbnb.mvvmbase.events.Event
 import de.trbnb.mvvmbase.events.addListener
-import de.trbnb.mvvmbase.databinding.utils.findGenericSuperclass
 
 /**
  * Reference implementation of an [MvvmView] with [android.app.Activity].
@@ -43,12 +43,6 @@ abstract class MvvmBindingActivity<VM, B>(@LayoutRes override val layoutId: Int 
             ?.actualTypeArguments
             ?.firstOrNull() as? Class<VM>
             ?: throw IllegalStateException("viewModelClass does not equal Class<VM>")
-
-    /**
-     * Callback implementation that delegates the parametes to [onViewModelPropertyChanged].
-     */
-    @Suppress("LeakingThis")
-    private val viewModelObserver = ViewModelPropertyChangedCallback(this)
 
     /**
      * Called by the lifecycle.
@@ -88,25 +82,9 @@ abstract class MvvmBindingActivity<VM, B>(@LayoutRes override val layoutId: Int 
 
     @CallSuper
     override fun onViewModelLoaded(viewModel: VM) {
-        viewModel.addOnPropertyChangedCallback(viewModelObserver)
         viewModel.eventChannel.addListener(this, eventListener)
     }
 
     @Suppress("EmptyFunctionBlock")
-    override fun onViewModelPropertyChanged(viewModel: VM, fieldId: Int) { }
-
-    @Suppress("EmptyFunctionBlock")
     override fun onEvent(event: Event) { }
-
-    /**
-     * Called by the lifecycle.
-     * Removes the view model callback.
-     * If the Activity is finishing the view model is notified.
-     */
-    @CallSuper
-    override fun onDestroy() {
-        super.onDestroy()
-
-        viewModel.removeOnPropertyChangedCallback(viewModelObserver)
-    }
 }

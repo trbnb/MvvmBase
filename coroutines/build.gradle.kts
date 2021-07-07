@@ -23,6 +23,18 @@ android {
         }
     }
 
+    buildFeatures {
+        dataBinding = true
+    }
+
+    dataBinding {
+        // This is necessary to allow the data binding annotation processor to generate
+        // the BR fields from Bindable annotations
+        testOptions.unitTests.isIncludeAndroidResources = true
+
+        isEnabledForTests = true
+    }
+
     compileOptions {
         sourceCompatibility = Versions.java
         targetCompatibility = Versions.java
@@ -38,13 +50,16 @@ dependencies {
 
     implementation(project(":databinding"))
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.3")
+    testAnnotationProcessor("androidx.databinding:databinding-compiler:${Versions.gradleTools}")
+    kaptTest("androidx.databinding:databinding-compiler:${Versions.gradleTools}")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1")
 
-    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.6.2")
-    androidTestImplementation("androidx.test:runner:1.3.0")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.3.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.7.0")
+    androidTestImplementation("androidx.test:runner:1.4.0")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
 }
 
 val sourcesJar = task<Jar>("sourcesJar") {

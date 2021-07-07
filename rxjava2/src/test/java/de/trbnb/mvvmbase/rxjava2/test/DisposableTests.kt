@@ -3,7 +3,7 @@ package de.trbnb.mvvmbase.rxjava2.test
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
-import de.trbnb.mvvmbase.BaseViewModel
+import de.trbnb.mvvmbase.databinding.BaseViewModel
 import de.trbnb.mvvmbase.rxjava2.autoDispose
 import de.trbnb.mvvmbase.rxjava2.compositeDisposable
 import io.reactivex.disposables.CompositeDisposable

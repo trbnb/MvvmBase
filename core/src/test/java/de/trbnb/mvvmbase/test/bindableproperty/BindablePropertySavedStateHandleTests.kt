@@ -5,10 +5,8 @@ import android.util.SizeF
 import androidx.lifecycle.SavedStateHandle
 import de.trbnb.mvvmbase.MvvmBase
 import de.trbnb.mvvmbase.bindableproperty.bindable
-import de.trbnb.mvvmbase.bindableproperty.bindableBoolean
 import de.trbnb.mvvmbase.savedstate.BaseStateSavingViewModel
-import de.trbnb.mvvmbase.test.setSdkVersion
-import de.trbnb.mvvmbase.databinding.utils.savingStateInBindableSupports
+import de.trbnb.mvvmbase.utils.savingStateInBindableSupports
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -19,11 +17,10 @@ class BindablePropertySavedStateHandleTests {
     }
 
     class TestViewModel(savedStateHandle: SavedStateHandle = SavedStateHandle()) : BaseStateSavingViewModel(savedStateHandle) {
-                var text: String by bindable("foo")
-                var userSetting: Boolean by bindable(false)
-                var nullableBoolean: Boolean? by bindable()
-                var isDone: Boolean by bindableBoolean()
-                var isDoneTwo: Boolean by bindable(false)
+        var text: String by bindable("foo")
+        var userSetting: Boolean by bindable(false)
+        var nullableBoolean: Boolean? by bindable()
+        var isDone: Boolean by bindable(false)
         var property: String? by bindable()
     }
 
@@ -39,7 +36,6 @@ class BindablePropertySavedStateHandleTests {
         assert(viewModel.userSetting.not())
         assert(viewModel.nullableBoolean == null)
         assert(viewModel.isDone)
-        assert(!viewModel.isDoneTwo)
     }
 
     @Test
@@ -50,10 +46,6 @@ class BindablePropertySavedStateHandleTests {
         assert(!savingStateInBindableSupports<List<Any>>())
         assert(savingStateInBindableSupports<Enum<*>>())
 
-        assert(!savingStateInBindableSupports<Size>())
-        assert(!savingStateInBindableSupports<SizeF>())
-
-        setSdkVersion(21)
         assert(savingStateInBindableSupports<Size>())
         assert(savingStateInBindableSupports<SizeF>())
     }

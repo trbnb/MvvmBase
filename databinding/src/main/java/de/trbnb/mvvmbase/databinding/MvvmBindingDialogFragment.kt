@@ -12,8 +12,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelLazy
-import de.trbnb.mvvmbase.events.Event
 import de.trbnb.mvvmbase.databinding.utils.findGenericSuperclass
+import de.trbnb.mvvmbase.events.Event
 
 /**
  * Reference implementation of an [MvvmView] with [DialogFragment].
@@ -23,12 +23,6 @@ import de.trbnb.mvvmbase.databinding.utils.findGenericSuperclass
 abstract class MvvmBindingDialogFragment<VM, B>(@LayoutRes override val layoutId: Int = 0) : DialogFragment(), MvvmView<VM, B>
         where VM : ViewModel, VM : androidx.lifecycle.ViewModel, B : ViewDataBinding {
     override var binding: B? = null
-
-    /**
-     * Callback implementation that delegates the parametes to [onViewModelPropertyChanged].
-     */
-    @Suppress("LeakingThis")
-    private val viewModelObserver = ViewModelPropertyChangedCallback(this)
 
     @Suppress("UNCHECKED_CAST")
     override val viewModelClass: Class<VM>
@@ -93,12 +87,8 @@ abstract class MvvmBindingDialogFragment<VM, B>(@LayoutRes override val layoutId
 
     @CallSuper
     override fun onViewModelLoaded(viewModel: VM) {
-        viewModel.addOnPropertyChangedCallback(viewModelObserver)
         viewModel.eventChannel.addListener(eventListener)
     }
-
-    @Suppress("EmptyFunctionBlock")
-    override fun onViewModelPropertyChanged(viewModel: VM, fieldId: Int) { }
 
     @Suppress("EmptyFunctionBlock")
     override fun onEvent(event: Event) { }
@@ -108,7 +98,6 @@ abstract class MvvmBindingDialogFragment<VM, B>(@LayoutRes override val layoutId
 
         binding?.setVariable(viewModelBindingId, null)
         viewModel.eventChannel.removeListener(eventListener)
-        viewModel.removeOnPropertyChangedCallback(viewModelObserver)
 
         binding = null
     }

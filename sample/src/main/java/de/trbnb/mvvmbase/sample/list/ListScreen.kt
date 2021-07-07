@@ -8,12 +8,13 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import de.trbnb.mvvmbase.sample.app.AppTheme
 import de.trbnb.mvvmbase.utils.observeAsState
 
 @Composable
 fun ListScreen() {
-    val viewModel = hiltNavGraphViewModel<ListViewModel>()
+    val viewModel = hiltViewModel<ListViewModel>()
     ListScreenTemplate(viewModel::items.observeAsState())
 }
 

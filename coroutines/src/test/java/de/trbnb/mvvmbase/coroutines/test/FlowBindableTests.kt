@@ -2,9 +2,11 @@
 
 package de.trbnb.mvvmbase.coroutines.test
 
-import de.trbnb.mvvmbase.BaseViewModel
+import androidx.databinding.Bindable
 import de.trbnb.mvvmbase.MvvmBase
 import de.trbnb.mvvmbase.coroutines.CoroutineViewModel
+import de.trbnb.mvvmbase.databinding.BaseViewModel
+import de.trbnb.mvvmbase.databinding.initDataBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,7 +25,7 @@ class FlowBindableTests {
     @BeforeEach
     fun setup() {
         Dispatchers.setMain(TestCoroutineDispatcher())
-        MvvmBase.disableViewModelLifecycleThreadConstraints()
+        MvvmBase.initDataBinding().disableViewModelLifecycleThreadConstraints()
     }
 
     @Test
@@ -106,10 +108,14 @@ class FlowBindableTests {
 
         val newValue = 55
         flow.value = newValue
-        assert("property" in propertyChangedCallback.changedPropertyIds)
+        assert(BR.property in propertyChangedCallback.changedPropertyIds) {
+            "Property ID was: ${BR.property}" +
+                    "changedIds: ${propertyChangedCallback.changedPropertyIds.joinToString(prefix = "[", postfix = "]")}"
+        }
     }
 
     class ViewModelWithBindable(flow: Flow<Int>) : BaseViewModel(), CoroutineViewModel {
+        @get:Bindable
         val property by flow.toBindable(defaultValue = 3)
     }
 }

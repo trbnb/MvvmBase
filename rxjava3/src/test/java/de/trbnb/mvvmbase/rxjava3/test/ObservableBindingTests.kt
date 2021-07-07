@@ -3,8 +3,9 @@
 package de.trbnb.mvvmbase.rxjava3.test
 
 import androidx.databinding.Bindable
-import de.trbnb.mvvmbase.BaseViewModel
+import de.trbnb.mvvmbase.databinding.BaseViewModel
 import de.trbnb.mvvmbase.MvvmBase
+import de.trbnb.mvvmbase.databinding.initDataBinding
 import de.trbnb.mvvmbase.rxjava3.RxViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
@@ -16,7 +17,7 @@ class ObservableBindingTests {
         @BeforeAll
         @JvmStatic
         fun setup() {
-            MvvmBase.disableViewModelLifecycleThreadConstraints()
+            MvvmBase.initDataBinding().disableViewModelLifecycleThreadConstraints()
         }
     }
 
@@ -94,10 +95,11 @@ class ObservableBindingTests {
 
         val newValue = 55
         observable.onNext(newValue)
-        assert("property" in propertyChangedCallback.changedPropertyIds)
+        assert(BR.property in propertyChangedCallback.changedPropertyIds)
     }
 
     class ViewModelWithBindable(observable: Observable<Int>) : BaseViewModel(), RxViewModel {
-                val property by observable.toBindable<Int>(defaultValue = 3)
+        @get:Bindable
+        val property by observable.toBindable<Int>(defaultValue = 3)
     }
 }

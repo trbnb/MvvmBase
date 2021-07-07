@@ -2,8 +2,10 @@
 
 package de.trbnb.mvvmbase.rxjava2.test
 
-import de.trbnb.mvvmbase.BaseViewModel
+import androidx.databinding.Bindable
+import de.trbnb.mvvmbase.databinding.BaseViewModel
 import de.trbnb.mvvmbase.MvvmBase
+import de.trbnb.mvvmbase.databinding.initDataBinding
 import de.trbnb.mvvmbase.rxjava2.RxViewModel
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
@@ -17,7 +19,7 @@ class FlowableBindingTests {
         @BeforeAll
         @JvmStatic
         fun setup() {
-            MvvmBase.disableViewModelLifecycleThreadConstraints()
+            MvvmBase.initDataBinding().disableViewModelLifecycleThreadConstraints()
         }
     }
 
@@ -102,10 +104,11 @@ class FlowableBindingTests {
 
         val newValue = 55
         observable.onNext(newValue)
-        assert("property" in propertyChangedCallback.changedPropertyIds)
+        assert(BR.property in propertyChangedCallback.changedPropertyIds)
     }
 
     class ViewModelWithBindable(flowable: Flowable<Int>) : BaseViewModel(), RxViewModel {
+        @get:Bindable
         val property by flowable.toBindable<Int>(defaultValue = 3)
     }
 }

@@ -3,8 +3,9 @@
 package de.trbnb.mvvmbase.rxjava3.test
 
 import androidx.databinding.Bindable
-import de.trbnb.mvvmbase.BaseViewModel
+import de.trbnb.mvvmbase.databinding.BaseViewModel
 import de.trbnb.mvvmbase.MvvmBase
+import de.trbnb.mvvmbase.databinding.initDataBinding
 import de.trbnb.mvvmbase.rxjava3.RxViewModel
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.subjects.MaybeSubject
@@ -16,7 +17,7 @@ class MaybeBindingTests {
         @BeforeAll
         @JvmStatic
         fun setup() {
-            MvvmBase.disableViewModelLifecycleThreadConstraints()
+            MvvmBase.initDataBinding().disableViewModelLifecycleThreadConstraints()
         }
     }
 
@@ -94,7 +95,7 @@ class MaybeBindingTests {
 
         val newValue = 55
         maybe.onSuccess(newValue)
-        assert("property" in propertyChangedCallback.changedPropertyIds)
+        assert(BR.property in propertyChangedCallback.changedPropertyIds)
     }
 
     class ViewModelWithBindable(maybe: Maybe<Int>) : BaseViewModel(), RxViewModel {
