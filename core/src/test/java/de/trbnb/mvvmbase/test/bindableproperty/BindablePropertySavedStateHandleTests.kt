@@ -4,7 +4,7 @@ import android.util.Size
 import android.util.SizeF
 import androidx.lifecycle.SavedStateHandle
 import de.trbnb.mvvmbase.MvvmBase
-import de.trbnb.mvvmbase.bindableproperty.bindable
+import de.trbnb.mvvmbase.observableproperty.bindable
 import de.trbnb.mvvmbase.savedstate.BaseStateSavingViewModel
 import de.trbnb.mvvmbase.utils.savingStateInBindableSupports
 import org.junit.jupiter.api.BeforeEach

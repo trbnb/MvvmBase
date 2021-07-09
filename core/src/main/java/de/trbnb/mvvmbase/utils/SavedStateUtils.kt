@@ -1,6 +1,5 @@
 package de.trbnb.mvvmbase.utils
 
-import android.annotation.SuppressLint
 import android.os.Binder
 import android.os.Bundle
 import android.os.Parcelable
@@ -9,9 +8,8 @@ import android.util.SizeF
 import java.io.Serializable
 
 /**
- * Function that specifies which types allow for saving state in [de.trbnb.mvvmbase.bindableproperty.BindableProperty].
+ * Function that specifies which types allow for saving state in [de.trbnb.mvvmbase.observableproperty.BindableProperty].
  */
-@SuppressLint("NewApi")
 inline fun <reified T> savingStateInBindableSupports(): Boolean {
     val clazz = T::class.java
     return when {

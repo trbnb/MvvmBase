@@ -1,6 +1,6 @@
-package de.trbnb.mvvmbase.databinding.list
+package de.trbnb.mvvmbase.utils
 
-import de.trbnb.mvvmbase.databinding.ViewModel
+import de.trbnb.mvvmbase.ViewModel
 
 /**
  * Calls [ViewModel.destroy] on every element in the receiver collection.

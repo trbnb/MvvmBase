@@ -2,10 +2,8 @@ package de.trbnb.mvvmbase.databinding.utils
 
 import androidx.databinding.Observable
 import androidx.lifecycle.LifecycleOwner
-import de.trbnb.mvvmbase.MvvmBase
 import de.trbnb.mvvmbase.databinding.BR
 import de.trbnb.mvvmbase.databinding.MvvmBaseDataBinding
-import de.trbnb.mvvmbase.utils.castSafely
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 import kotlin.jvm.internal.CallableReference
@@ -37,7 +35,7 @@ tailrec fun <T> Type.findGenericSuperclass(targetType: Class<T>): ParameterizedT
 /**
  * Finds the field ID of the given property.
  *
- * @see MvvmBase.init
+ * @see de.trbnb.mvvmbase.databinding.initDataBinding
  */
 fun KProperty<*>.resolveFieldId(): Int = MvvmBaseDataBinding.lookupFieldIdByName(brFieldName()) ?: BR._all
 
@@ -51,7 +49,7 @@ fun KProperty<*>.resolveFieldId(): Int = MvvmBaseDataBinding.lookupFieldIdByName
 internal fun KProperty<*>.brFieldName(): String {
     val isBoolean = returnType.classifier == Boolean::class && !returnType.isMarkedNullable
     if (name.startsWith("is") && Character.isJavaIdentifierStart(name[2]) && isBoolean) {
-        return name[2].toLowerCase() + name.substring(3)
+        return name[2].lowercaseChar() + name.substring(3)
     }
 
     return name
@@ -62,7 +60,7 @@ inline fun <T> KProperty0<T>.observeBindable(
     lifecycleOwner: LifecycleOwner,
     crossinline action: (T) -> Unit
 ) {
-    val observable = castSafely<CallableReference>()?.boundReceiver?.castSafely<Observable>()
+    val observable = (this as? CallableReference)?.boundReceiver?.let { it as? Observable }
         ?: throw IllegalArgumentException("Property receiver is not an Observable")
 
     val fieldId = resolveFieldId()

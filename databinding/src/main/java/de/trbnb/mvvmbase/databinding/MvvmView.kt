@@ -1,5 +1,6 @@
 package de.trbnb.mvvmbase.databinding
 
+import androidx.annotation.CallSuper
 import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
@@ -75,6 +76,16 @@ interface MvvmView<VM, B : ViewDataBinding> : ViewModelStoreOwner, SavedStateReg
      * @param[viewModel] The [ViewModel] instance that was loaded.
      */
     fun onViewModelLoaded(viewModel: VM)
+
+    /**
+     * Called when the view model notifies listeners that a property has changed.
+     *
+     * @param[viewModel] The [ViewModel] instance whose property has changed.
+     * @param[fieldId] The ID of the field in the BR file that indicates which property in the view model has changed.
+     */
+    @CallSuper
+    @Deprecated("Use KProperty.observe() instead", level = DeprecationLevel.ERROR)
+    fun onViewModelPropertyChanged(viewModel: VM, fieldId: Int) { }
 
     /**
      * Is called when the ViewModel sends an [Event].

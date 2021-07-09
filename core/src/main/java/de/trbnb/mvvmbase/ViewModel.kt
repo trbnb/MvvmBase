@@ -3,19 +3,15 @@ package de.trbnb.mvvmbase
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
-import de.trbnb.mvvmbase.bindableproperty.BeforeSet
-import de.trbnb.mvvmbase.bindableproperty.BindablePropertyBase
-import de.trbnb.mvvmbase.bindableproperty.beforeSet
 import de.trbnb.mvvmbase.events.EventChannelOwner
 import de.trbnb.mvvmbase.events.addListener
-import de.trbnb.mvvmbase.list.destroyAll
 import de.trbnb.mvvmbase.observable.ObservableContainer
+import de.trbnb.mvvmbase.observableproperty.BeforeSet
+import de.trbnb.mvvmbase.observableproperty.ObservableProperty
+import de.trbnb.mvvmbase.utils.destroyAll
 
 /**
  * Base interface that defines basic functionality for all view models.
- *
- * View models are bound to either an [MvvmActivity] or an [MvvmFragment] and saved
- * throughout the lifecycle of these by the Architecture Components.
  *
  * It extends the [ObservableContainer] interface provided by the Android data binding library. This means
  * that implementations have to handle [OnPropertyChangedCallback]s..
@@ -77,9 +73,9 @@ interface ViewModel : ObservableContainer, LifecycleOwner, EventChannelOwner {
     }
 
     /**
-     * Sets [BindablePropertyBase.afterSet] to a given function and returns that instance.
+     * Sets [ObservableProperty.beforeSet] to a given function and returns that instance.
      */
-    fun <T : Collection<ViewModel>, P : BindablePropertyBase.Provider<*, T>> P.asChildren(beforeSet: BeforeSet<T>? = null): P = apply {
+    fun <T : Collection<ViewModel>> ObservableProperty.Provider<T>.asChildren(beforeSet: BeforeSet<T>? = null) = apply {
         beforeSet { old, new ->
             old.destroyAll()
             new.autoDestroy().bindEvents()

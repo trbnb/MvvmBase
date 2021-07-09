@@ -9,7 +9,7 @@ import androidx.lifecycle.LifecycleRegistry
  * The custom lifecycle owner for ViewModels.
  *
  * Its lifecycle state is:
- * - After initialization: [Lifecycle.State.STARTED].
+ * - After initialization: [Lifecycle.State.RESUMED].
  * - After being destroyed: [Lifecycle.State.DESTROYED].
  */
 internal class ViewModelLifecycleOwner(enforceMainThread: Boolean) : LifecycleOwner {
@@ -25,7 +25,7 @@ internal class ViewModelLifecycleOwner(enforceMainThread: Boolean) : LifecycleOw
 
     fun onEvent(event: Event) {
         registry.currentState = when (event) {
-            Event.INITIALIZED -> Lifecycle.State.STARTED
+            Event.INITIALIZED -> Lifecycle.State.RESUMED
             Event.DESTROYED -> Lifecycle.State.DESTROYED
         }
     }

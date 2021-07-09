@@ -3,7 +3,7 @@ package de.trbnb.mvvmbase.databinding.test.bindableproperty
 import androidx.databinding.Bindable
 import androidx.lifecycle.SavedStateHandle
 import de.trbnb.mvvmbase.MvvmBase
-import de.trbnb.mvvmbase.bindableproperty.StateSaveOption
+import de.trbnb.mvvmbase.observableproperty.StateSaveOption
 import de.trbnb.mvvmbase.databinding.BaseViewModel
 import de.trbnb.mvvmbase.databinding.bindableproperty.afterSet
 import de.trbnb.mvvmbase.databinding.bindableproperty.beforeSet
@@ -162,14 +162,14 @@ class BindableBytePropertyTests {
     @Test
     fun `automatic StateSaveOption is set correctly`() {
         val savedStateHandle = SavedStateHandle()
-        val viewModel = AutomaticSavedStateViewModel(savedStateHandle)
+        val viewModel = AutomaticStateViewModel(savedStateHandle)
 
         val newValue = 6.toByte()
         viewModel.supportedAutomatic = newValue
         assert(savedStateHandle.get<Byte>("supportedAutomatic") == newValue)
     }
 
-    class AutomaticSavedStateViewModel(savedStateHandle: SavedStateHandle = SavedStateHandle()) : BaseStateSavingViewModel(savedStateHandle) {
+    class AutomaticStateViewModel(savedStateHandle: SavedStateHandle = SavedStateHandle()) : BaseStateSavingViewModel(savedStateHandle) {
         @get:Bindable
         var supportedAutomatic by bindableByte()
     }
@@ -178,14 +178,14 @@ class BindableBytePropertyTests {
     fun `manual StateSaveOption is working correctly`() {
         val savedStateHandle = SavedStateHandle()
         val key = "Bar"
-        val viewModel = ManualSavedStateViewModel(key, savedStateHandle)
+        val viewModel = ManualStateViewModel(key, savedStateHandle)
 
         val newValue = 9.toByte()
         viewModel.property = newValue
         assert(savedStateHandle.get<Byte>(key) == newValue)
     }
 
-    class ManualSavedStateViewModel(
+    class ManualStateViewModel(
         key: String,
         savedStateHandle: SavedStateHandle = SavedStateHandle()
     ) : BaseStateSavingViewModel(savedStateHandle) {
@@ -196,14 +196,14 @@ class BindableBytePropertyTests {
     @Test
     fun `none StateSaveOption is working correctly`() {
         val savedStateHandle = SavedStateHandle()
-        val viewModel = NoneSavedStateViewModel(savedStateHandle)
+        val viewModel = NoneStateViewModel(savedStateHandle)
 
         val newValue = 6.toByte()
         viewModel.property = newValue
         assert(savedStateHandle.keys().isEmpty())
     }
 
-    class NoneSavedStateViewModel(savedStateHandle: SavedStateHandle = SavedStateHandle()) : BaseStateSavingViewModel(savedStateHandle) {
+    class NoneStateViewModel(savedStateHandle: SavedStateHandle = SavedStateHandle()) : BaseStateSavingViewModel(savedStateHandle) {
         @get:Bindable
         var property by bindableByte(stateSaveOption = StateSaveOption.None)
     }

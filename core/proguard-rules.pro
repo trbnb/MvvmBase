@@ -15,10 +15,3 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
--keep class de.trbnb.mvvmbase.BR { *; }
-
--keep @interface kotlin.Metadata { *; }
-
--keep class ** extends de.trbnb.mvvmbase.BaseViewModel {
-  @androidx.databinding.Bindable public *;
-}

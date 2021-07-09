@@ -15,11 +15,11 @@ import kotlin.reflect.full.memberProperties
 import androidx.lifecycle.ViewModel as ArchitectureViewModel
 
 /**
- * Simple base implementation of the [ViewModel] interface based on [BaseObservable].
+ * Simple base implementation of the [ViewModel].
  */
 abstract class BaseViewModel : ArchitectureViewModel(), ViewModel, LifecycleOwner {
     /**
-     * Callback registry for [Observable].
+     * Callback registry for [de.trbnb.mvvmbase.observable.ObservableContainer].
      */
     private val callbacks: PropertyChangeRegistry
 
@@ -41,7 +41,7 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel, LifecycleOwne
 
     init {
         val pairs = javaClass.kotlin.memberProperties.mapNotNull { property ->
-            when (val annotation = property.findAnnotation<Bindable>()) {
+            when (val annotation = property.findAnnotation<DependsOn>()) {
                 null -> null
                 else -> property.name to annotation.value
             }

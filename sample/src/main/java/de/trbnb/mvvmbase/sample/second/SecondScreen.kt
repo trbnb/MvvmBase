@@ -13,10 +13,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import androidx.hilt.navigation.compose.hiltViewModel
-import de.trbnb.mvvmbase.utils.observeAsMutableState
-import de.trbnb.mvvmbase.utils.observeAsState
+import de.trbnb.mvvmbase.compose.observeAsMutableState
+import de.trbnb.mvvmbase.compose.observeAsState
 
 @Composable
 fun SecondScreen() {

@@ -4,19 +4,13 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 
-typealias EventListener = Listener<Event>
+typealias EventListener = (event: Event) -> Unit
 
 /**
  * Base interface that defines interaction for not-state information between [de.trbnb.mvvmbase.ViewModel]
  * and MVVM view components.
  */
 interface EventChannel {
-    object NoOp : EventChannel {
-        override fun invoke(event: Event) {}
-        override fun addListener(eventListener: EventListener): EventListener = {}
-        override fun removeListener(eventListener: EventListener) {}
-    }
-
     /**
      * Invokes all listeners with given [event].
      */

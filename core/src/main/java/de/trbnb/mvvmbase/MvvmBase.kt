@@ -1,6 +1,6 @@
 package de.trbnb.mvvmbase
 
-import de.trbnb.mvvmbase.bindableproperty.StateSaveOption
+import de.trbnb.mvvmbase.observableproperty.StateSaveOption
 
 /**
  * Object for containing library configurations.

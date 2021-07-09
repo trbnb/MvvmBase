@@ -5,7 +5,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import de.trbnb.mvvmbase.BaseViewModel
 import de.trbnb.mvvmbase.MvvmBase
-import de.trbnb.mvvmbase.bindableproperty.bindable
+import de.trbnb.mvvmbase.observableproperty.bindable
 import de.trbnb.mvvmbase.commands.Command
 import de.trbnb.mvvmbase.commands.SimpleCommand
 import de.trbnb.mvvmbase.commands.ruleCommand

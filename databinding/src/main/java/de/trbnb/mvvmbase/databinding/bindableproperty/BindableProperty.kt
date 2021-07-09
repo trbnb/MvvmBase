@@ -1,25 +1,25 @@
 package de.trbnb.mvvmbase.databinding.bindableproperty
 
 import androidx.databinding.BaseObservable
-import de.trbnb.mvvmbase.bindableproperty.AfterSet
-import de.trbnb.mvvmbase.bindableproperty.BeforeSet
-import de.trbnb.mvvmbase.bindableproperty.StateSaveOption
-import de.trbnb.mvvmbase.bindableproperty.Validate
-import de.trbnb.mvvmbase.bindableproperty.resolveKey
+import de.trbnb.mvvmbase.observableproperty.AfterSet
+import de.trbnb.mvvmbase.observableproperty.BeforeSet
+import de.trbnb.mvvmbase.observableproperty.StateSaveOption
+import de.trbnb.mvvmbase.observableproperty.Validate
+import de.trbnb.mvvmbase.observableproperty.resolveKey
 import de.trbnb.mvvmbase.databinding.ViewModel
 import de.trbnb.mvvmbase.databinding.utils.resolveFieldId
-import de.trbnb.mvvmbase.savedstate.SavedStateHandleOwner
+import de.trbnb.mvvmbase.savedstate.StateSavingViewModel
 import de.trbnb.mvvmbase.utils.savingStateInBindableSupports
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
 /**
  * Delegate property that invokes [BaseObservable.notifyPropertyChanged] and saves state
- * via [SavedStateHandleOwner.savedStateHandle].
+ * via [StateSavingViewModel.savedStateHandle].
  *
  * @param T Type of the stored value.
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
- * @param defaultValue Value that will be used at start if value can not be restored from [SavedStateHandleOwner.savedStateHandle].
+ * @param defaultValue Value that will be used at start if value can not be restored from [StateSavingViewModel.savedStateHandle].
  * @param distinct See [BindablePropertyBase.distinct].
  * @param stateSavingKey Specifies with which key the value will be state-saved. No state-saving if `null`.
  * @param afterSet [BindablePropertyBase.afterSet]
@@ -38,7 +38,7 @@ class BindableProperty<T> internal constructor(
 ) : BindablePropertyBase<T>(distinct, afterSet, beforeSet, validate), ReadWriteProperty<ViewModel, T> {
     @Suppress("UNCHECKED_CAST")
     private var value: T = when {
-        stateSavingKey != null && viewModel is SavedStateHandleOwner && stateSavingKey in viewModel.savedStateHandle -> {
+        stateSavingKey != null && viewModel is StateSavingViewModel && stateSavingKey in viewModel.savedStateHandle -> {
             viewModel.savedStateHandle.get<T>(stateSavingKey) as T
         }
         else -> defaultValue
@@ -59,7 +59,7 @@ class BindableProperty<T> internal constructor(
         }
 
         thisRef.notifyPropertyChanged(fieldId)
-        if (thisRef is SavedStateHandleOwner && stateSavingKey != null) {
+        if (thisRef is StateSavingViewModel && stateSavingKey != null) {
             thisRef.savedStateHandle[stateSavingKey] = this.value
         }
         afterSet?.invoke(oldValue, this.value)
@@ -101,7 +101,7 @@ inline fun <reified T> ViewModel.bindable(
     fieldId: Int? = null,
     stateSaveOption: StateSaveOption? = null
 ): BindableProperty.Provider<T> = BindableProperty.Provider(fieldId, defaultValue, when (this) {
-    is SavedStateHandleOwner -> when (stateSaveOption) {
+    is StateSavingViewModel -> when (stateSaveOption) {
         null -> when (savingStateInBindableSupports<T>()) {
             true -> defaultStateSaveOption
             false -> StateSaveOption.None

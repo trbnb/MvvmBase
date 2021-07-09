@@ -29,6 +29,10 @@ android {
         targetCompatibility = Versions.java
     }
 
+    kotlin {
+        explicitApi()
+    }
+
     kotlinOptions {
         jvmTarget = Versions.java.toString()
     }
@@ -46,18 +50,18 @@ dependencies {
     implementation(fileTree("dir" to "libs", "include" to listOf("*.jar")))
 
     // Support library
-    implementation("androidx.appcompat:appcompat:1.2.0")
-    implementation("com.google.android.material:material:1.3.0")
-    implementation("androidx.fragment:fragment-ktx:1.3.3")
-    implementation("androidx.recyclerview:recyclerview:1.2.0")
+    implementation("androidx.appcompat:appcompat:1.3.0")
+    implementation("com.google.android.material:material:1.4.0")
+    implementation("androidx.fragment:fragment-ktx:1.3.5")
+    implementation("androidx.recyclerview:recyclerview:1.2.1")
 
     implementation("androidx.compose.runtime:runtime:${Versions.compose}")
     implementation("androidx.compose.ui:ui:${Versions.compose}")
 
     // Testing
-    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.6.2")
-    androidTestImplementation("androidx.test:runner:1.3.0")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.3.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.7.0")
+    androidTestImplementation("androidx.test:runner:1.4.0")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
 
     // Kotlin
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${Versions.kotlin}")

@@ -2,7 +2,7 @@ package de.trbnb.mvvmbase.databinding.savedstate
 
 import androidx.lifecycle.SavedStateHandle
 import de.trbnb.mvvmbase.databinding.BaseViewModel
-import de.trbnb.mvvmbase.savedstate.SavedStateHandleOwner
+import de.trbnb.mvvmbase.savedstate.StateSavingViewModel
 
 /**
  * Base implementation for [StateSavingViewModel].
@@ -10,4 +10,4 @@ import de.trbnb.mvvmbase.savedstate.SavedStateHandleOwner
  */
 abstract class BaseStateSavingViewModel(
     final override val savedStateHandle: SavedStateHandle
-) : BaseViewModel(), SavedStateHandleOwner
+) : BaseViewModel(), StateSavingViewModel

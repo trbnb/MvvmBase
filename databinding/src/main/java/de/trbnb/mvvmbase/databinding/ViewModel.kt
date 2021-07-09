@@ -7,7 +7,7 @@ import androidx.lifecycle.LifecycleOwner
 import de.trbnb.mvvmbase.databinding.bindableproperty.BeforeSet
 import de.trbnb.mvvmbase.databinding.bindableproperty.BindablePropertyBase
 import de.trbnb.mvvmbase.databinding.bindableproperty.beforeSet
-import de.trbnb.mvvmbase.databinding.list.destroyAll
+import de.trbnb.mvvmbase.databinding.utils.destroyAll
 import de.trbnb.mvvmbase.events.EventChannelOwner
 import de.trbnb.mvvmbase.events.addListener
 

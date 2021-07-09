@@ -4,10 +4,9 @@ import de.trbnb.mvvmbase.observable.ObservableContainer
 
 fun interface OnPropertyChangedCallback {
     /**
-     * Called by an Observable whenever an observable property changes.
-     * @param sender The Observable that is changing.
-     * @param propertyName The BR identifier of the property that has changed. The getter
-     * for this property should be annotated with [Bindable].
+     * Called by an ObservableContainer whenever an observable property changes.
+     * @param sender The ObservableContainer that contains the property.
+     * @param propertyName The name of the changed property.
      */
     fun onPropertyChanged(sender: ObservableContainer, propertyName: String)
 }

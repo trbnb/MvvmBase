@@ -1,19 +1,12 @@
 package de.trbnb.mvvmbase.sample.main
 
 import android.widget.Toast
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
-import androidx.compose.material.ButtonColors
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.ButtonElevation
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -23,27 +16,23 @@ import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import de.trbnb.mvvmbase.sample.app.AppTheme
-import de.trbnb.mvvmbase.commands.Command
 import de.trbnb.mvvmbase.commands.invoke
-import de.trbnb.mvvmbase.commands.invokeSafely
+import de.trbnb.mvvmbase.compose.observeAsMutableState
+import de.trbnb.mvvmbase.compose.observeAsState
+import de.trbnb.mvvmbase.compose.setter
 import de.trbnb.mvvmbase.events.Event
 import de.trbnb.mvvmbase.events.lastEventAsState
-import de.trbnb.mvvmbase.utils.observeAsMutableState
-import de.trbnb.mvvmbase.utils.observeAsState
-import de.trbnb.mvvmbase.utils.setter
+import de.trbnb.mvvmbase.sample.app.AppTheme
 import kotlinx.coroutines.launch
 
 @Preview
@@ -114,6 +103,7 @@ fun OnEvent(event: Event?) {
 fun MainScreen(navController: NavController) {
     val viewModel = viewModel<MainViewModel>()
     val inputState = viewModel::textInput.observeAsMutableState()
+    viewModel.showToastCommand::isEnabled.observeAsState()
     MainScreenTemplate(
         inputState,
         onShowToast = { viewModel.showToastCommand() },

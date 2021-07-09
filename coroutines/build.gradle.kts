@@ -40,6 +40,10 @@ android {
         targetCompatibility = Versions.java
     }
 
+    kotlin {
+        explicitApi()
+    }
+
     kotlinOptions {
         jvmTarget = Versions.java.toString()
     }

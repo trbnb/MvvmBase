@@ -3,12 +3,8 @@ package de.trbnb.mvvmbase.test.bindableproperty
 import androidx.lifecycle.SavedStateHandle
 import de.trbnb.mvvmbase.BaseViewModel
 import de.trbnb.mvvmbase.MvvmBase
-import de.trbnb.mvvmbase.bindableproperty.StateSaveOption
-import de.trbnb.mvvmbase.bindableproperty.afterSet
-import de.trbnb.mvvmbase.bindableproperty.beforeSet
-import de.trbnb.mvvmbase.bindableproperty.bindable
-import de.trbnb.mvvmbase.bindableproperty.distinct
-import de.trbnb.mvvmbase.bindableproperty.validate
+import de.trbnb.mvvmbase.observableproperty.StateSaveOption
+import de.trbnb.mvvmbase.observableproperty.bindable
 import de.trbnb.mvvmbase.savedstate.BaseStateSavingViewModel
 import de.trbnb.mvvmbase.test.TestPropertyChangedCallback
 import org.junit.jupiter.api.BeforeEach
@@ -160,7 +156,7 @@ class BindablePropertyTests {
     @Test
     fun `automatic StateSaveOption is set correctly`() {
         val savedStateHandle = SavedStateHandle()
-        val viewModel = AutomaticSavedStateViewModel(savedStateHandle)
+        val viewModel = AutomaticStateViewModel(savedStateHandle)
 
         val newValue = "Foo"
         viewModel.supportedAutomatic = newValue
@@ -171,7 +167,7 @@ class BindablePropertyTests {
         assert(!savedStateHandle.contains("notSupportedAutomatic"))
     }
 
-    class AutomaticSavedStateViewModel(savedStateHandle: SavedStateHandle = SavedStateHandle()) : BaseStateSavingViewModel(savedStateHandle) {
+    class AutomaticStateViewModel(savedStateHandle: SavedStateHandle = SavedStateHandle()) : BaseStateSavingViewModel(savedStateHandle) {
                 var supportedAutomatic by bindable("")
 
                 var notSupportedAutomatic: Any by bindable(Any())
@@ -181,14 +177,14 @@ class BindablePropertyTests {
     fun `manual StateSaveOption is working correctly`() {
         val savedStateHandle = SavedStateHandle()
         val key = "Bar"
-        val viewModel = ManualSavedStateViewModel(key, savedStateHandle)
+        val viewModel = ManualStateViewModel(key, savedStateHandle)
 
         val newValue = "Foo"
         viewModel.property = newValue
         assert(savedStateHandle.get<String>(key) == newValue)
     }
 
-    class ManualSavedStateViewModel(
+    class ManualStateViewModel(
         key: String,
         savedStateHandle: SavedStateHandle = SavedStateHandle()
     ) : BaseStateSavingViewModel(savedStateHandle) {
@@ -198,14 +194,14 @@ class BindablePropertyTests {
     @Test
     fun `none StateSaveOption is working correctly`() {
         val savedStateHandle = SavedStateHandle()
-        val viewModel = NoneSavedStateViewModel(savedStateHandle)
+        val viewModel = NoneStateViewModel(savedStateHandle)
 
         val newValue = "Foo"
         viewModel.property = newValue
         assert(savedStateHandle.keys().isEmpty())
     }
 
-    class NoneSavedStateViewModel(savedStateHandle: SavedStateHandle = SavedStateHandle()) : BaseStateSavingViewModel(savedStateHandle) {
+    class NoneStateViewModel(savedStateHandle: SavedStateHandle = SavedStateHandle()) : BaseStateSavingViewModel(savedStateHandle) {
                 var property by bindable("", stateSaveOption = StateSaveOption.None)
     }
 

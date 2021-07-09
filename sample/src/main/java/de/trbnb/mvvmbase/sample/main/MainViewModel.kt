@@ -3,9 +3,8 @@ package de.trbnb.mvvmbase.sample.main
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import de.trbnb.mvvmbase.bindableproperty.bindable
-import de.trbnb.mvvmbase.bindableproperty.distinct
 import de.trbnb.mvvmbase.commands.simpleCommand
+import de.trbnb.mvvmbase.observableproperty.observable
 import de.trbnb.mvvmbase.savedstate.BaseStateSavingViewModel
 import io.reactivex.Observable
 import kotlinx.coroutines.delay
@@ -16,7 +15,7 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : BaseStateSavingViewModel(savedStateHandle) {
-    var textInput by bindable("")
+    var textInput by observable("")
         .distinct()
 
     val title = Observable.create<String> { emitter ->

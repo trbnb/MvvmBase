@@ -18,8 +18,7 @@ class SimpleCommand<in P, out R> internal constructor(isEnabled: Boolean = true,
 }
 
 /**
- * Helper function to create a [SimpleCommand] that clears all it's listeners automatically when
- * [ViewModel.onUnbind] is called.
+ * Helper function to create a [SimpleCommand].
  */
 @JvmName("parameterizedSimpleCommand")
 fun <P, R> ViewModel.simpleCommand(
@@ -28,8 +27,7 @@ fun <P, R> ViewModel.simpleCommand(
 ): SimpleCommand<P, R> = SimpleCommand(isEnabled, action)
 
 /**
- * Helper function to create a parameter-less [SimpleCommand] that clears all it's listeners automatically when
- * [ViewModel.onUnbind] is called.
+ * Helper function to create a parameter-less [SimpleCommand].
  */
 fun <R> ViewModel.simpleCommand(
     isEnabled: Boolean = true,

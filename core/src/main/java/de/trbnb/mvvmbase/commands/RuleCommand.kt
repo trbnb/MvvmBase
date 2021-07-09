@@ -33,8 +33,7 @@ class RuleCommand<in P, out R> internal constructor(
 }
 
 /**
- * Helper function to create a [RuleCommand] that clears all it's listeners automatically when
- * [ViewModel.onUnbind] is called.
+ * Helper function to create a [RuleCommand].
  */
 @JvmName("parameterizedRuleCommand0")
 fun <P, R> ViewModel.ruleCommand(
@@ -46,8 +45,7 @@ fun <P, R> ViewModel.ruleCommand(
 }
 
 /**
- * Helper function to create a [RuleCommand] that clears all it's listeners automatically when
- * [ViewModel.onUnbind] is called.
+ * Helper function to create a [RuleCommand].
  */
 @JvmName("parameterizedRuleCommand1")
 fun <P, R> ViewModel.ruleCommand(
@@ -57,8 +55,7 @@ fun <P, R> ViewModel.ruleCommand(
 ): RuleCommand<P, R> = ruleCommand(action, enabledRule, dependencyProperties.map { it.name })
 
 /**
- * Helper function to create a parameter-less [RuleCommand] that clears all it's listeners automatically when
- * [ViewModel.onUnbind] is called.
+ * Helper function to create a parameter-less [RuleCommand].
  */
 @JvmName("parameterizedRuleCommand2")
 fun <R> ViewModel.ruleCommand(
@@ -68,8 +65,7 @@ fun <R> ViewModel.ruleCommand(
 ): RuleCommand<Unit, R> = ruleCommand<Unit, R>(action, enabledRule, dependencyPropertyNames)
 
 /**
- * Helper function to create a parameter-less [RuleCommand] that clears all it's listeners automatically when
- * [ViewModel.onUnbind] is called.
+ * Helper function to create a parameter-less [RuleCommand].
  */
 fun <R> ViewModel.ruleCommand(
     action: (Unit) -> R,

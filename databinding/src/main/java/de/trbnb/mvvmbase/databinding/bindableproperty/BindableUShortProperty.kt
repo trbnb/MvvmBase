@@ -1,19 +1,19 @@
 package de.trbnb.mvvmbase.databinding.bindableproperty
 
 import androidx.databinding.BaseObservable
-import de.trbnb.mvvmbase.bindableproperty.AfterSet
-import de.trbnb.mvvmbase.bindableproperty.BeforeSet
-import de.trbnb.mvvmbase.bindableproperty.StateSaveOption
-import de.trbnb.mvvmbase.bindableproperty.Validate
-import de.trbnb.mvvmbase.bindableproperty.resolveKey
+import de.trbnb.mvvmbase.observableproperty.AfterSet
+import de.trbnb.mvvmbase.observableproperty.BeforeSet
+import de.trbnb.mvvmbase.observableproperty.StateSaveOption
+import de.trbnb.mvvmbase.observableproperty.Validate
+import de.trbnb.mvvmbase.observableproperty.resolveKey
 import de.trbnb.mvvmbase.databinding.ViewModel
 import de.trbnb.mvvmbase.databinding.utils.resolveFieldId
-import de.trbnb.mvvmbase.savedstate.SavedStateHandleOwner
+import de.trbnb.mvvmbase.savedstate.StateSavingViewModel
 import kotlin.reflect.KProperty
 
 /**
  * Delegate property that invokes [BaseObservable.notifyPropertyChanged] and saves state
- * via [SavedStateHandleOwner.savedStateHandle].
+ * via [StateSavingViewModel.savedStateHandle].
  *
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  * @param defaultValue Value that will be used at start.
@@ -34,7 +34,7 @@ class BindableUShortProperty private constructor(
     validate: Validate<UShort>?
 ) : BindablePropertyBase<UShort>(distinct, afterSet, beforeSet, validate) {
     private var value: UShort = when {
-        stateSavingKey != null && viewModel is SavedStateHandleOwner && stateSavingKey in viewModel.savedStateHandle -> {
+        stateSavingKey != null && viewModel is StateSavingViewModel && stateSavingKey in viewModel.savedStateHandle -> {
             viewModel.savedStateHandle.get<Short>(stateSavingKey)?.toUShort() ?: defaultValue
         }
         else -> defaultValue
@@ -61,7 +61,7 @@ class BindableUShortProperty private constructor(
         }
 
         thisRef.notifyPropertyChanged(fieldId)
-        if (thisRef is SavedStateHandleOwner && stateSavingKey != null) {
+        if (thisRef is StateSavingViewModel && stateSavingKey != null) {
             thisRef.savedStateHandle[stateSavingKey] = this.value.toShort()
         }
         afterSet?.invoke(oldValue, this.value)
@@ -101,8 +101,8 @@ class BindableUShortProperty private constructor(
 fun ViewModel.bindableUShort(
     defaultValue: UShort = 0U,
     fieldId: Int? = null,
-    stateSaveOption: StateSaveOption = (this as? SavedStateHandleOwner)?.defaultStateSaveOption ?: StateSaveOption.None
+    stateSaveOption: StateSaveOption = (this as? StateSavingViewModel)?.defaultStateSaveOption ?: StateSaveOption.None
 ) = BindableUShortProperty.Provider(fieldId, defaultValue, when (this) {
-    is SavedStateHandleOwner -> stateSaveOption
+    is StateSavingViewModel -> stateSaveOption
     else -> StateSaveOption.None
 })
