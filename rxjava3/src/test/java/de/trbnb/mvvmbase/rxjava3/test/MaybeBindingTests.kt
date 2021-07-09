@@ -2,9 +2,8 @@
 
 package de.trbnb.mvvmbase.rxjava3.test
 
-import androidx.databinding.Bindable
-import de.trbnb.mvvmbase.databinding.BaseViewModel
 import de.trbnb.mvvmbase.MvvmBase
+import de.trbnb.mvvmbase.databinding.BaseViewModel
 import de.trbnb.mvvmbase.databinding.initDataBinding
 import de.trbnb.mvvmbase.rxjava3.RxViewModel
 import io.reactivex.rxjava3.core.Maybe

@@ -2,7 +2,7 @@ package de.trbnb.mvvmbase.test.utils
 
 import de.trbnb.mvvmbase.BaseViewModel
 import de.trbnb.mvvmbase.MvvmBase
-import de.trbnb.mvvmbase.observableproperty.bindable
+import de.trbnb.mvvmbase.observableproperty.observable
 import de.trbnb.mvvmbase.utils.observe
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -17,7 +17,7 @@ class ReflectionUtilsTests {
     @Test
     fun `observe property`() {
         val observable = object : BaseViewModel() {
-            var foo by bindable("")
+            var foo by observable("")
         }
 
         var wasTriggered = false

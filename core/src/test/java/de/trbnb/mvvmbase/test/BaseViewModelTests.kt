@@ -65,6 +65,5 @@ class BaseViewModelTests {
         Assertions.assertEquals(true, barChanged)
         Assertions.assertEquals(2, amountOfNotify)
         Assertions.assertEquals("foobar", viewModel.bar)
-
     }
 }

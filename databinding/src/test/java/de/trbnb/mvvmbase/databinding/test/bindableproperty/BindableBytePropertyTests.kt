@@ -136,7 +136,6 @@ class BindableBytePropertyTests {
         // undo MvvmBase.initDataBinding() call
         MvvmBase.resetDataBinding()
 
-
         val propertyChangedCallback = TestPropertyChangedCallback()
         val manualFieldId = BR.vm
         val viewModel = ViewModelWithBindable(manualFieldId)

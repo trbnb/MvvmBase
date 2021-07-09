@@ -55,7 +55,7 @@ dependencies {
 
     // Support library
     implementation("androidx.appcompat:appcompat:1.3.0")
-    implementation("com.google.android.material:material:1.3.0")
+    implementation("com.google.android.material:material:1.4.0")
     implementation("androidx.fragment:fragment-ktx:1.3.5")
     implementation("androidx.recyclerview:recyclerview:1.2.1")
 
@@ -88,7 +88,7 @@ repositories {
 
 val sourcesJar = task<Jar>("sourcesJar") {
     archiveClassifier.set("sources")
-    from((android.sourceSets["main"].java as com.android.build.gradle.internal.api.DefaultAndroidSourceDirectorySet).srcDirs)
+    from(android.sourceSets["main"].java.srcDirs)
 }
 
 signing {
@@ -105,4 +105,3 @@ afterEvaluate {
         }
     }
 }
-

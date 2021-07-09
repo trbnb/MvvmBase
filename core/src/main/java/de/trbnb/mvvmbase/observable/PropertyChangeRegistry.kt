@@ -2,7 +2,7 @@ package de.trbnb.mvvmbase.observable
 
 import de.trbnb.mvvmbase.OnPropertyChangedCallback
 
-class PropertyChangeRegistry(
+internal class PropertyChangeRegistry(
     private val dependencyPairs: List<Pair<String, Array<out String>>>
 ) : CallbackRegistry<OnPropertyChangedCallback, ObservableContainer, String>(
     object : NotifierCallback<OnPropertyChangedCallback, ObservableContainer, String>() {

@@ -11,6 +11,9 @@ import de.trbnb.mvvmbase.utils.observe
 import kotlin.reflect.KMutableProperty0
 import kotlin.reflect.KProperty0
 
+/**
+ * Observes an observable property as Compose state.
+ */
 @Composable
 fun <T> KProperty0<T>.observeAsState(): State<T> {
     val state = remember { mutableStateOf(get()) }
@@ -22,9 +25,15 @@ fun <T> KProperty0<T>.observeAsState(): State<T> {
     return state
 }
 
+/**
+ * Observes an observable property as mutable Compose state.
+ */
 @Composable
 fun <T> KMutableProperty0<T>.observeAsMutableState(): MutableState<T> {
     return ViewModelMutableState(observeAsState(), this)
 }
 
+/**
+ * Gets the setter function in an explicit way.
+ */
 inline val <T> MutableState<T>.setter: (T) -> Unit get() = component2()

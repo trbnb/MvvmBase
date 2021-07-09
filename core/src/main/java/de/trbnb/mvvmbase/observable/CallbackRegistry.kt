@@ -28,7 +28,7 @@ package de.trbnb.mvvmbase.observable
  * @param <A> Opaque argument used to pass additional data beyond an int.
  * @param notifier The notification mechanism for notifying an event.
  */
-open class CallbackRegistry<C, T, A> (private val notifier: NotifierCallback<C, T, A>) : Cloneable {
+internal open class CallbackRegistry<C, T, A> (private val notifier: NotifierCallback<C, T, A>) : Cloneable {
     /** An ordered collection of listeners waiting to be notified.  */
     private val callbacks: MutableList<C> = mutableListOf()
 
@@ -69,7 +69,7 @@ open class CallbackRegistry<C, T, A> (private val notifier: NotifierCallback<C, 
                     remainderRemoved[i] = 0
                 }
             }
-            
+
             if (first64Removed != 0L) {
                 removeRemovedCallbacks(0, first64Removed)
                 first64Removed = 0

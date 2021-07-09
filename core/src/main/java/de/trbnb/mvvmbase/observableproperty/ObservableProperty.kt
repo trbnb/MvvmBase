@@ -108,7 +108,6 @@ class ObservableProperty<T> internal constructor(
          */
         fun afterSet(action: AfterSet<T>) = apply { afterSet = action }
 
-
         override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>) = ObservableProperty(
             viewModel = thisRef,
             defaultValue = defaultValue,

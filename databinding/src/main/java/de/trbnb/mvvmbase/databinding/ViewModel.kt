@@ -56,6 +56,12 @@ interface ViewModel : Observable, LifecycleOwner, EventChannelOwner {
      */
     fun onUnbind()
 
+    /**
+     * Is called when this instance is about to be removed from memory.
+     * This means that this object is no longer bound to a view and will never be. It is about to
+     * be garbage collected.
+     * Implementations should provide a method to deregister from callbacks, etc.
+     */
     fun onDestroy()
 
     /**

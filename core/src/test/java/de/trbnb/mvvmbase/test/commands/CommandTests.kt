@@ -5,11 +5,11 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import de.trbnb.mvvmbase.BaseViewModel
 import de.trbnb.mvvmbase.MvvmBase
-import de.trbnb.mvvmbase.observableproperty.bindable
 import de.trbnb.mvvmbase.commands.Command
 import de.trbnb.mvvmbase.commands.SimpleCommand
 import de.trbnb.mvvmbase.commands.ruleCommand
 import de.trbnb.mvvmbase.commands.simpleCommand
+import de.trbnb.mvvmbase.observableproperty.observable
 import de.trbnb.mvvmbase.utils.observe
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeAll
@@ -66,11 +66,11 @@ class CommandTests {
     }
 
     class DependsOnViewModel : BaseViewModel() {
-        var foo by bindable<Any>()
+        var foo by observable<Any>()
 
         val command = ruleCommand<Unit, Unit>(
             enabledRule = { foo != null },
-            action = {  },
+            action = {},
             dependencyProperties = listOf(::foo)
         )
     }

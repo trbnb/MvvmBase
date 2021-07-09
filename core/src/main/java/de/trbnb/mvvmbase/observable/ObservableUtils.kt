@@ -4,7 +4,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import de.trbnb.mvvmbase.OnPropertyChangedCallback
-import kotlin.reflect.KProperty
 
 /**
  * Adds an [OnPropertyChangedCallback] and removes it when the lifecycle of [lifecycleOwner] is destroyed.

@@ -32,6 +32,9 @@ fun <VM> MvvmBindingActivity<VM, *>.viewModelProviderFactory(factory: (handle: S
         }
     }
 
+/**
+ * Convenience function to create a [ViewModelProvider.Factory].
+ */
 fun <VM> viewModelProviderFactory(factory: () -> VM): ViewModelProvider.Factory
     where VM : ViewModel, VM : androidx.lifecycle.ViewModel = object : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")

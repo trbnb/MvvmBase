@@ -1,13 +1,13 @@
 package de.trbnb.mvvmbase.databinding.bindableproperty
 
 import androidx.databinding.BaseObservable
+import de.trbnb.mvvmbase.databinding.ViewModel
+import de.trbnb.mvvmbase.databinding.utils.resolveFieldId
 import de.trbnb.mvvmbase.observableproperty.AfterSet
 import de.trbnb.mvvmbase.observableproperty.BeforeSet
 import de.trbnb.mvvmbase.observableproperty.StateSaveOption
 import de.trbnb.mvvmbase.observableproperty.Validate
 import de.trbnb.mvvmbase.observableproperty.resolveKey
-import de.trbnb.mvvmbase.databinding.ViewModel
-import de.trbnb.mvvmbase.databinding.utils.resolveFieldId
 import de.trbnb.mvvmbase.savedstate.StateSavingViewModel
 import de.trbnb.mvvmbase.utils.savingStateInBindableSupports
 import kotlin.properties.ReadWriteProperty

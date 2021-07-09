@@ -23,7 +23,6 @@ class FlowableBindingTests {
         }
     }
 
-
     @Test
     fun `is the given default value used`() {
         val observable: Observable<Int> = PublishSubject.create()

@@ -4,8 +4,6 @@ import androidx.lifecycle.LifecycleOwner
 import de.trbnb.mvvmbase.OnPropertyChangedCallback
 import de.trbnb.mvvmbase.observable.ObservableContainer
 import de.trbnb.mvvmbase.observable.addOnPropertyChangedCallback
-import java.lang.reflect.ParameterizedType
-import java.lang.reflect.Type
 import kotlin.jvm.internal.CallableReference
 import kotlin.reflect.KProperty0
 

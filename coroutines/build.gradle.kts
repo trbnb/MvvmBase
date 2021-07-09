@@ -68,7 +68,7 @@ dependencies {
 
 val sourcesJar = task<Jar>("sourcesJar") {
     archiveClassifier.set("sources")
-    from((android.sourceSets["main"].java as com.android.build.gradle.internal.api.DefaultAndroidSourceDirectorySet).srcDirs)
+    from(android.sourceSets["main"].java.srcDirs)
 }
 
 signing {

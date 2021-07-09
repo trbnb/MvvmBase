@@ -55,6 +55,12 @@ internal fun KProperty<*>.brFieldName(): String {
     return name
 }
 
+/**
+ * Invokes [action] everytime notifyPropertyChanged is called for the receiver property.
+ *
+ * @param invokeImmediately If true [action] will be invoked immediately and not wait for the first notifyPropertyChanged call.
+ * @param lifecycleOwner Lifecycle that determines when listening for notifyPropertyChanged stops.
+ */
 inline fun <T> KProperty0<T>.observeBindable(
     invokeImmediately: Boolean = true,
     lifecycleOwner: LifecycleOwner,
