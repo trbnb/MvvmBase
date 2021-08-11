@@ -18,7 +18,7 @@ import kotlin.reflect.KProperty0
 fun <T> KProperty0<T>.observeAsState(): State<T> {
     val state = remember { mutableStateOf(get()) }
     val lifecycleOwner = LocalLifecycleOwner.current
-    DisposableEffect(key1 = this, lifecycleOwner) {
+    DisposableEffect(key1 = this, key2 = lifecycleOwner) {
         val dispose = observe(lifecycleOwner, false) { state.value = it }
         onDispose(dispose::invoke)
     }
@@ -30,7 +30,7 @@ fun <T> KProperty0<T>.observeAsState(): State<T> {
  */
 @Composable
 fun <T> KMutableProperty0<T>.observeAsMutableState(): MutableState<T> {
-    return ViewModelMutableState(observeAsState(), this)
+    return PropertyMutableState(observeAsState(), this)
 }
 
 /**
