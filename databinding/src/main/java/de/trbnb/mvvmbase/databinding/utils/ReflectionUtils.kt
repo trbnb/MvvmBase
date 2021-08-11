@@ -62,10 +62,10 @@ internal fun KProperty<*>.brFieldName(): String {
  * @param lifecycleOwner Lifecycle that determines when listening for notifyPropertyChanged stops.
  */
 inline fun <T> KProperty0<T>.observeBindable(
+    lifecycleOwner: LifecycleOwner? = null,
     invokeImmediately: Boolean = true,
-    lifecycleOwner: LifecycleOwner,
     crossinline action: (T) -> Unit
-) {
+): () -> Unit {
     val observable = (this as? CallableReference)?.boundReceiver?.let { it as? Observable }
         ?: throw IllegalArgumentException("Property receiver is not an Observable")
 
@@ -79,9 +79,16 @@ inline fun <T> KProperty0<T>.observeBindable(
         }
     }
 
-    observable.addOnPropertyChangedCallback(lifecycleOwner, onPropertyChangedCallback)
+
+    if (lifecycleOwner != null) {
+        observable.addOnPropertyChangedCallback(lifecycleOwner, onPropertyChangedCallback)
+    } else {
+        observable.addOnPropertyChangedCallback(onPropertyChangedCallback)
+    }
 
     if (invokeImmediately) {
         action(get())
     }
+
+    return { observable.removeOnPropertyChangedCallback(onPropertyChangedCallback) }
 }
