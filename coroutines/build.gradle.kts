@@ -57,8 +57,8 @@ dependencies {
     testAnnotationProcessor("androidx.databinding:databinding-compiler:${Versions.gradleTools}")
     kaptTest("androidx.databinding:databinding-compiler:${Versions.gradleTools}")
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.1")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1")
 
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.7.0")

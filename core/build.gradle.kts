@@ -50,9 +50,9 @@ dependencies {
     implementation(fileTree("dir" to "libs", "include" to listOf("*.jar")))
 
     // Support library
-    implementation("androidx.appcompat:appcompat:1.3.0")
+    implementation("androidx.appcompat:appcompat:1.3.1")
     implementation("com.google.android.material:material:1.4.0")
-    implementation("androidx.fragment:fragment-ktx:1.3.5")
+    implementation("androidx.fragment:fragment-ktx:1.3.6")
     implementation("androidx.recyclerview:recyclerview:1.2.1")
 
     implementation("androidx.compose.runtime:runtime:${Versions.compose}")
