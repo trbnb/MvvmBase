@@ -1,7 +1,5 @@
 package de.trbnb.mvvmbase.commands
 
-import de.trbnb.mvvmbase.ViewModel
-
 /**
  * A [Command] implementation that can simply be set as en-/disabled with a boolean value.
  *
@@ -21,7 +19,7 @@ class SimpleCommand<in P, out R> internal constructor(isEnabled: Boolean = true,
  * Helper function to create a [SimpleCommand].
  */
 @JvmName("parameterizedSimpleCommand")
-fun <P, R> ViewModel.simpleCommand(
+fun <P, R> simpleCommand(
     isEnabled: Boolean = true,
     action: (P) -> R
 ): SimpleCommand<P, R> = SimpleCommand(isEnabled, action)
@@ -29,7 +27,7 @@ fun <P, R> ViewModel.simpleCommand(
 /**
  * Helper function to create a parameter-less [SimpleCommand].
  */
-fun <R> ViewModel.simpleCommand(
+fun <R> simpleCommand(
     isEnabled: Boolean = true,
     action: (Unit) -> R
 ): SimpleCommand<Unit, R> = simpleCommand<Unit, R>(isEnabled, action)
