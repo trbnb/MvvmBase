@@ -3,7 +3,7 @@ package de.trbnb.mvvmbase.sample.main
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import de.trbnb.mvvmbase.commands.simpleCommand
+import de.trbnb.mvvmbase.commands.ruleCommand
 import de.trbnb.mvvmbase.observableproperty.observable
 import de.trbnb.mvvmbase.savedstate.BaseStateSavingViewModel
 import io.reactivex.Observable
@@ -26,7 +26,9 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    val showToastCommand = simpleCommand {
-        eventChannel(MainEvent.ShowToast)
-    }
+    val showToastCommand = ruleCommand(
+        action = { eventChannel(MainEvent.ShowToast(textInput)) },
+        enabledRule = { textInput.isNotEmpty() },
+        dependencyProperties = listOf(::textInput)
+    )
 }

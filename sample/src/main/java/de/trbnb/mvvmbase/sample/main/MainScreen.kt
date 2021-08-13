@@ -15,7 +15,6 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -26,12 +25,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import de.trbnb.mvvmbase.commands.Command
 import de.trbnb.mvvmbase.commands.invoke
+import de.trbnb.mvvmbase.commands.simpleCommand
 import de.trbnb.mvvmbase.compose.observeAsMutableState
 import de.trbnb.mvvmbase.compose.observeAsState
 import de.trbnb.mvvmbase.compose.setter
 import de.trbnb.mvvmbase.events.Event
-import de.trbnb.mvvmbase.events.lastEventAsState
+import de.trbnb.mvvmbase.events.OnEvent
 import de.trbnb.mvvmbase.sample.app.AppTheme
 import kotlinx.coroutines.launch
 
@@ -39,10 +40,9 @@ import kotlinx.coroutines.launch
 @Composable
 fun MainScreenTemplate(
     input: MutableState<String> = remember { mutableStateOf("Foo") },
-    onShowToast: () -> Unit = {},
+    showToastCommand: Command<Unit, Unit> = simpleCommand { },
     navigateToSecondScreen: () -> Unit = {},
-    navigateToListScreen: () -> Unit = {},
-    lastEventState: State<Event?> = mutableStateOf(null)
+    navigateToListScreen: () -> Unit = {}
 ) = AppTheme {
     val scaffoldState = rememberScaffoldState()
     val coroutineScope = rememberCoroutineScope()
@@ -78,7 +78,7 @@ fun MainScreenTemplate(
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp)
                 )
-                Button(onClick = onShowToast) { Text(text = "Show Toast") }
+                Button(enabled = showToastCommand.isEnabled, onClick = showToastCommand::invoke) { Text(text = "Show Toast") }
                 Button(onClick = {
                     coroutineScope.launch {
                         scaffoldState.snackbarHostState.showSnackbar("Snackbar example!")
@@ -89,13 +89,12 @@ fun MainScreenTemplate(
             }
         }
     )
-    OnEvent(lastEventState.value)
 }
 
 @Composable
 fun OnEvent(event: Event?) {
     when (event) {
-        MainEvent.ShowToast -> Toast.makeText(LocalContext.current, "foobar", Toast.LENGTH_SHORT).show()
+        is MainEvent.ShowToast -> Toast.makeText(LocalContext.current, event.text, Toast.LENGTH_SHORT).show()
     }
 }
 
@@ -106,9 +105,9 @@ fun MainScreen(navController: NavController) {
     viewModel.showToastCommand::isEnabled.observeAsState()
     MainScreenTemplate(
         inputState,
-        onShowToast = { viewModel.showToastCommand() },
+        showToastCommand = viewModel.showToastCommand,
         navigateToSecondScreen = { navController.navigate("second") },
-        lastEventState = viewModel.lastEventAsState(),
         navigateToListScreen = { navController.navigate("list") }
     )
+    viewModel.OnEvent { OnEvent(it) }
 }
