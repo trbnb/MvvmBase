@@ -4,7 +4,7 @@ import android.util.Size
 import android.util.SizeF
 import androidx.lifecycle.SavedStateHandle
 import de.trbnb.mvvmbase.MvvmBase
-import de.trbnb.mvvmbase.observableproperty.bindable
+import de.trbnb.mvvmbase.observableproperty.observable
 import de.trbnb.mvvmbase.savedstate.BaseStateSavingViewModel
 import de.trbnb.mvvmbase.utils.savingStateInBindableSupports
 import org.junit.jupiter.api.BeforeEach
@@ -17,11 +17,11 @@ class BindablePropertySavedStateHandleTests {
     }
 
     class TestViewModel(savedStateHandle: SavedStateHandle = SavedStateHandle()) : BaseStateSavingViewModel(savedStateHandle) {
-        var text: String by bindable("foo")
-        var userSetting: Boolean by bindable(false)
-        var nullableBoolean: Boolean? by bindable()
-        var isDone: Boolean by bindable(false)
-        var property: String? by bindable()
+        var text: String by observable("foo")
+        var userSetting: Boolean by observable(false)
+        var nullableBoolean: Boolean? by observable()
+        var isDone: Boolean by observable(false)
+        var property: String? by observable()
     }
 
     @Test

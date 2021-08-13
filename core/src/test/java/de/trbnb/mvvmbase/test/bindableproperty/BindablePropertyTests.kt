@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import de.trbnb.mvvmbase.BaseViewModel
 import de.trbnb.mvvmbase.MvvmBase
 import de.trbnb.mvvmbase.observableproperty.StateSaveOption
-import de.trbnb.mvvmbase.observableproperty.bindable
+import de.trbnb.mvvmbase.observableproperty.observable
 import de.trbnb.mvvmbase.savedstate.BaseStateSavingViewModel
 import de.trbnb.mvvmbase.test.TestPropertyChangedCallback
 import org.junit.jupiter.api.BeforeEach
@@ -19,7 +19,7 @@ class BindablePropertyTests {
     @Test
     fun `is null the default value without explicit assignment`() {
         val viewModel = object : BaseViewModel() {
-            val property: String? by bindable()
+            val property: String? by observable()
         }
 
         assert(viewModel.property == null)
@@ -28,7 +28,7 @@ class BindablePropertyTests {
     @Test
     fun `does value assignment work`() {
         val viewModel = object : BaseViewModel() {
-            var property: String by bindable("")
+            var property: String by observable("")
         }
 
         val newValue = "Foo"
@@ -43,7 +43,7 @@ class BindablePropertyTests {
         val oldValue = ""
         val newValue = "Foo"
         val viewModel = object : BaseViewModel() {
-            var property: String by bindable(oldValue)
+            var property: String by observable(oldValue)
                 .afterSet { old, new ->
                     assert(newValue == new)
                     assert(oldValue == old)
@@ -58,7 +58,7 @@ class BindablePropertyTests {
         val value = "Foo"
         var afterSetWasCalled = false
         val viewModel = object : BaseViewModel() {
-            var propery: String by bindable(value)
+            var propery: String by observable(value)
                 .distinct()
                 .afterSet { _, _ -> afterSetWasCalled = true }
         }
@@ -74,7 +74,7 @@ class BindablePropertyTests {
         assert(oldValue != newValue)
 
         val viewModel = object : BaseViewModel() {
-            var property: String by bindable(oldValue)
+            var property: String by observable(oldValue)
                 .beforeSet { old, new ->
                     assert(old == oldValue)
                     assert(new == newValue)
@@ -93,7 +93,7 @@ class BindablePropertyTests {
         assert(oldValue != newValue)
 
         val viewModel = object : BaseViewModel() {
-            var property: Int by bindable(defaultValue = oldValue)
+            var property: Int by observable(defaultValue = oldValue)
                 .validate { old, new ->
                     assert(old == oldValue)
                     assert(new == newValue)
@@ -113,7 +113,7 @@ class BindablePropertyTests {
         assert(oldValue != newValue)
 
         val viewModel = object : BaseViewModel() {
-            var property: Int? by bindable<Int?>(defaultValue = oldValue)
+            var property: Int? by observable<Int?>(defaultValue = oldValue)
                 .validate { old, new ->
                     assert(old == oldValue)
                     assert(new == newValue)
@@ -146,11 +146,11 @@ class BindablePropertyTests {
     }
 
     class ViewModelWithBindable : BaseViewModel() {
-                var stringProperty: String? by bindable()
+                var stringProperty: String? by observable()
 
-                var booleanProperty: Boolean? by bindable()
+                var booleanProperty: Boolean? by observable()
 
-                var isSomething: Boolean by bindable(false)
+                var isSomething: Boolean by observable(false)
     }
 
     @Test
@@ -168,9 +168,9 @@ class BindablePropertyTests {
     }
 
     class AutomaticStateViewModel(savedStateHandle: SavedStateHandle = SavedStateHandle()) : BaseStateSavingViewModel(savedStateHandle) {
-                var supportedAutomatic by bindable("")
+                var supportedAutomatic by observable("")
 
-                var notSupportedAutomatic: Any by bindable(Any())
+                var notSupportedAutomatic: Any by observable(Any())
     }
 
     @Test
@@ -188,7 +188,7 @@ class BindablePropertyTests {
         key: String,
         savedStateHandle: SavedStateHandle = SavedStateHandle()
     ) : BaseStateSavingViewModel(savedStateHandle) {
-                var property by bindable("", stateSaveOption = StateSaveOption.Manual(key))
+                var property by observable("", stateSaveOption = StateSaveOption.Manual(key))
     }
 
     @Test
@@ -202,7 +202,7 @@ class BindablePropertyTests {
     }
 
     class NoneStateViewModel(savedStateHandle: SavedStateHandle = SavedStateHandle()) : BaseStateSavingViewModel(savedStateHandle) {
-                var property by bindable("", stateSaveOption = StateSaveOption.None)
+                var property by observable("", stateSaveOption = StateSaveOption.None)
     }
 
     @Test
@@ -221,7 +221,7 @@ class BindablePropertyTests {
     }
 
     class ViewModelWithDistinct : BaseViewModel() {
-                var property by bindable("")
+                var property by observable("")
             .distinct()
     }
 }

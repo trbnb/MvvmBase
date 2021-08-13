@@ -6,8 +6,8 @@ import androidx.lifecycle.LifecycleRegistry
 import de.trbnb.mvvmbase.BaseViewModel
 import de.trbnb.mvvmbase.DependsOn
 import de.trbnb.mvvmbase.MvvmBase
-import de.trbnb.mvvmbase.observableproperty.bindable
 import de.trbnb.mvvmbase.observable.addOnPropertyChangedCallback
+import de.trbnb.mvvmbase.observableproperty.observable
 import de.trbnb.mvvmbase.utils.observe
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -42,7 +42,7 @@ class BaseViewModelTests {
     @Test
     fun `@DependsOn`() {
         val viewModel = object : BaseViewModel() {
-            var foo by bindable("")
+            var foo by observable("")
 
             @DependsOn("foo")
             val bar: String
