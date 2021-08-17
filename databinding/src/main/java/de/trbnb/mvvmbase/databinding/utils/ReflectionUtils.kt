@@ -79,7 +79,6 @@ inline fun <T> KProperty0<T>.observeBindable(
         }
     }
 
-
     if (lifecycleOwner != null) {
         observable.addOnPropertyChangedCallback(lifecycleOwner, onPropertyChangedCallback)
     } else {
