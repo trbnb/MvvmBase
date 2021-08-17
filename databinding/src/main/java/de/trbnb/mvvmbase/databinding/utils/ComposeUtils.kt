@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.viewinterop.AndroidViewBinding
 import androidx.databinding.ViewDataBinding
+import androidx.lifecycle.LifecycleOwner
 import de.trbnb.mvvmbase.compose.PropertyMutableState
 import de.trbnb.mvvmbase.databinding.BR
 import de.trbnb.mvvmbase.databinding.ViewModel
@@ -51,11 +52,13 @@ fun <VM, B> AndroidViewDataBinding(
     factory: (inflater: LayoutInflater, parent: ViewGroup, attachToParent: Boolean) -> B,
     modifier: Modifier = Modifier,
     fieldId: Int = BR.vm,
-    update: B.(viewModel: VM) -> Unit = {}
+    update: B.(viewModel: VM) -> Unit = {},
+    lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
 ) where VM : ViewModel, VM : androidx.lifecycle.ViewModel, B : ViewDataBinding {
     AndroidViewBinding(
         factory = { inflater, parent, attachToParent ->
             factory(inflater, parent, attachToParent).apply {
+                this.lifecycleOwner = lifecycleOwner
                 setVariable(fieldId, viewModel)
                 viewModel.onBind()
             }
