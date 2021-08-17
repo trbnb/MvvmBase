@@ -40,6 +40,11 @@ fun <T> KMutableProperty0<T>.observeBindableAsMutableState(): MutableState<T> {
     return PropertyMutableState(observeBindableAsState(), this)
 }
 
+/**
+ * Helper function to use [AndroidViewBinding] with [ViewDataBinding]s that only have a single variable: a ViewModel.
+ *
+ * @see AndroidViewBinding
+ */
 @Composable
 fun <VM, B> AndroidViewDataBinding(
     viewModel: VM,
