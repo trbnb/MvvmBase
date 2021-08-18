@@ -1,8 +1,0 @@
-<resources>
-    <string name="app_name">KotlinDaggerDatabindingTemplate</string>
-
-    <string name="example_text">Hello Databinding, Kotlin &amp; Dagger</string>
-
-    <string name="not_restored">Not restored.</string>
-    <string name="restored">Restored.</string>
-</resources>

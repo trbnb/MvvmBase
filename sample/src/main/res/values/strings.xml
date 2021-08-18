@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Compose MvvmBase Sample</string>
+
+    <string name="example_text">Hello Compose!</string>
+
+    <string name="not_restored">Not restored.</string>
+    <string name="restored">Restored.</string>
+</resources>

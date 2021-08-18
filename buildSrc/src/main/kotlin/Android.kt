@@ -1,4 +1,4 @@
 object Android {
-    const val minSdk = 14
-    const val compileSdk = 29
+    const val minSdk = 21
+    const val compileSdk = 30
 }

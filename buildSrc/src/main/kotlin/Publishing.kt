@@ -7,28 +7,12 @@ import org.gradle.kotlin.dsl.get
 import java.nio.file.Paths
 
 object Publishing {
-    const val versionName = "2.1.1"
-    const val versionCode = 43
+    const val versionName = "3.0.0"
 
     const val url = "https://github.com/trbnb/MvvmBase"
     const val gitUrl = "https://github.com/trbnb/MvvmBase.git"
     const val licenseUrl = "https://github.com/trbnb/MvvmBase/blob/master/LICENSE"
     const val groupId = "de.trbnb"
-
-    const val mainDescription = "MVVM Framework for Android."
-    const val mainArtifactId = "mvvmbase-core"
-
-    const val rxJava2Description = "RxJava2 extensions for MvvmBase."
-    const val rxJava2ArtifactId = "mvvmbase-rxjava2"
-
-    const val rxJava3Description = "RxJava3 extensions for MvvmBase."
-    const val rxJava3ArtifactId = "mvvmbase-rxjava3"
-
-    const val conductorDescription = "Conductor extensions for MvvmBase."
-    const val conductorArtifactId = "mvvmbase-conductor"
-
-    const val coroutinesDescription = "Coroutines extensions for MvvmBase."
-    const val coroutinesArtifactId = "mvvmbase-coroutines"
 
     fun getOssrhUsername(project: Project) = project.rootProject.extra["private_ossrh_user"].toString()
     fun getOssrhPassword(project: Project) = project.rootProject.extra["private_ossrh_password"].toString()
