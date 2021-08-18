@@ -272,3 +272,15 @@ fun ViewModel.bindableUShort(
     defaultValue: UShort = 0U,
     fieldId: Int? = null
 ): ObservableProperty.Provider<UShort> = observable(defaultValue)
+
+/**
+ * Helper function to migrate from `childrenBindable`.
+ *
+ * @see ViewModel.asChildren
+ */
+@Deprecated("Use asChildren() instead.", ReplaceWith("observable(defaultValue, stateSaveOption).asChildren()"))
+inline fun <reified C : Collection<ViewModel>> ViewModel.childrenBindable(
+    defaultValue: C,
+    fieldId: Int? = null,
+    stateSaveOption: StateSaveOption? = null
+): ObservableProperty.Provider<C> = observable(defaultValue, stateSaveOption).asChildren()
