@@ -10,8 +10,10 @@ import androidx.lifecycle.destroyInternal
 import androidx.lifecycle.getTagFromViewModel
 import androidx.lifecycle.setTagIfAbsentForViewModel
 import de.trbnb.mvvmbase.MvvmBase
+import de.trbnb.mvvmbase.databinding.utils.resolveFieldId
 import de.trbnb.mvvmbase.events.EventChannel
 import de.trbnb.mvvmbase.events.EventChannelImpl
+import kotlin.reflect.KProperty
 import androidx.lifecycle.ViewModel as ArchitectureViewModel
 
 /**
@@ -51,6 +53,10 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel, LifecycleOwne
 
     final override fun notifyPropertyChanged(fieldId: Int) {
         callbacks.notifyCallbacks(this, fieldId, null)
+    }
+
+    final override fun notifyPropertyChanged(property: KProperty<*>) {
+        notifyPropertyChanged(property.resolveFieldId())
     }
 
     /**
