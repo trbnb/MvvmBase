@@ -69,7 +69,7 @@ dependencies {
 
     implementation("androidx.compose.runtime:runtime:${Versions.compose}")
     implementation("androidx.compose.ui:ui:${Versions.compose}")
-    implementation("androidx.compose.ui:ui-viewbinding:1.0.1")
+    implementation("androidx.compose.ui:ui-viewbinding:1.0.2")
 
     // Testing
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.7.0")
