@@ -3,11 +3,18 @@ package de.trbnb.mvvmbase.databinding.test
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
+import de.trbnb.mvvmbase.MvvmBase
 import de.trbnb.mvvmbase.databinding.BaseViewModel
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class ViewModelLifecycleTests {
     class ViewModel : BaseViewModel()
+
+    @BeforeEach
+    fun setup() {
+        MvvmBase.disableViewModelLifecycleThreadConstraints()
+    }
 
     @Test
     fun `initial state`() {
@@ -99,6 +106,20 @@ class ViewModelLifecycleTests {
         viewModel.destroy()
 
         assert(onUnbindCalled)
+    }
+
+    @Test
+    fun `onUnbind() doesn't do anything if ViewModel is destroyed`() {
+        val viewModel = ViewModel()
+        viewModel.destroy()
+        viewModel.onUnbind()
+    }
+
+    @Test
+    fun `onBind() doesn't do anything if ViewModel is destroyed`() {
+        val viewModel = ViewModel()
+        viewModel.destroy()
+        viewModel.onBind()
     }
 
     class LifecycleObserver : LifecycleEventObserver {

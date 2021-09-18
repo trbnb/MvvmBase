@@ -13,6 +13,7 @@ import de.trbnb.mvvmbase.MvvmBase
 import de.trbnb.mvvmbase.databinding.utils.resolveFieldId
 import de.trbnb.mvvmbase.events.EventChannel
 import de.trbnb.mvvmbase.events.EventChannelImpl
+import de.trbnb.mvvmbase.utils.isDestroyed
 import kotlin.reflect.KProperty
 import androidx.lifecycle.ViewModel as ArchitectureViewModel
 
@@ -64,6 +65,7 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel, LifecycleOwne
      */
     @CallSuper
     override fun onBind() {
+        if (isDestroyed) return
         lifecycleOwner.onEvent(DataBindingViewModelLifecycleOwner.Event.BOUND)
     }
 
@@ -72,6 +74,7 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel, LifecycleOwne
      */
     @CallSuper
     override fun onUnbind() {
+        if (isDestroyed) return
         lifecycleOwner.onEvent(DataBindingViewModelLifecycleOwner.Event.UNBOUND)
     }
 
