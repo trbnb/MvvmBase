@@ -30,7 +30,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = Versions.compose
+        kotlinCompilerExtensionVersion = Versions.composeCompiler
     }
 
     dataBinding {
@@ -59,9 +59,9 @@ dependencies {
     implementation(fileTree("dir" to "libs", "include" to listOf("*.jar")))
 
     // Support library
-    implementation("androidx.appcompat:appcompat:1.3.1")
-    implementation("com.google.android.material:material:1.4.0")
-    implementation("androidx.fragment:fragment-ktx:1.3.6")
+    implementation("androidx.appcompat:appcompat:1.5.1")
+    implementation("com.google.android.material:material:1.6.1")
+    implementation("androidx.fragment:fragment-ktx:1.5.3")
     implementation("androidx.recyclerview:recyclerview:1.2.1")
 
     testAnnotationProcessor("androidx.databinding:databinding-compiler:${Versions.gradleTools}")
@@ -69,7 +69,7 @@ dependencies {
 
     implementation("androidx.compose.runtime:runtime:${Versions.compose}")
     implementation("androidx.compose.ui:ui:${Versions.compose}")
-    implementation("androidx.compose.ui:ui-viewbinding:1.0.2")
+    implementation("androidx.compose.ui:ui-viewbinding:1.2.1")
 
     // Testing
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.7.0")
@@ -83,8 +83,8 @@ dependencies {
     api(project(":core"))
 
     // Lifecycle architecture components
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1")
-    api("androidx.lifecycle:lifecycle-viewmodel-savedstate:2.3.1")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1")
+    api("androidx.lifecycle:lifecycle-viewmodel-savedstate:2.5.1")
 
     // Java inject API for dependency injection
     api("javax.inject:javax.inject:1")
