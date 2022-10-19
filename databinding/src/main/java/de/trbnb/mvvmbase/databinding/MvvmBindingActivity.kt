@@ -34,7 +34,8 @@ abstract class MvvmBindingActivity<VM, B>(@LayoutRes override val layoutId: Int)
     override val viewModelDelegate: Lazy<VM> = ViewModelLazy(
         viewModelClass = viewModelClass.kotlin,
         storeProducer = { viewModelStore },
-        factoryProducer = { defaultViewModelProviderFactory }
+        factoryProducer = { defaultViewModelProviderFactory },
+        extrasProducer = { defaultViewModelCreationExtras }
     )
 
     @Suppress("UNCHECKED_CAST")
@@ -88,5 +89,6 @@ abstract class MvvmBindingActivity<VM, B>(@LayoutRes override val layoutId: Int)
     }
 
     @Suppress("EmptyFunctionBlock")
-    override fun onEvent(event: Event) { }
+    override fun onEvent(event: Event) {
+    }
 }
