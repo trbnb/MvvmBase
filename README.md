@@ -7,7 +7,7 @@ MvvmBase is available via Maven Central. To use it put this in your `build.gradl
 
 ```gradle
 dependencies {
-    def mvvmbaseVersion = "3.0.2"
+    def mvvmbaseVersion = "3.0.3"
 
     [...]
     implementation de.trbnb:mvvmbase-core:$mvvmbaseVersion"

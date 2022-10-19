@@ -18,6 +18,7 @@ import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.lifecycle.ViewModelLazy
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
+import androidx.savedstate.SavedStateRegistry
 import androidx.savedstate.SavedStateRegistryController
 import com.bluelinelabs.conductor.archlifecycle.LifecycleController
 import de.trbnb.mvvmbase.databinding.MvvmView
@@ -88,9 +89,10 @@ abstract class MvvmBindingController<VM, B>(
      */
     private var onRestoreInstanceStateCalled = false
 
-    override fun getViewModelStore() = viewModelStore
+    override val savedStateRegistry: SavedStateRegistry
+        get() = savedStateRegistryController.savedStateRegistry
 
-    override fun getSavedStateRegistry() = savedStateRegistryController.savedStateRegistry
+    override fun getViewModelStore() = viewModelStore
 
     override fun onContextAvailable(context: Context) {
         super.onContextAvailable(context)
