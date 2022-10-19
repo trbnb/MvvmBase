@@ -38,7 +38,7 @@ fun <VM> MvvmBindingActivity<VM, *>.viewModelProviderFactory(factory: (handle: S
 fun <VM> viewModelProviderFactory(factory: () -> VM): ViewModelProvider.Factory
     where VM : ViewModel, VM : androidx.lifecycle.ViewModel = object : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
-    override fun <T : androidx.lifecycle.ViewModel?> create(modelClass: Class<T>): T = factory() as T
+    override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T =factory() as T
 }
 
 /**
