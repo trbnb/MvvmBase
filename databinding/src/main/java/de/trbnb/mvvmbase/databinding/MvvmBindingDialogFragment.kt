@@ -35,7 +35,8 @@ abstract class MvvmBindingDialogFragment<VM, B>(@LayoutRes override val layoutId
     override val viewModelDelegate: Lazy<VM> = ViewModelLazy(
         viewModelClass = viewModelClass.kotlin,
         storeProducer = { viewModelStore },
-        factoryProducer = { defaultViewModelProviderFactory }
+        factoryProducer = { defaultViewModelProviderFactory },
+        extrasProducer = { defaultViewModelCreationExtras }
     )
 
     private val mainHandler by lazy { Handler(Looper.getMainLooper()) }
