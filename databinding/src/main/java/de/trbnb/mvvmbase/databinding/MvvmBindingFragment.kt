@@ -35,7 +35,8 @@ abstract class MvvmBindingFragment<VM, B>(@LayoutRes override val layoutId: Int)
     override val viewModelDelegate: Lazy<VM> = ViewModelLazy(
         viewModelClass = viewModelClass.kotlin,
         storeProducer = { viewModelStore },
-        factoryProducer = { defaultViewModelProviderFactory }
+        factoryProducer = { defaultViewModelProviderFactory },
+        extrasProducer = { defaultViewModelCreationExtras }
     )
 
     private val mainHandler by lazy { Handler(Looper.getMainLooper()) }
@@ -73,7 +74,7 @@ abstract class MvvmBindingFragment<VM, B>(@LayoutRes override val layoutId: Int)
         onViewModelLoaded(viewModel)
     }
 
-    protected open fun onBindingCreated(binding: B) { }
+    protected open fun onBindingCreated(binding: B) {}
 
     /**
      * Creates a new [ViewDataBinding].
