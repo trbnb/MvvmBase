@@ -70,7 +70,7 @@ signing {
 afterEvaluate {
     publishing {
         repositories {
-//            mavenCentralUpload(project)
+            mavenCentralUpload(project)
         }
         publications {
             create(Publication.CONDUCTOR, this@afterEvaluate)
