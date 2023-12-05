@@ -10,7 +10,7 @@ import de.trbnb.mvvmbase.observable.PropertyChangeRegistry
  *
  * @param action The initial action that will be run when the Command is executed.
  */
-abstract class BaseCommandImpl<in P, out R>(private val action: (P) -> R) : Command<P, R> {
+public abstract class BaseCommandImpl<in P, out R>(private val action: (P) -> R) : Command<P, R> {
     private val registry = PropertyChangeRegistry(emptyList())
 
     override fun addOnPropertyChangedCallback(callback: OnPropertyChangedCallback) {

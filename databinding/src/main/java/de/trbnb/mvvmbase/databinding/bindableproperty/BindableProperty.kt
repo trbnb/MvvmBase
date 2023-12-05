@@ -26,7 +26,7 @@ import kotlin.reflect.KProperty
  * @param validate [BindablePropertyBase.validate]
  * @param beforeSet [BindablePropertyBase.beforeSet]
  */
-class BindableProperty<T> internal constructor(
+public class BindableProperty<T> internal constructor(
     viewModel: ViewModel,
     private val fieldId: Int,
     defaultValue: T,
@@ -71,7 +71,7 @@ class BindableProperty<T> internal constructor(
      *
      * @see BindableProperty
      */
-    class Provider<T>(
+    public class Provider<T>(
         private val fieldId: Int? = null,
         private val defaultValue: T,
         private val stateSaveOption: StateSaveOption
@@ -96,7 +96,7 @@ class BindableProperty<T> internal constructor(
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  * @param stateSaveOption Specifies if the state of the property should be saved and with which key.
  */
-inline fun <reified T> ViewModel.bindable(
+public inline fun <reified T> ViewModel.bindable(
     defaultValue: T,
     fieldId: Int? = null,
     stateSaveOption: StateSaveOption? = null
@@ -117,7 +117,7 @@ inline fun <reified T> ViewModel.bindable(
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  * @param stateSaveOption Specifies if the state of the property should be saved and with which key.
  */
-inline fun <reified T> ViewModel.bindable(
+public inline fun <reified T> ViewModel.bindable(
     fieldId: Int? = null,
     stateSaveOption: StateSaveOption? = null
 ): BindableProperty.Provider<T?> = bindable(null, fieldId, stateSaveOption)

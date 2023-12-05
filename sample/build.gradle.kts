@@ -6,6 +6,7 @@ plugins {
 }
 
 android {
+    namespace = "de.trbnb.mvvmbase.sample"
     compileSdk = Android.compileSdk
 
     defaultConfig {
@@ -63,18 +64,18 @@ dependencies {
     implementation(project(":rxjava3"))
 
     // Support library
-    implementation("androidx.appcompat:appcompat:1.5.1")
-    implementation("com.google.android.material:material:1.6.1")
-    implementation("androidx.recyclerview:recyclerview:1.2.1")
+    implementation("androidx.appcompat:appcompat:${Versions.appcompat}")
+    implementation("com.google.android.material:material:${Versions.material}")
+    implementation("androidx.recyclerview:recyclerview:${Versions.recyclerview}")
     implementation("androidx.cardview:cardview:1.0.0")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1")
-    implementation("androidx.fragment:fragment-ktx:1.5.3")
-    implementation("androidx.navigation:navigation-fragment-ktx:2.5.2")
-    implementation("androidx.navigation:navigation-ui-ktx:2.5.2")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.lifecycle}")
+    implementation("androidx.fragment:fragment-ktx:${Versions.fragments}")
+    implementation("androidx.navigation:navigation-fragment-ktx:${Versions.navigation}")
+    implementation("androidx.navigation:navigation-ui-ktx:${Versions.navigation}")
 
     // Kotlin
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${Versions.kotlin}")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.coroutines}")
 
     // Dagger 2
     implementation("com.google.dagger:hilt-android:${Versions.daggerHilt}")
@@ -98,14 +99,14 @@ dependencies {
     implementation("androidx.compose.material:material-icons-core:${Versions.compose}")
     implementation("androidx.compose.material:material-icons-extended:${Versions.compose}")
     // Integration with activities
-    implementation("androidx.activity:activity-compose:1.6.0")
+    implementation("androidx.activity:activity-compose:${Versions.activity}")
     // Integration with ViewModels
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:${Versions.lifecycle}")
     // Integration with observables
     implementation("androidx.compose.runtime:runtime-livedata:${Versions.compose}")
     implementation("androidx.compose.runtime:runtime-rxjava2:${Versions.compose}")
     // Hilt integration
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
     // UI Tests
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:${Versions.compose}")
 }

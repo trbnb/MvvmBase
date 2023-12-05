@@ -10,7 +10,7 @@ import de.trbnb.mvvmbase.savedstate.StateSavingViewModel
  *  Migration helper for [de.trbnb.mvvmbase.databinding.bindableproperty.bindableBoolean].
  */
 @Deprecated("Use observable() instead.", ReplaceWith("observable(defaultValue, stateSaveOption)", "de.trbnb.mvvmbase.observableproperty.observable"))
-fun ViewModel.bindableBoolean(
+public fun ViewModel.bindableBoolean(
     defaultValue: Boolean = false,
     fieldId: Int? = null,
     stateSaveOption: StateSaveOption = (this as? StateSavingViewModel)?.defaultStateSaveOption ?: StateSaveOption.None
@@ -20,7 +20,7 @@ fun ViewModel.bindableBoolean(
  *  Migration helper for [de.trbnb.mvvmbase.databinding.bindableproperty.bindableBoolean].
  */
 @Deprecated("Use observable() instead.", ReplaceWith("observable(defaultValue)", "de.trbnb.mvvmbase.observableproperty.observable"))
-fun ViewModel.bindableBoolean(
+public fun ViewModel.bindableBoolean(
     defaultValue: Boolean = false,
     fieldId: Int? = null,
 ): ObservableProperty.Provider<Boolean> = observable(defaultValue)
@@ -29,7 +29,7 @@ fun ViewModel.bindableBoolean(
  *  Migration helper for [de.trbnb.mvvmbase.databinding.bindableproperty.bindableByte].
  */
 @Deprecated("Use observable() instead.", ReplaceWith("observable(defaultValue, stateSaveOption)", "de.trbnb.mvvmbase.observableproperty.observable"))
-fun ViewModel.bindableByte(
+public fun ViewModel.bindableByte(
     defaultValue: Byte = 0,
     fieldId: Int? = null,
     stateSaveOption: StateSaveOption = (this as? StateSavingViewModel)?.defaultStateSaveOption ?: StateSaveOption.None
@@ -39,7 +39,7 @@ fun ViewModel.bindableByte(
  *  Migration helper for [de.trbnb.mvvmbase.databinding.bindableproperty.bindableByte].
  */
 @Deprecated("Use observable() instead.", ReplaceWith("observable(defaultValue)", "de.trbnb.mvvmbase.observableproperty.observable"))
-fun ViewModel.bindableByte(
+public fun ViewModel.bindableByte(
     defaultValue: Byte = 0,
     fieldId: Int? = null,
 ): ObservableProperty.Provider<Byte> = observable(defaultValue)
@@ -48,7 +48,7 @@ fun ViewModel.bindableByte(
  *  Migration helper for [de.trbnb.mvvmbase.databinding.bindableproperty.bindableChar].
  */
 @Deprecated("Use observable() instead.", ReplaceWith("observable(defaultValue, stateSaveOption)", "de.trbnb.mvvmbase.observableproperty.observable"))
-fun ViewModel.bindableChar(
+public fun ViewModel.bindableChar(
     defaultValue: Char,
     fieldId: Int? = null,
     stateSaveOption: StateSaveOption = (this as? StateSavingViewModel)?.defaultStateSaveOption ?: StateSaveOption.None
@@ -58,7 +58,7 @@ fun ViewModel.bindableChar(
  *  Migration helper for [de.trbnb.mvvmbase.databinding.bindableproperty.bindableChar].
  */
 @Deprecated("Use observable() instead.", ReplaceWith("observable(defaultValue)", "de.trbnb.mvvmbase.observableproperty.observable"))
-fun ViewModel.bindableChar(
+public fun ViewModel.bindableChar(
     defaultValue: Char,
     fieldId: Int? = null
 ): ObservableProperty.Provider<Char> = observable(defaultValue)
@@ -67,7 +67,7 @@ fun ViewModel.bindableChar(
  *  Migration helper for [de.trbnb.mvvmbase.databinding.bindableproperty.bindableDouble].
  */
 @Deprecated("Use observable() instead.", ReplaceWith("observable(defaultValue, stateSaveOption)", "de.trbnb.mvvmbase.observableproperty.observable"))
-fun ViewModel.bindableDouble(
+public fun ViewModel.bindableDouble(
     defaultValue: Double = 0.0,
     fieldId: Int? = null,
     stateSaveOption: StateSaveOption = (this as? StateSavingViewModel)?.defaultStateSaveOption ?: StateSaveOption.None
@@ -77,7 +77,7 @@ fun ViewModel.bindableDouble(
  *  Migration helper for [de.trbnb.mvvmbase.databinding.bindableproperty.bindableDouble].
  */
 @Deprecated("Use observable() instead.", ReplaceWith("observable(defaultValue)", "de.trbnb.mvvmbase.observableproperty.observable"))
-fun ViewModel.bindableDouble(
+public fun ViewModel.bindableDouble(
     defaultValue: Double = 0.0,
     fieldId: Int? = null
 ): ObservableProperty.Provider<Double> = observable(defaultValue)
@@ -86,7 +86,7 @@ fun ViewModel.bindableDouble(
  * Migration helper for [de.trbnb.mvvmbase.databinding.bindableproperty.bindableFloat]
  */
 @Deprecated("Use observable() instead.", ReplaceWith("observable(defaultValue, stateSaveOption)", "de.trbnb.mvvmbase.observableproperty.observable"))
-fun ViewModel.bindableFloat(
+public fun ViewModel.bindableFloat(
     defaultValue: Float = 0f,
     fieldId: Int? = null,
     stateSaveOption: StateSaveOption = (this as? StateSavingViewModel)?.defaultStateSaveOption ?: StateSaveOption.None
@@ -96,7 +96,7 @@ fun ViewModel.bindableFloat(
  * Migration helper for [de.trbnb.mvvmbase.databinding.bindableproperty.bindableFloat]
  */
 @Deprecated("Use observable() instead.", ReplaceWith("observable(defaultValue)", "de.trbnb.mvvmbase.observableproperty.observable"))
-fun ViewModel.bindableFloat(
+public fun ViewModel.bindableFloat(
     defaultValue: Float = 0f,
     fieldId: Int? = null
 ): ObservableProperty.Provider<Float> = observable(defaultValue)
@@ -105,7 +105,7 @@ fun ViewModel.bindableFloat(
  * Migration helper for [de.trbnb.mvvmbase.databinding.bindableproperty.bindableInt]
  */
 @Deprecated("Use observable() instead.", ReplaceWith("observable(defaultValue, stateSaveOption)", "de.trbnb.mvvmbase.observableproperty.observable"))
-fun ViewModel.bindableInt(
+public fun ViewModel.bindableInt(
     defaultValue: Int = 0,
     fieldId: Int? = null,
     stateSaveOption: StateSaveOption = (this as? StateSavingViewModel)?.defaultStateSaveOption ?: StateSaveOption.None
@@ -115,7 +115,7 @@ fun ViewModel.bindableInt(
  * Migration helper for [de.trbnb.mvvmbase.databinding.bindableproperty.bindableInt]
  */
 @Deprecated("Use observable() instead.", ReplaceWith("observable(defaultValue)", "de.trbnb.mvvmbase.observableproperty.observable"))
-fun ViewModel.bindableInt(
+public fun ViewModel.bindableInt(
     defaultValue: Int = 0,
     fieldId: Int? = null
 ): ObservableProperty.Provider<Int> = observable(defaultValue)
@@ -124,7 +124,7 @@ fun ViewModel.bindableInt(
  * Migration helper for [de.trbnb.mvvmbase.databinding.bindableproperty.bindableLong]
  */
 @Deprecated("Use observable() instead.", ReplaceWith("observable(defaultValue, stateSaveOption)", "de.trbnb.mvvmbase.observableproperty.observable"))
-fun ViewModel.bindableLong(
+public fun ViewModel.bindableLong(
     defaultValue: Long = 0,
     fieldId: Int? = null,
     stateSaveOption: StateSaveOption = (this as? StateSavingViewModel)?.defaultStateSaveOption ?: StateSaveOption.None
@@ -134,7 +134,7 @@ fun ViewModel.bindableLong(
  * Migration helper for [de.trbnb.mvvmbase.databinding.bindableproperty.bindableLong]
  */
 @Deprecated("Use observable() instead.", ReplaceWith("observable(defaultValue)", "de.trbnb.mvvmbase.observableproperty.observable"))
-fun ViewModel.bindableLong(
+public fun ViewModel.bindableLong(
     defaultValue: Long = 0,
     fieldId: Int? = null
 ): ObservableProperty.Provider<Long> = observable(defaultValue)
@@ -143,7 +143,7 @@ fun ViewModel.bindableLong(
  * Migration helper for [de.trbnb.mvvmbase.databinding.bindableproperty.bindable]
  */
 @Deprecated("Use observable() instead.", ReplaceWith("observable(defaultValue, stateSaveOption)", "de.trbnb.mvvmbase.observableproperty.observable"))
-inline fun <reified T> ViewModel.bindable(
+public inline fun <reified T> ViewModel.bindable(
     defaultValue: T,
     fieldId: Int? = null,
     stateSaveOption: StateSaveOption? = null
@@ -153,7 +153,7 @@ inline fun <reified T> ViewModel.bindable(
  * Migration helper for [de.trbnb.mvvmbase.databinding.bindableproperty.bindable]
  */
 @Deprecated("Use observable() instead.", ReplaceWith("observable(defaultValue)", "de.trbnb.mvvmbase.observableproperty.observable"))
-inline fun <reified T> ViewModel.bindable(
+public inline fun <reified T> ViewModel.bindable(
     defaultValue: T,
     fieldId: Int? = null,
 ): ObservableProperty.Provider<T> = observable(defaultValue)
@@ -165,7 +165,7 @@ inline fun <reified T> ViewModel.bindable(
     "Use observable() instead.",
     ReplaceWith("observable(stateSaveOption = stateSaveOption)", "de.trbnb.mvvmbase.observableproperty.observable")
 )
-inline fun <reified T> ViewModel.bindable(
+public inline fun <reified T> ViewModel.bindable(
     fieldId: Int? = null,
     stateSaveOption: StateSaveOption? = null
 ): ObservableProperty.Provider<T?> = observable<T?>(null, stateSaveOption)
@@ -174,7 +174,7 @@ inline fun <reified T> ViewModel.bindable(
  * MIgration helper for [de.trbnb.mvvmbase.databinding.bindableproperty.bindable].
  */
 @Deprecated("Use observable() instead.", ReplaceWith("observable()", "de.trbnb.mvvmbase.observableproperty.observable"))
-inline fun <reified T> ViewModel.bindable(
+public inline fun <reified T> ViewModel.bindable(
     fieldId: Int? = null,
 ): ObservableProperty.Provider<T?> = observable<T?>(null)
 
@@ -182,7 +182,7 @@ inline fun <reified T> ViewModel.bindable(
  * MIgration helper for [de.trbnb.mvvmbase.databinding.bindableproperty.bindableShort].
  */
 @Deprecated("Use observable() instead.", ReplaceWith("observable(defaultValue, stateSaveOption)", "de.trbnb.mvvmbase.observableproperty.observable"))
-fun ViewModel.bindableShort(
+public fun ViewModel.bindableShort(
     defaultValue: Short = 0,
     fieldId: Int? = null,
     stateSaveOption: StateSaveOption = (this as? StateSavingViewModel)?.defaultStateSaveOption ?: StateSaveOption.None
@@ -192,7 +192,7 @@ fun ViewModel.bindableShort(
  * MIgration helper for [de.trbnb.mvvmbase.databinding.bindableproperty.bindableShort].
  */
 @Deprecated("Use observable() instead.", ReplaceWith("observable(defaultValue)", "de.trbnb.mvvmbase.observableproperty.observable"))
-fun ViewModel.bindableShort(
+public fun ViewModel.bindableShort(
     defaultValue: Short = 0,
     fieldId: Int? = null
 ): ObservableProperty.Provider<Short> = observable(defaultValue)
@@ -201,7 +201,7 @@ fun ViewModel.bindableShort(
  * MIgration helper for [de.trbnb.mvvmbase.databinding.bindableproperty.bindableUByte].
  */
 @Deprecated("Use observable() instead.", ReplaceWith("observable(defaultValue, stateSaveOption)", "de.trbnb.mvvmbase.observableproperty.observable"))
-fun ViewModel.bindableUByte(
+public fun ViewModel.bindableUByte(
     defaultValue: UByte = 0U,
     fieldId: Int? = null,
     stateSaveOption: StateSaveOption = (this as? StateSavingViewModel)?.defaultStateSaveOption ?: StateSaveOption.None
@@ -211,7 +211,7 @@ fun ViewModel.bindableUByte(
  * MIgration helper for [de.trbnb.mvvmbase.databinding.bindableproperty.bindableUByte].
  */
 @Deprecated("Use observable() instead.", ReplaceWith("observable(defaultValue)", "de.trbnb.mvvmbase.observableproperty.observable"))
-fun ViewModel.bindableUByte(
+public fun ViewModel.bindableUByte(
     defaultValue: UByte = 0U,
     fieldId: Int? = null
 ): ObservableProperty.Provider<UByte> = observable(defaultValue)
@@ -220,7 +220,7 @@ fun ViewModel.bindableUByte(
  * MIgration helper for [de.trbnb.mvvmbase.databinding.bindableproperty.bindableUInt].
  */
 @Deprecated("Use observable() instead.", ReplaceWith("observable(defaultValue, stateSaveOption)", "de.trbnb.mvvmbase.observableproperty.observable"))
-fun ViewModel.bindableUInt(
+public fun ViewModel.bindableUInt(
     defaultValue: UInt = 0U,
     fieldId: Int? = null,
     stateSaveOption: StateSaveOption = (this as? StateSavingViewModel)?.defaultStateSaveOption ?: StateSaveOption.None
@@ -230,7 +230,7 @@ fun ViewModel.bindableUInt(
  * MIgration helper for [de.trbnb.mvvmbase.databinding.bindableproperty.bindableUInt].
  */
 @Deprecated("Use observable() instead.", ReplaceWith("observable(defaultValue)", "de.trbnb.mvvmbase.observableproperty.observable"))
-fun ViewModel.bindableUInt(
+public fun ViewModel.bindableUInt(
     defaultValue: UInt = 0U,
     fieldId: Int? = null
 ): ObservableProperty.Provider<UInt> = observable(defaultValue)
@@ -239,7 +239,7 @@ fun ViewModel.bindableUInt(
  * MIgration helper for [de.trbnb.mvvmbase.databinding.bindableproperty.bindableULong].
  */
 @Deprecated("Use observable() instead.", ReplaceWith("observable(defaultValue, stateSaveOption)", "de.trbnb.mvvmbase.observableproperty.observable"))
-fun ViewModel.bindableULong(
+public fun ViewModel.bindableULong(
     defaultValue: ULong = 0UL,
     fieldId: Int? = null,
     stateSaveOption: StateSaveOption = (this as? StateSavingViewModel)?.defaultStateSaveOption ?: StateSaveOption.None
@@ -249,7 +249,7 @@ fun ViewModel.bindableULong(
  * MIgration helper for [de.trbnb.mvvmbase.databinding.bindableproperty.bindableULong].
  */
 @Deprecated("Use observable() instead.", ReplaceWith("observable(defaultValue)", "de.trbnb.mvvmbase.observableproperty.observable"))
-fun ViewModel.bindableULong(
+public fun ViewModel.bindableULong(
     defaultValue: ULong = 0UL,
     fieldId: Int? = null
 ): ObservableProperty.Provider<ULong> = observable(defaultValue)
@@ -258,7 +258,7 @@ fun ViewModel.bindableULong(
  * MIgration helper for [de.trbnb.mvvmbase.databinding.bindableproperty.bindableUShort].
  */
 @Deprecated("Use observable() instead.", ReplaceWith("observable(defaultValue, stateSaveOption)", "de.trbnb.mvvmbase.observableproperty.observable"))
-fun ViewModel.bindableUShort(
+public fun ViewModel.bindableUShort(
     defaultValue: UShort = 0U,
     fieldId: Int? = null,
     stateSaveOption: StateSaveOption = (this as? StateSavingViewModel)?.defaultStateSaveOption ?: StateSaveOption.None
@@ -268,7 +268,7 @@ fun ViewModel.bindableUShort(
  * MIgration helper for [de.trbnb.mvvmbase.databinding.bindableproperty.bindableUShort].
  */
 @Deprecated("Use observable() instead.", ReplaceWith("observable(defaultValue)", "de.trbnb.mvvmbase.observableproperty.observable"))
-fun ViewModel.bindableUShort(
+public fun ViewModel.bindableUShort(
     defaultValue: UShort = 0U,
     fieldId: Int? = null
 ): ObservableProperty.Provider<UShort> = observable(defaultValue)
@@ -279,7 +279,7 @@ fun ViewModel.bindableUShort(
  * @see ViewModel.asChildren
  */
 @Deprecated("Use asChildren() instead.", ReplaceWith("observable(defaultValue, stateSaveOption).asChildren()"))
-inline fun <reified C : Collection<ViewModel>> ViewModel.childrenBindable(
+public inline fun <reified C : Collection<ViewModel>> ViewModel.childrenBindable(
     defaultValue: C,
     fieldId: Int? = null,
     stateSaveOption: StateSaveOption? = null

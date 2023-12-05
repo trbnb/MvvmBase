@@ -22,11 +22,11 @@ import kotlin.reflect.KProperty
  * that implementations have to handle [androidx.databinding.Observable.OnPropertyChangedCallback]s.
  * This is done the easiest way by extending [androidx.databinding.BaseObservable].
  */
-interface ViewModel : Observable, LifecycleOwner, EventChannelOwner {
+public interface ViewModel : Observable, LifecycleOwner, EventChannelOwner {
     /**
      * Notifies listeners that all properties of this instance have changed.
      */
-    fun notifyChange()
+    public fun notifyChange()
 
     /**
      * Notifies listeners that a specific property has changed. The getter for the property
@@ -35,7 +35,7 @@ interface ViewModel : Observable, LifecycleOwner, EventChannelOwner {
      *
      * @param fieldId The generated BR id for the Bindable field.
      */
-    fun notifyPropertyChanged(fieldId: Int)
+    public fun notifyPropertyChanged(fieldId: Int)
 
     /**
      * Notifies listeners that a specific property has changed. The getter for the property
@@ -46,7 +46,7 @@ interface ViewModel : Observable, LifecycleOwner, EventChannelOwner {
      *
      * @param property The property whose BR field ID will be detected via reflection.
      */
-    fun notifyPropertyChanged(property: KProperty<*>)
+    public fun notifyPropertyChanged(property: KProperty<*>)
 
     /**
      * Registers a property changed callback.
@@ -61,12 +61,12 @@ interface ViewModel : Observable, LifecycleOwner, EventChannelOwner {
     /**
      * Is called when this ViewModel is bound to a View.
      */
-    fun onBind()
+    public fun onBind()
 
     /**
      * Is called this ViewModel is not bound to a View anymore.
      */
-    fun onUnbind()
+    public fun onUnbind()
 
     /**
      * Is called when this instance is about to be removed from memory.
@@ -74,7 +74,7 @@ interface ViewModel : Observable, LifecycleOwner, EventChannelOwner {
      * be garbage collected.
      * Implementations should provide a method to deregister from callbacks, etc.
      */
-    fun onDestroy()
+    public fun onDestroy()
 
     /**
      * Is called when this instance is about to be removed from memory.
@@ -84,27 +84,27 @@ interface ViewModel : Observable, LifecycleOwner, EventChannelOwner {
      *
      * @see [BaseViewModel.onDestroy]
      */
-    fun destroy()
+    public fun destroy()
 
     /**
      * @see [androidx.lifecycle.ViewModel.getTag]
      */
-    operator fun <T : Any> get(key: String): T?
+    public operator fun <T : Any> get(key: String): T?
 
     /**
      * @see [androidx.lifecycle.ViewModel.setTagIfAbsent]
      */
-    fun <T : Any> initTag(key: String, newValue: T): T
+    public fun <T : Any> initTag(key: String, newValue: T): T
 
     /**
      * Destroys all ViewModels in that list when the containing ViewModel is destroyed.
      */
-    fun <VM : ViewModel, C : Collection<VM>> C.autoDestroy(): C = onEach { it.autoDestroy() }
+    public fun <VM : ViewModel, C : Collection<VM>> C.autoDestroy(): C = onEach { it.autoDestroy() }
 
     /**
      * Destroys the receiver ViewModel when the containing ViewModel is destroyed.
      */
-    fun <VM : ViewModel> VM.autoDestroy(): VM = also { child ->
+    public fun <VM : ViewModel> VM.autoDestroy(): VM = also { child ->
         val parentLifecycleObserver = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_DESTROY) {
                 child.destroy()
@@ -122,19 +122,19 @@ interface ViewModel : Observable, LifecycleOwner, EventChannelOwner {
     /**
      * Sends all the events of a given list of (receiver type) ViewModels through the event channel of the ViewModel where this function is called in.
      */
-    fun <VM : ViewModel, C : Collection<VM>> C.bindEvents(): C = onEach { it.bindEvents() }
+    public fun <VM : ViewModel, C : Collection<VM>> C.bindEvents(): C = onEach { it.bindEvents() }
 
     /**
      * Sends all the events of a given (receiver type) ViewModel through the event channel of the ViewModel where this function is called in.
      */
-    fun <VM : ViewModel> VM.bindEvents(): VM = also { child ->
+    public fun <VM : ViewModel> VM.bindEvents(): VM = also { child ->
         child.eventChannel.addListener(this@ViewModel) { event -> this@ViewModel.eventChannel.invoke(event) }
     }
 
     /**
      * Sets [BindablePropertyBase.afterSet] to a given function and returns that instance.
      */
-    fun <T : Collection<ViewModel>, P : BindablePropertyBase.Provider<*, T>> P.asChildren(beforeSet: BeforeSet<T>? = null): P = apply {
+    public fun <T : Collection<ViewModel>, P : BindablePropertyBase.Provider<*, T>> P.asChildren(beforeSet: BeforeSet<T>? = null): P = apply {
         beforeSet { old, new ->
             old.destroyAll()
             new.autoDestroy().bindEvents()

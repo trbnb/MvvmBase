@@ -10,7 +10,7 @@ import kotlin.reflect.KProperty0
 /**
  * Invokes [action] everytime notifyPropertyChanged is called for the receiver property.
  */
-inline fun <T> KProperty0<T>.observe(
+public inline fun <T> KProperty0<T>.observe(
     lifecycleOwner: LifecycleOwner? = null,
     invokeImmediately: Boolean = false,
     crossinline action: (T) -> Unit

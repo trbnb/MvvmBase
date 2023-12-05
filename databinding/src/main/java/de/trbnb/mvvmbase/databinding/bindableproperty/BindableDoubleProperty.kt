@@ -23,7 +23,7 @@ import kotlin.reflect.KProperty
  * @param validate [BindablePropertyBase.validate]
  * @param beforeSet [BindablePropertyBase.beforeSet]
  */
-class BindableDoubleProperty private constructor(
+public class BindableDoubleProperty private constructor(
     viewModel: ViewModel,
     private val fieldId: Int,
     defaultValue: Double,
@@ -43,12 +43,12 @@ class BindableDoubleProperty private constructor(
     /**
      * @see [kotlin.properties.ReadWriteProperty.getValue]
      */
-    operator fun getValue(thisRef: ViewModel, property: KProperty<*>): Double = value
+    public operator fun getValue(thisRef: ViewModel, property: KProperty<*>): Double = value
 
     /**
      * @see [kotlin.properties.ReadWriteProperty.setValue]
      */
-    operator fun setValue(thisRef: ViewModel, property: KProperty<*>, value: Double) {
+    public operator fun setValue(thisRef: ViewModel, property: KProperty<*>, value: Double) {
         if (distinct && this.value == value) {
             return
         }
@@ -73,12 +73,12 @@ class BindableDoubleProperty private constructor(
      *
      * @see BindableDoubleProperty
      */
-    class Provider internal constructor(
+    public class Provider internal constructor(
         private val fieldId: Int? = null,
         private val defaultValue: Double,
         private val stateSaveOption: StateSaveOption
     ) : BindablePropertyBase.Provider<ViewModel, Double>() {
-        override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>) = BindableDoubleProperty(
+        override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>): BindableDoubleProperty = BindableDoubleProperty(
             viewModel = thisRef,
             fieldId = fieldId ?: property.resolveFieldId(),
             defaultValue = defaultValue,
@@ -98,11 +98,11 @@ class BindableDoubleProperty private constructor(
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  * @param stateSaveOption Specifies if the state of the property should be saved and with which key.
  */
-fun ViewModel.bindableDouble(
+public fun ViewModel.bindableDouble(
     defaultValue: Double = 0.0,
     fieldId: Int? = null,
     stateSaveOption: StateSaveOption = (this as? StateSavingViewModel)?.defaultStateSaveOption ?: StateSaveOption.None
-) = BindableDoubleProperty.Provider(fieldId, defaultValue, when (this) {
+): BindableDoubleProperty.Provider = BindableDoubleProperty.Provider(fieldId, defaultValue, when (this) {
     is StateSavingViewModel -> stateSaveOption
     else -> StateSaveOption.None
 })

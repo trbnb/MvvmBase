@@ -23,7 +23,7 @@ import kotlin.reflect.KProperty
  * @param validate [BindablePropertyBase.validate]
  * @param beforeSet [BindablePropertyBase.beforeSet]
  */
-class BindableUByteProperty private constructor(
+public class BindableUByteProperty private constructor(
     viewModel: ViewModel,
     private val fieldId: Int,
     defaultValue: UByte,
@@ -43,12 +43,12 @@ class BindableUByteProperty private constructor(
     /**
      * @see [kotlin.properties.ReadWriteProperty.getValue]
      */
-    operator fun getValue(thisRef: ViewModel, property: KProperty<*>): UByte = value
+    public operator fun getValue(thisRef: ViewModel, property: KProperty<*>): UByte = value
 
     /**
      * @see [kotlin.properties.ReadWriteProperty.setValue]
      */
-    operator fun setValue(thisRef: ViewModel, property: KProperty<*>, value: UByte) {
+    public operator fun setValue(thisRef: ViewModel, property: KProperty<*>, value: UByte) {
         if (distinct && this.value == value) {
             return
         }
@@ -73,12 +73,12 @@ class BindableUByteProperty private constructor(
      *
      * @see BindableUByteProperty
      */
-    class Provider internal constructor(
+    public class Provider internal constructor(
         private val fieldId: Int? = null,
         private val defaultValue: UByte,
         private val stateSaveOption: StateSaveOption
     ) : BindablePropertyBase.Provider<ViewModel, UByte>() {
-        override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>) = BindableUByteProperty(
+        override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>): BindableUByteProperty = BindableUByteProperty(
             viewModel = thisRef,
             fieldId = fieldId ?: property.resolveFieldId(),
             defaultValue = defaultValue,
@@ -98,11 +98,11 @@ class BindableUByteProperty private constructor(
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  * @param stateSaveOption Specifies if the state of the property should be saved and with which key.
  */
-fun ViewModel.bindableUByte(
+public fun ViewModel.bindableUByte(
     defaultValue: UByte = 0U,
     fieldId: Int? = null,
     stateSaveOption: StateSaveOption = (this as? StateSavingViewModel)?.defaultStateSaveOption ?: StateSaveOption.None
-) = BindableUByteProperty.Provider(fieldId, defaultValue, when (this) {
+): BindableUByteProperty.Provider = BindableUByteProperty.Provider(fieldId, defaultValue, when (this) {
     is StateSavingViewModel -> stateSaveOption
     else -> StateSaveOption.None
 })

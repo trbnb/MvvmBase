@@ -9,7 +9,7 @@ import de.trbnb.mvvmbase.databinding.ViewModel
  * @param action The initial action that will be run when the Command is executed.
  * @param isEnabled Has to be `true` if this Command should be enabled, otherwise `false`.
  */
-class SimpleCommand<in P, out R> internal constructor(isEnabled: Boolean = true, action: (P) -> R) : BaseCommandImpl<P, R>(action) {
+public class SimpleCommand<in P, out R> internal constructor(isEnabled: Boolean = true, action: (P) -> R) : BaseCommandImpl<P, R>(action) {
     @get:Bindable
     override var isEnabled: Boolean = isEnabled
         set(value) {
@@ -24,7 +24,7 @@ class SimpleCommand<in P, out R> internal constructor(isEnabled: Boolean = true,
  * [ViewModel.onUnbind] is called.
  */
 @JvmName("parameterizedSimpleCommand")
-fun <P, R> ViewModel.simpleCommand(
+public fun <P, R> ViewModel.simpleCommand(
     isEnabled: Boolean = true,
     action: (P) -> R
 ): SimpleCommand<P, R> = SimpleCommand(isEnabled, action).apply {
@@ -35,7 +35,7 @@ fun <P, R> ViewModel.simpleCommand(
  * Helper function to create a parameter-less [SimpleCommand] that clears all it's listeners automatically when
  * [ViewModel.onUnbind] is called.
  */
-fun <R> ViewModel.simpleCommand(
+public fun <R> ViewModel.simpleCommand(
     isEnabled: Boolean = true,
     action: (Unit) -> R
 ): SimpleCommand<Unit, R> = simpleCommand<Unit, R>(isEnabled, action)

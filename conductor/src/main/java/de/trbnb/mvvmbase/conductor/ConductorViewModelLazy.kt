@@ -11,9 +11,9 @@ import com.bluelinelabs.conductor.Controller
  * @see [androidx.fragment.app.Fragment.activityViewModels]
  */
 @MainThread
-inline fun <reified VM : ViewModel> Controller.activityViewModels(
+public inline fun <reified VM : ViewModel> Controller.activityViewModels(
     noinline factoryProducer: () -> ViewModelProvider.Factory
-) = ViewModelLazy(
+): ViewModelLazy<VM> = ViewModelLazy(
     viewModelClass = VM::class,
     storeProducer = { (activity as ViewModelStoreOwner).viewModelStore },
     factoryProducer = factoryProducer

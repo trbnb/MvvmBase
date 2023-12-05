@@ -23,7 +23,7 @@ import kotlin.reflect.KProperty
  * @param validate [BindablePropertyBase.validate]
  * @param beforeSet [BindablePropertyBase.beforeSet]
  */
-class BindableCharProperty private constructor(
+public class BindableCharProperty private constructor(
     viewModel: ViewModel,
     private val fieldId: Int,
     defaultValue: Char,
@@ -43,12 +43,12 @@ class BindableCharProperty private constructor(
     /**
      * @see [kotlin.properties.ReadWriteProperty.getValue]
      */
-    operator fun getValue(thisRef: ViewModel, property: KProperty<*>): Char = value
+    public operator fun getValue(thisRef: ViewModel, property: KProperty<*>): Char = value
 
     /**
      * @see [kotlin.properties.ReadWriteProperty.setValue]
      */
-    operator fun setValue(thisRef: ViewModel, property: KProperty<*>, value: Char) {
+    public operator fun setValue(thisRef: ViewModel, property: KProperty<*>, value: Char) {
         if (distinct && this.value == value) {
             return
         }
@@ -73,12 +73,12 @@ class BindableCharProperty private constructor(
      *
      * @see BindableCharProperty
      */
-    class Provider internal constructor(
+    public class Provider internal constructor(
         private val fieldId: Int? = null,
         private val defaultValue: Char,
         private val stateSaveOption: StateSaveOption
     ) : BindablePropertyBase.Provider<ViewModel, Char>() {
-        override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>) = BindableCharProperty(
+        override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>): BindableCharProperty = BindableCharProperty(
             viewModel = thisRef,
             fieldId = fieldId ?: property.resolveFieldId(),
             defaultValue = defaultValue,
@@ -98,11 +98,11 @@ class BindableCharProperty private constructor(
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  * @param stateSaveOption Specifies if the state of the property should be saved and with which key.
  */
-fun ViewModel.bindableChar(
+public fun ViewModel.bindableChar(
     defaultValue: Char,
     fieldId: Int? = null,
     stateSaveOption: StateSaveOption = (this as? StateSavingViewModel)?.defaultStateSaveOption ?: StateSaveOption.None
-) = BindableCharProperty.Provider(fieldId, defaultValue, when (this) {
+): BindableCharProperty.Provider = BindableCharProperty.Provider(fieldId, defaultValue, when (this) {
     is StateSavingViewModel -> stateSaveOption
     else -> StateSaveOption.None
 })

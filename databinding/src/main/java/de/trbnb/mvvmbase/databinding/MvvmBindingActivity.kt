@@ -16,7 +16,7 @@ import de.trbnb.mvvmbase.events.addListener
  *
  * This creates the binding and the ViewModel during [onCreate].
  */
-abstract class MvvmBindingActivity<VM, B>(@LayoutRes override val layoutId: Int) : AppCompatActivity(), MvvmView<VM, B>
+public abstract class MvvmBindingActivity<VM, B>(@LayoutRes override val layoutId: Int) : AppCompatActivity(), MvvmView<VM, B>
         where VM : ViewModel, VM : androidx.lifecycle.ViewModel, B : ViewDataBinding {
     override lateinit var binding: B
 
@@ -45,7 +45,7 @@ abstract class MvvmBindingActivity<VM, B>(@LayoutRes override val layoutId: Int)
             ?.firstOrNull() as? Class<VM>
             ?: throw IllegalStateException("viewModelClass does not equal Class<VM>")
 
-    constructor() : this(0)
+    public constructor() : this(0)
 
     /**
      * Called by the lifecycle.

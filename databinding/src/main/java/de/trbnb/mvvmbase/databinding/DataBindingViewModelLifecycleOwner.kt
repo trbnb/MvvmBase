@@ -20,6 +20,9 @@ internal class DataBindingViewModelLifecycleOwner(enforceMainThread: Boolean) : 
         false -> LifecycleRegistry.createUnsafe(this)
     }
 
+    override val lifecycle: Lifecycle
+        get() = registry
+
     init {
         onEvent(Event.INITIALIZED)
     }
@@ -32,8 +35,6 @@ internal class DataBindingViewModelLifecycleOwner(enforceMainThread: Boolean) : 
             Event.DESTROYED -> Lifecycle.State.DESTROYED
         }
     }
-
-    override fun getLifecycle() = registry
 
     internal fun getInternalState() = when (registry.currentState) {
         Lifecycle.State.DESTROYED -> State.DESTROYED

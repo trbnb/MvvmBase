@@ -12,7 +12,7 @@ import kotlin.reflect.KProperty
  * @param action The initial action that will be run when the Command is executed.
  * @param enabledRule The initial rule that determines if this Command is enabled.
  */
-class RuleCommand<in P, out R> internal constructor(
+public class RuleCommand<in P, out R> internal constructor(
     action: (P) -> R,
     private val enabledRule: () -> Boolean
 ) : BaseCommandImpl<P, R>(action) {
@@ -27,7 +27,7 @@ class RuleCommand<in P, out R> internal constructor(
     /**
      * This method has to be called when the result of the rule might have changed.
      */
-    fun onEnabledChanged() {
+    public fun onEnabledChanged() {
         isEnabled = enabledRule()
     }
 }
@@ -36,7 +36,7 @@ class RuleCommand<in P, out R> internal constructor(
  * Helper function to create a [RuleCommand].
  */
 @JvmName("parameterizedRuleCommand0")
-fun <P, R> ViewModel.ruleCommand(
+public fun <P, R> ViewModel.ruleCommand(
     action: (P) -> R,
     enabledRule: () -> Boolean,
     dependencyPropertyNames: List<String>? = null
@@ -48,7 +48,7 @@ fun <P, R> ViewModel.ruleCommand(
  * Helper function to create a [RuleCommand].
  */
 @JvmName("parameterizedRuleCommand1")
-fun <P, R> ViewModel.ruleCommand(
+public fun <P, R> ViewModel.ruleCommand(
     action: (P) -> R,
     enabledRule: () -> Boolean,
     dependencyProperties: List<KProperty<*>>
@@ -58,7 +58,7 @@ fun <P, R> ViewModel.ruleCommand(
  * Helper function to create a parameter-less [RuleCommand].
  */
 @JvmName("parameterizedRuleCommand2")
-fun <R> ViewModel.ruleCommand(
+public fun <R> ViewModel.ruleCommand(
     action: (Unit) -> R,
     enabledRule: () -> Boolean,
     dependencyPropertyNames: List<String>? = null
@@ -67,7 +67,7 @@ fun <R> ViewModel.ruleCommand(
 /**
  * Helper function to create a parameter-less [RuleCommand].
  */
-fun <R> ViewModel.ruleCommand(
+public fun <R> ViewModel.ruleCommand(
     action: (Unit) -> R,
     enabledRule: () -> Boolean,
     dependencyProperties: List<KProperty<*>>

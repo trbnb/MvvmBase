@@ -7,6 +7,7 @@ plugins {
 }
 
 android {
+    namespace = "de.trbnb.mvvmbase.conductor"
     compileSdk = Android.compileSdk
 
     defaultConfig {
@@ -44,17 +45,17 @@ android {
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${Versions.kotlin}")
 
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:2.3.1")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.lifecycle}")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:${Versions.lifecycle}")
 
     implementation(project(":databinding"))
 
-    api("com.bluelinelabs:conductor:3.1.0")
-    api("com.bluelinelabs:conductor-archlifecycle:3.1.0")
+    api("com.bluelinelabs:conductor:${Versions.conductor}")
+    api("com.bluelinelabs:conductor-archlifecycle:${Versions.conductor}")
 
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test:runner:1.4.0")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
+    testImplementation("junit:junit:${Versions.junit}")
+    androidTestImplementation("androidx.test:runner:${Versions.testRunner}")
+    androidTestImplementation("androidx.test.espresso:espresso-core:${Versions.espresso}")
 }
 
 val sourcesJar = task<Jar>("sourcesJar") {
@@ -69,7 +70,7 @@ signing {
 afterEvaluate {
     publishing {
         repositories {
-            mavenCentralUpload(project)
+//            mavenCentralUpload(project)
         }
         publications {
             create(Publication.CONDUCTOR, this@afterEvaluate)

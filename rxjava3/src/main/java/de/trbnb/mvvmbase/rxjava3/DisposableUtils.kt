@@ -8,7 +8,7 @@ import io.reactivex.rxjava3.disposables.Disposable
 /**
  * Disposes a [Disposable] when the given lifecycle has emitted the [ON_DESTROY] event.
  */
-fun Disposable.autoDispose(lifecycleOwner: LifecycleOwner) {
+public fun Disposable.autoDispose(lifecycleOwner: LifecycleOwner) {
     lifecycleOwner.lifecycle.addObserver(LifecycleEventObserver { _, event ->
         if (event == ON_DESTROY) {
             dispose()

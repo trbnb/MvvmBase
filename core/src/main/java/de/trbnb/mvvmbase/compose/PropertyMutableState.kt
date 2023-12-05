@@ -7,7 +7,7 @@ import kotlin.reflect.KMutableProperty0
 /**
  * Simple implementation of a mutable state derived from an observable property.
  */
-class PropertyMutableState<T>(
+public class PropertyMutableState<T>(
     private val state: State<T>,
     private val property: KMutableProperty0<T>
 ) : MutableState<T> {

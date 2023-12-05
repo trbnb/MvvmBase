@@ -11,7 +11,7 @@ import kotlin.reflect.KProperty
 /**
  * Base class for RxKotlin related BindableProperties.
  */
-open class RxBindablePropertyBase<T> protected constructor(
+public open class RxBindablePropertyBase<T> protected constructor(
     private val viewModel: ViewModel,
     defaultValue: T,
     private val fieldId: Int,

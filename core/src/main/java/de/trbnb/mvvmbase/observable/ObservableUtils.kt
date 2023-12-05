@@ -8,7 +8,7 @@ import de.trbnb.mvvmbase.OnPropertyChangedCallback
 /**
  * Adds an [OnPropertyChangedCallback] and removes it when the lifecycle of [lifecycleOwner] is destroyed.
  */
-fun ObservableContainer.addOnPropertyChangedCallback(lifecycleOwner: LifecycleOwner, callback: OnPropertyChangedCallback) {
+public fun ObservableContainer.addOnPropertyChangedCallback(lifecycleOwner: LifecycleOwner, callback: OnPropertyChangedCallback) {
     addOnPropertyChangedCallback(callback)
     lifecycleOwner.lifecycle.addObserver(object : LifecycleEventObserver {
         override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {

@@ -13,7 +13,7 @@ import kotlin.reflect.KProperty
 /**
  * BindableProperty implementation for [Completable]s.
  */
-class CompletableBindableProperty private constructor(
+public class CompletableBindableProperty private constructor(
     viewModel: ViewModel,
     fieldId: Int,
     completable: Completable,
@@ -33,11 +33,11 @@ class CompletableBindableProperty private constructor(
      *
      * @see CompletableBindableProperty
      */
-    class Provider internal constructor(
+    public class Provider internal constructor(
         private val completable: Completable,
         private val onError: (Throwable) -> Unit
     ) : BindablePropertyBase.Provider<ViewModel, Boolean>() {
-        override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>) = CompletableBindableProperty(
+        override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>): CompletableBindableProperty = CompletableBindableProperty(
             viewModel = thisRef,
             fieldId = property.resolveFieldId(),
             completable = completable,

@@ -23,7 +23,7 @@ import kotlin.reflect.KProperty
  * @param validate [BindablePropertyBase.validate]
  * @param beforeSet [BindablePropertyBase.beforeSet]
  */
-class BindableBooleanProperty private constructor(
+public class BindableBooleanProperty private constructor(
     viewModel: ViewModel,
     private val fieldId: Int,
     defaultValue: Boolean,
@@ -43,12 +43,12 @@ class BindableBooleanProperty private constructor(
     /**
      * @see [kotlin.properties.ReadWriteProperty.getValue]
      */
-    operator fun getValue(thisRef: ViewModel, property: KProperty<*>): Boolean = value
+    public operator fun getValue(thisRef: ViewModel, property: KProperty<*>): Boolean = value
 
     /**
      * @see [kotlin.properties.ReadWriteProperty.setValue]
      */
-    operator fun setValue(thisRef: ViewModel, property: KProperty<*>, value: Boolean) {
+    public operator fun setValue(thisRef: ViewModel, property: KProperty<*>, value: Boolean) {
         if (distinct && this.value == value) {
             return
         }
@@ -73,12 +73,12 @@ class BindableBooleanProperty private constructor(
      *
      * @see BindableBooleanProperty
      */
-    class Provider internal constructor(
+    public class Provider internal constructor(
         private val fieldId: Int? = null,
         private val defaultValue: Boolean,
         private val stateSaveOption: StateSaveOption
     ) : BindablePropertyBase.Provider<ViewModel, Boolean>() {
-        override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>) = BindableBooleanProperty(
+        override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>): BindableBooleanProperty = BindableBooleanProperty(
             viewModel = thisRef,
             fieldId = fieldId ?: property.resolveFieldId(),
             defaultValue = defaultValue,
@@ -98,7 +98,7 @@ class BindableBooleanProperty private constructor(
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  * @param stateSaveOption Specifies if the state of the property should be saved and with which key.
  */
-fun ViewModel.bindableBoolean(
+public fun ViewModel.bindableBoolean(
     defaultValue: Boolean = false,
     fieldId: Int? = null,
     stateSaveOption: StateSaveOption = (this as? StateSavingViewModel)?.defaultStateSaveOption ?: StateSaveOption.None

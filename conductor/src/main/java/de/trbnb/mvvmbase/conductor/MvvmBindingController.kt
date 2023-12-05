@@ -30,12 +30,12 @@ import de.trbnb.mvvmbase.events.Event
  * Reference implementation of an [MvvmView] with [com.bluelinelabs.conductor.Controller].
  *
  * This creates the binding in [onCreateView] and the ViewModel lazily.
-*/
-abstract class MvvmBindingController<VM, B>(
+ */
+public abstract class MvvmBindingController<VM, B>(
     bundle: Bundle? = null,
     @LayoutRes override val layoutId: Int = 0
 ) : LifecycleController(bundle), MvvmView<VM, B>, HasDefaultViewModelProviderFactory
-    where VM : ViewModel, VM : androidx.lifecycle.ViewModel, B : ViewDataBinding {
+        where VM : ViewModel, VM : androidx.lifecycle.ViewModel, B : ViewDataBinding {
     override var binding: B? = null
 
     @Suppress("LeakingThis")
@@ -75,7 +75,14 @@ abstract class MvvmBindingController<VM, B>(
     override val dataBindingComponent: DataBindingComponent?
         get() = null
 
-    private val viewModelStore = ViewModelStore()
+    override val viewModelStore: ViewModelStore = ViewModelStore()
+
+    override val defaultViewModelProviderFactory: ViewModelProvider.Factory
+        get() = SavedStateViewModelFactory(
+            activity?.application ?: throw RuntimeException("Unable to retrieve application context"),
+            this,
+            args
+        )
 
     @Suppress("LeakingThis")
     private val savedStateRegistryController = SavedStateRegistryController.create(this)
@@ -91,8 +98,6 @@ abstract class MvvmBindingController<VM, B>(
 
     override val savedStateRegistry: SavedStateRegistry
         get() = savedStateRegistryController.savedStateRegistry
-
-    override fun getViewModelStore() = viewModelStore
 
     override fun onContextAvailable(context: Context) {
         super.onContextAvailable(context)
@@ -154,13 +159,5 @@ abstract class MvvmBindingController<VM, B>(
         super.onRestoreInstanceState(savedInstanceState)
         savedStateRegistryController.performRestore(savedInstanceState)
         onRestoreInstanceStateCalled = true
-    }
-
-    override fun getDefaultViewModelProviderFactory(): ViewModelProvider.Factory {
-        return SavedStateViewModelFactory(
-            activity?.application ?: throw RuntimeException("Unable to retrieve application context"),
-            this,
-            args
-        )
     }
 }

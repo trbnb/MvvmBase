@@ -8,15 +8,15 @@ import de.trbnb.mvvmbase.observableproperty.StateSaveOption
 /**
  * Specification for [ViewModel]s that support saving state via [SavedStateHandle].
  */
-interface StateSavingViewModel {
+public interface StateSavingViewModel {
     /**
      * Used to store/read values if a new instance has to be created.
      */
-    val savedStateHandle: SavedStateHandle
+    public val savedStateHandle: SavedStateHandle
 
     /**
      * Defines what default [StateSaveOption] will be used for bindable properties.
      */
-    val defaultStateSaveOption: StateSaveOption
+    public val defaultStateSaveOption: StateSaveOption
         get() = MvvmBase.defaultStateSaveOption
 }

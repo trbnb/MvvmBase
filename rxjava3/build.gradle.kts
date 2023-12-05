@@ -7,6 +7,7 @@ plugins {
 }
 
 android {
+    namespace = "de.trbnb.mvvmbase.rxjava3"
     compileSdk = Android.compileSdk
 
     defaultConfig {
@@ -57,11 +58,11 @@ dependencies {
     testAnnotationProcessor("androidx.databinding:databinding-compiler:${Versions.gradleTools}")
     kaptTest("androidx.databinding:databinding-compiler:${Versions.gradleTools}")
 
-    implementation("io.reactivex.rxjava3:rxkotlin:3.0.0")
+    implementation("io.reactivex.rxjava3:rxkotlin:3.0.1")
 
-    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.7.0")
-    androidTestImplementation("androidx.test:runner:1.4.0")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:${Versions.jupiter}")
+    androidTestImplementation("androidx.test:runner:${Versions.testRunner}")
+    androidTestImplementation("androidx.test.espresso:espresso-core:${Versions.espresso}")
 }
 
 val sourcesJar = task<Jar>("sourcesJar") {
@@ -76,7 +77,7 @@ signing {
 afterEvaluate {
     publishing {
         repositories {
-            mavenCentralUpload(project)
+//            mavenCentralUpload(project)
         }
         publications {
             create(Publication.RX_JAVA_3, this@afterEvaluate)

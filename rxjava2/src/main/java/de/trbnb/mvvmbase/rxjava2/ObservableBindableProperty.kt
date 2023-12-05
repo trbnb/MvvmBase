@@ -13,7 +13,7 @@ import kotlin.reflect.KProperty
 /**
  * Read-only bindable property delegate that has last emitted value from a [Observable] or `defaultValue` if no value has been emitted.
  */
-class ObservableBindableProperty<T> private constructor(
+public class ObservableBindableProperty<T> private constructor(
     viewModel: ViewModel,
     defaultValue: T,
     fieldId: Int,
@@ -35,13 +35,13 @@ class ObservableBindableProperty<T> private constructor(
      *
      * @see ObservableBindableProperty
      */
-    class Provider<T> internal constructor(
+    public class Provider<T> internal constructor(
         private val defaultValue: T,
         private val observable: Observable<out T>,
         private val onError: (Throwable) -> Unit,
         private val onComplete: () -> Unit
     ) : BindablePropertyBase.Provider<ViewModel, T>() {
-        override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>) = ObservableBindableProperty(
+        override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>): ObservableBindableProperty<T> = ObservableBindableProperty(
             viewModel = thisRef,
             fieldId = property.resolveFieldId(),
             defaultValue = defaultValue,

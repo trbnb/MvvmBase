@@ -7,6 +7,7 @@ plugins {
 }
 
 android {
+    namespace = "de.trbnb.mvvmbase.rxjava2"
     compileSdk = Android.compileSdk
 
     defaultConfig {
@@ -59,9 +60,9 @@ dependencies {
 
     implementation("io.reactivex.rxjava2:rxkotlin:2.4.0")
 
-    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.7.0")
-    androidTestImplementation("androidx.test:runner:1.4.0")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:${Versions.jupiter}")
+    androidTestImplementation("androidx.test:runner:${Versions.testRunner}")
+    androidTestImplementation("androidx.test.espresso:espresso-core:${Versions.espresso}")
 }
 
 val sourcesJar = task<Jar>("sourcesJar") {
@@ -76,7 +77,7 @@ signing {
 afterEvaluate {
     publishing {
         repositories {
-            mavenCentralUpload(project)
+//            mavenCentralUpload(project)
         }
         publications {
             create(Publication.RX_JAVA_2, this@afterEvaluate)

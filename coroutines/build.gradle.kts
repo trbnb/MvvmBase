@@ -7,6 +7,7 @@ plugins {
 }
 
 android {
+    namespace = "de.trbnb.mvvmbase.coroutines"
     compileSdk = Android.compileSdk
 
     defaultConfig {
@@ -57,13 +58,13 @@ dependencies {
     testAnnotationProcessor("androidx.databinding:databinding-compiler:${Versions.gradleTools}")
     kaptTest("androidx.databinding:databinding-compiler:${Versions.gradleTools}")
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.coroutines}")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.coroutines}")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.lifecycle}")
 
-    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.7.0")
-    androidTestImplementation("androidx.test:runner:1.4.0")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:${Versions.jupiter}")
+    androidTestImplementation("androidx.test:runner:${Versions.testRunner}")
+    androidTestImplementation("androidx.test.espresso:espresso-core:${Versions.espresso}")
 }
 
 val sourcesJar = task<Jar>("sourcesJar") {
@@ -78,7 +79,7 @@ signing {
 afterEvaluate {
     publishing {
         repositories {
-            mavenCentralUpload(project)
+//            mavenCentralUpload(project)
         }
         publications {
             create(Publication.COROUTINES, this@afterEvaluate)

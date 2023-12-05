@@ -13,11 +13,11 @@ import kotlin.reflect.KProperty
 /**
  * Read-only bindable property delegate that has last emitted value from a [Single] or `defaultValue` if no value has been emitted.
  */
-class SingleBindableProperty<T> private constructor(
+public class SingleBindableProperty<T> private constructor(
     viewModel: ViewModel,
     defaultValue: T,
     fieldId: Int,
-    single: Single<out T>,
+    single: Single<Any>,
     onError: (Throwable) -> Unit,
     distinct: Boolean,
     afterSet: AfterSet<T>?,
@@ -25,7 +25,7 @@ class SingleBindableProperty<T> private constructor(
     validate: Validate<T>?
 ) : RxBindablePropertyBase<T>(viewModel, defaultValue, fieldId, distinct, afterSet, beforeSet, validate) {
     init {
-        viewModel.compositeDisposable += single.subscribe({ value = it }, onError)
+        viewModel.compositeDisposable += single.subscribe({ value = it as T }, onError)
     }
 
     /**
@@ -34,12 +34,12 @@ class SingleBindableProperty<T> private constructor(
      *
      * @see SingleBindableProperty
      */
-    class Provider<T> internal constructor(
+    public class Provider<T> internal constructor(
         private val defaultValue: T,
-        private val single: Single<out T>,
+        private val single: Single<Any>,
         private val onError: (Throwable) -> Unit
     ) : BindablePropertyBase.Provider<ViewModel, T>() {
-        override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>) = SingleBindableProperty(
+        override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>): SingleBindableProperty<T> = SingleBindableProperty(
             viewModel = thisRef,
             fieldId = property.resolveFieldId(),
             defaultValue = defaultValue,

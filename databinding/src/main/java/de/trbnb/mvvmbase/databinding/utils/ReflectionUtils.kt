@@ -14,7 +14,7 @@ import kotlin.reflect.KProperty0
  * Searches for a given parameterized class type in the receivers type hierachy and returns it if it was found.
  * Returns `null` otherwise.
  */
-inline fun <reified T> Any.findGenericSuperclass(): ParameterizedType? {
+public inline fun <reified T> Any.findGenericSuperclass(): ParameterizedType? {
     return javaClass.findGenericSuperclass(T::class.java)
 }
 
@@ -22,7 +22,7 @@ inline fun <reified T> Any.findGenericSuperclass(): ParameterizedType? {
  * Searches for a given parameterized class type in the receivers hierachy and returns it if it was found.
  * Returns `null` otherwise.
  */
-tailrec fun <T> Type.findGenericSuperclass(targetType: Class<T>): ParameterizedType? {
+public tailrec fun <T> Type.findGenericSuperclass(targetType: Class<T>): ParameterizedType? {
     val genericSuperClass = ((this as? Class<*>)?.genericSuperclass) ?: return null
 
     if ((genericSuperClass as? ParameterizedType)?.rawType == targetType) {
@@ -37,7 +37,7 @@ tailrec fun <T> Type.findGenericSuperclass(targetType: Class<T>): ParameterizedT
  *
  * @see de.trbnb.mvvmbase.databinding.initDataBinding
  */
-fun KProperty<*>.resolveFieldId(): Int = MvvmBaseDataBinding.lookupFieldIdByName(brFieldName()) ?: BR._all
+public fun KProperty<*>.resolveFieldId(): Int = MvvmBaseDataBinding.lookupFieldIdByName(brFieldName()) ?: BR._all
 
 /**
  * Converts a property name to a field name like the data binding compiler.
@@ -61,7 +61,7 @@ internal fun KProperty<*>.brFieldName(): String {
  * @param invokeImmediately If true [action] will be invoked immediately and not wait for the first notifyPropertyChanged call.
  * @param lifecycleOwner Lifecycle that determines when listening for notifyPropertyChanged stops.
  */
-inline fun <T> KProperty0<T>.observeBindable(
+public inline fun <T> KProperty0<T>.observeBindable(
     lifecycleOwner: LifecycleOwner? = null,
     invokeImmediately: Boolean = true,
     crossinline action: (T) -> Unit

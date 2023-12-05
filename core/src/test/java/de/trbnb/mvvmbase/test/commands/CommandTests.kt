@@ -28,10 +28,9 @@ class CommandTests {
     fun `enabledListener with Lifecycle`() {
         val command: Command<*, *> = SimpleCommand<Unit, Unit> { }
         val lifecycleOwner = object : LifecycleOwner {
-            private val lifecycle = LifecycleRegistry.createUnsafe(this).apply {
+            override val lifecycle = LifecycleRegistry.createUnsafe(this).apply {
                 currentState = Lifecycle.State.STARTED
             }
-            override fun getLifecycle() = lifecycle
             fun destroy() { lifecycle.currentState = Lifecycle.State.DESTROYED }
         }
 

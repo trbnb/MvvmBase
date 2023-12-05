@@ -30,7 +30,10 @@ internal class ViewModelLifecycleOwner(enforceMainThread: Boolean) : LifecycleOw
         }
     }
 
-    override fun getLifecycle() = registry
+    override val lifecycle: Lifecycle
+        get() = registry
+
+    fun getLifecycle() = registry
 
     /**
      * Enum for the specific Lifecycle of ViewModels.

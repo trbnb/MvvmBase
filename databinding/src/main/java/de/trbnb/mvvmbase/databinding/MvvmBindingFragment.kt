@@ -20,7 +20,7 @@ import de.trbnb.mvvmbase.events.Event
  *
  * This creates the binding during [onCreateView] and the ViewModel during [onCreate].
  */
-abstract class MvvmBindingFragment<VM, B>(@LayoutRes override val layoutId: Int) : Fragment(), MvvmView<VM, B>
+public abstract class MvvmBindingFragment<VM, B>(@LayoutRes override val layoutId: Int) : Fragment(), MvvmView<VM, B>
         where VM : ViewModel, VM : androidx.lifecycle.ViewModel, B : ViewDataBinding {
     override var binding: B? = null
 
@@ -51,7 +51,7 @@ abstract class MvvmBindingFragment<VM, B>(@LayoutRes override val layoutId: Int)
         mainHandler.post { onEvent(event) }
     }
 
-    constructor() : this(0)
+    public constructor() : this(0)
 
     /**
      * Called by the lifecycle.

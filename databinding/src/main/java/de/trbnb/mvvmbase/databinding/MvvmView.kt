@@ -18,39 +18,39 @@ import de.trbnb.mvvmbase.events.Event
  *
  * The [ViewModel] will be instantiated via the ViewModel API by Android X.
  */
-interface MvvmView<VM, B : ViewDataBinding> : ViewModelStoreOwner, SavedStateRegistryOwner
+public interface MvvmView<VM, B : ViewDataBinding> : ViewModelStoreOwner, SavedStateRegistryOwner
     where VM : ViewModel, VM : androidx.lifecycle.ViewModel {
     /**
      * The [ViewDataBinding] implementation for a specific layout.
      * Nullable due to possible lifecycle circumstances.
      */
-    val binding: B?
+    public val binding: B?
 
     /**
      * Delegate for [viewModel].
      *
      * Can be overridden to make use of `activityViewModels()` or `navGraphViewModels()`.
      */
-    val viewModelDelegate: Lazy<VM>
+    public val viewModelDelegate: Lazy<VM>
 
     /**
      * The [ViewModel] that is used for data binding.
      *
      * @see viewModelDelegate
      */
-    val viewModel: VM
+    public val viewModel: VM
         get() = viewModelDelegate.value
 
     /**
      * Gets the class of the view model that an implementation uses.
      */
-    val viewModelClass: Class<VM>
+    public val viewModelClass: Class<VM>
 
     /**
      * The [de.trbnb.mvvmbase.BR] value that is used as parameter for the view model in the binding.
      * Is always [de.trbnb.mvvmbase.BR.vm].
      */
-    val viewModelBindingId: Int
+    public val viewModelBindingId: Int
         get() = BR.vm
 
     /**
@@ -58,13 +58,13 @@ interface MvvmView<VM, B : ViewDataBinding> : ViewModelStoreOwner, SavedStateReg
      * Is used to create the [ViewDataBinding].
      */
     @get:LayoutRes
-    val layoutId: Int
+    public val layoutId: Int
 
     /**
      * Defines which [DataBindingComponent] will be used with [DataBindingUtil.inflate].
      * Default is `null` and will lead to usage of [DataBindingUtil.getDefaultComponent].
      */
-    val dataBindingComponent: DataBindingComponent?
+    public val dataBindingComponent: DataBindingComponent?
         get() = null
 
     /**
@@ -72,7 +72,7 @@ interface MvvmView<VM, B : ViewDataBinding> : ViewModelStoreOwner, SavedStateReg
      *
      * @param[viewModel] The [ViewModel] instance that was loaded.
      */
-    fun onViewModelLoaded(viewModel: VM)
+    public fun onViewModelLoaded(viewModel: VM)
 
     /**
      * Called when the view model notifies listeners that a property has changed.
@@ -82,10 +82,10 @@ interface MvvmView<VM, B : ViewDataBinding> : ViewModelStoreOwner, SavedStateReg
      */
     @CallSuper
     @Deprecated("Use KProperty.observe() instead", level = DeprecationLevel.ERROR)
-    fun onViewModelPropertyChanged(viewModel: VM, fieldId: Int) { }
+    public fun onViewModelPropertyChanged(viewModel: VM, fieldId: Int) { }
 
     /**
      * Is called when the ViewModel sends an [Event].
      */
-    fun onEvent(event: Event) { }
+    public fun onEvent(event: Event) { }
 }

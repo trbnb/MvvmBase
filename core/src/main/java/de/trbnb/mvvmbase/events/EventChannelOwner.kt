@@ -3,9 +3,9 @@ package de.trbnb.mvvmbase.events
 /**
  * Marker interface for objects that contain an [EventChannel]
  */
-interface EventChannelOwner {
+public interface EventChannelOwner {
     /**
      * Gets an EventChannel that can be used for sending one-time events.
      */
-    val eventChannel: EventChannel
+    public val eventChannel: EventChannel
 }

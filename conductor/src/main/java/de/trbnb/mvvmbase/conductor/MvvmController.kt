@@ -8,4 +8,4 @@ import de.trbnb.mvvmbase.ViewModel
  *
  * @param[VM] The type of the specific [ViewModel] implementation for this Controller.
  */
-typealias MvvmController<VM> = MvvmBindingController<VM, ViewDataBinding>
+public typealias MvvmController<VM> = MvvmBindingController<VM, ViewDataBinding>

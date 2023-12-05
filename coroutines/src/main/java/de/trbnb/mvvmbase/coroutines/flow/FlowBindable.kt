@@ -22,7 +22,7 @@ import kotlin.reflect.KProperty
  * Uses `defaultValue` if no value has been emitted.
  */
 @ExperimentalCoroutinesApi
-class FlowBindable<T> private constructor(
+public class FlowBindable<T> private constructor(
     private val viewModel: ViewModel,
     private val fieldId: Int,
     defaultValue: T,
@@ -65,14 +65,14 @@ class FlowBindable<T> private constructor(
      *
      * @see BindableProperty
      */
-    class Provider<T>(
+    public class Provider<T>(
         private val flow: Flow<T>,
         private val onException: OnException<T>?,
         private val onCompletion: OnCompletion<T>?,
         private val coroutineScope: CoroutineScope,
         private val defaultValue: T
     ) : BindablePropertyBase.Provider<ViewModel, T>() {
-        override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>) = FlowBindable(
+        override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>): FlowBindable<T> = FlowBindable(
             viewModel = thisRef,
             flow = flow,
             fieldId = property.resolveFieldId(),

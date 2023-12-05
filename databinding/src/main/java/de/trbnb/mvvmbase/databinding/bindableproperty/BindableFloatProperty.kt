@@ -23,7 +23,7 @@ import kotlin.reflect.KProperty
  * @param validate [BindablePropertyBase.validate]
  * @param beforeSet [BindablePropertyBase.beforeSet]
  */
-class BindableFloatProperty private constructor(
+public class BindableFloatProperty private constructor(
     viewModel: ViewModel,
     private val fieldId: Int,
     defaultValue: Float,
@@ -43,12 +43,12 @@ class BindableFloatProperty private constructor(
     /**
      * @see [kotlin.properties.ReadWriteProperty.getValue]
      */
-    operator fun getValue(thisRef: ViewModel, property: KProperty<*>): Float = value
+    public operator fun getValue(thisRef: ViewModel, property: KProperty<*>): Float = value
 
     /**
      * @see [kotlin.properties.ReadWriteProperty.setValue]
      */
-    operator fun setValue(thisRef: ViewModel, property: KProperty<*>, value: Float) {
+    public operator fun setValue(thisRef: ViewModel, property: KProperty<*>, value: Float) {
         if (distinct && this.value == value) {
             return
         }
@@ -73,12 +73,12 @@ class BindableFloatProperty private constructor(
      *
      * @see BindableFloatProperty
      */
-    class Provider internal constructor(
+    public class Provider internal constructor(
         private val fieldId: Int? = null,
         private val defaultValue: Float,
         private val stateSaveOption: StateSaveOption
     ) : BindablePropertyBase.Provider<ViewModel, Float>() {
-        override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>) = BindableFloatProperty(
+        override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>): BindableFloatProperty = BindableFloatProperty(
             viewModel = thisRef,
             fieldId = fieldId ?: property.resolveFieldId(),
             defaultValue = defaultValue,
@@ -98,11 +98,11 @@ class BindableFloatProperty private constructor(
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  * @param stateSaveOption Specifies if the state of the property should be saved and with which key.
  */
-fun ViewModel.bindableFloat(
+public fun ViewModel.bindableFloat(
     defaultValue: Float = 0f,
     fieldId: Int? = null,
     stateSaveOption: StateSaveOption = (this as? StateSavingViewModel)?.defaultStateSaveOption ?: StateSaveOption.None
-) = BindableFloatProperty.Provider(fieldId, defaultValue, when (this) {
+): BindableFloatProperty.Provider = BindableFloatProperty.Provider(fieldId, defaultValue, when (this) {
     is StateSavingViewModel -> stateSaveOption
     else -> StateSaveOption.None
 })

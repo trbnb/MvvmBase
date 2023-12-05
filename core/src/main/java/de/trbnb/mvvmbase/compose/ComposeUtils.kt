@@ -15,7 +15,7 @@ import kotlin.reflect.KProperty0
  * Observes an observable property as Compose state.
  */
 @Composable
-fun <T> KProperty0<T>.observeAsState(): State<T> {
+public fun <T> KProperty0<T>.observeAsState(): State<T> {
     val state = remember { mutableStateOf(get()) }
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(key1 = this, key2 = lifecycleOwner) {
@@ -29,11 +29,11 @@ fun <T> KProperty0<T>.observeAsState(): State<T> {
  * Observes an observable property as mutable Compose state.
  */
 @Composable
-fun <T> KMutableProperty0<T>.observeAsMutableState(): MutableState<T> {
+public fun <T> KMutableProperty0<T>.observeAsMutableState(): MutableState<T> {
     return PropertyMutableState(observeAsState(), this)
 }
 
 /**
  * Gets the setter function in an explicit way.
  */
-inline val <T> MutableState<T>.setter: (T) -> Unit get() = component2()
+public inline val <T> MutableState<T>.setter: (T) -> Unit get() = component2()

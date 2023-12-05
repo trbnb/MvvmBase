@@ -17,7 +17,7 @@ import androidx.lifecycle.ViewModel as ArchitectureViewModel
 /**
  * Simple base implementation of the [ViewModel].
  */
-abstract class BaseViewModel : ArchitectureViewModel(), ViewModel, LifecycleOwner {
+public abstract class BaseViewModel : ArchitectureViewModel(), ViewModel, LifecycleOwner {
     /**
      * Callback registry for [de.trbnb.mvvmbase.observable.ObservableContainer].
      */
@@ -38,6 +38,9 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel, LifecycleOwne
      * @see ViewModelLifecycleOwner
      */
     private val lifecycleOwner = ViewModelLifecycleOwner(MvvmBase.enforceViewModelLifecycleMainThread)
+
+    public override val lifecycle: Lifecycle
+        get() = lifecycleOwner.lifecycle
 
     init {
         val pairs = javaClass.kotlin.memberProperties.mapNotNull { property ->
@@ -87,6 +90,4 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel, LifecycleOwne
     final override operator fun <T : Any> get(key: String): T? = getTagFromViewModel(key)
 
     final override fun <T : Any> initTag(key: String, newValue: T): T = setTagIfAbsentForViewModel(key, newValue)
-
-    override fun getLifecycle(): Lifecycle = lifecycleOwner.lifecycle
 }

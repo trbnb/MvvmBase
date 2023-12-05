@@ -10,7 +10,7 @@ import de.trbnb.mvvmbase.databinding.BR
  *
  * @param action The initial action that will be run when the Command is executed.
  */
-abstract class BaseCommandImpl<in P, out R>(private val action: (P) -> R) : BaseObservable(), Command<P, R> {
+public abstract class BaseCommandImpl<in P, out R>(private val action: (P) -> R) : BaseObservable(), Command<P, R> {
     private val listeners = mutableListOf<(Boolean) -> Unit>()
 
     final override fun invoke(param: P): R {

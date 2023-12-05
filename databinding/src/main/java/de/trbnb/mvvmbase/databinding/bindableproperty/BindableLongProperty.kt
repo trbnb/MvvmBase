@@ -23,7 +23,7 @@ import kotlin.reflect.KProperty
  * @param validate [BindablePropertyBase.validate]
  * @param beforeSet [BindablePropertyBase.beforeSet]
  */
-class BindableLongProperty private constructor(
+public class BindableLongProperty private constructor(
     viewModel: ViewModel,
     private val fieldId: Int,
     defaultValue: Long,
@@ -43,12 +43,12 @@ class BindableLongProperty private constructor(
     /**
      * @see [kotlin.properties.ReadWriteProperty.getValue]
      */
-    operator fun getValue(thisRef: ViewModel, property: KProperty<*>): Long = value
+    public operator fun getValue(thisRef: ViewModel, property: KProperty<*>): Long = value
 
     /**
      * @see [kotlin.properties.ReadWriteProperty.setValue]
      */
-    operator fun setValue(thisRef: ViewModel, property: KProperty<*>, value: Long) {
+    public operator fun setValue(thisRef: ViewModel, property: KProperty<*>, value: Long) {
         if (distinct && this.value == value) {
             return
         }
@@ -73,12 +73,12 @@ class BindableLongProperty private constructor(
      *
      * @see BindableLongProperty
      */
-    class Provider internal constructor(
+    public class Provider internal constructor(
         private val fieldId: Int? = null,
         private val defaultValue: Long,
         private val stateSaveOption: StateSaveOption
     ) : BindablePropertyBase.Provider<ViewModel, Long>() {
-        override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>) = BindableLongProperty(
+        override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>): BindableLongProperty = BindableLongProperty(
             viewModel = thisRef,
             fieldId = fieldId ?: property.resolveFieldId(),
             defaultValue = defaultValue,
@@ -98,11 +98,11 @@ class BindableLongProperty private constructor(
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  * @param stateSaveOption Specifies if the state of the property should be saved and with which key.
  */
-fun ViewModel.bindableLong(
+public fun ViewModel.bindableLong(
     defaultValue: Long = 0,
     fieldId: Int? = null,
     stateSaveOption: StateSaveOption = (this as? StateSavingViewModel)?.defaultStateSaveOption ?: StateSaveOption.None
-) = BindableLongProperty.Provider(fieldId, defaultValue, when (this) {
+): BindableLongProperty.Provider = BindableLongProperty.Provider(fieldId, defaultValue, when (this) {
     is StateSavingViewModel -> stateSaveOption
     else -> StateSaveOption.None
 })

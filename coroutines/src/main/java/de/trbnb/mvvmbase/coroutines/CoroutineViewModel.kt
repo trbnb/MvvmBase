@@ -12,11 +12,11 @@ import kotlinx.coroutines.flow.Flow
 /**
  * Interface that defines coroutines extensions for [ViewModel].
  */
-interface CoroutineViewModel : ViewModel {
+public interface CoroutineViewModel : ViewModel {
     /**
      * Gets a [CoroutineScope] that is cancelled when the ViewModel is destroyed.
      */
-    val viewModelScope: CoroutineScope
+    public val viewModelScope: CoroutineScope
         get() = (this as? androidx.lifecycle.ViewModel)?.viewModelScope ?: throw RuntimeException(
             "ViewModel doesn't extend androidx.lifecycle.ViewModel and has to implement viewModelScope manually."
         )
@@ -27,7 +27,7 @@ interface CoroutineViewModel : ViewModel {
      * @param defaultValue Value of the property from the start.
      */
     @ExperimentalCoroutinesApi
-    fun <T> Flow<T>.toBindable(
+    public fun <T> Flow<T>.toBindable(
         defaultValue: T,
         onException: OnException<T>? = null,
         onCompletion: OnCompletion<T>? = null,
@@ -38,7 +38,7 @@ interface CoroutineViewModel : ViewModel {
      * Creates a new FlowBindable.Provider instance with `null` as default value.
      */
     @ExperimentalCoroutinesApi
-    fun <T> Flow<T>.toBindable(
+    public fun <T> Flow<T>.toBindable(
         onException: OnException<T>? = null,
         onCompletion: OnCompletion<T>? = null,
         scope: CoroutineScope = viewModelScope

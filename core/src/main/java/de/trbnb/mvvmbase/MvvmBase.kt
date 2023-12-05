@@ -5,17 +5,17 @@ import de.trbnb.mvvmbase.observableproperty.StateSaveOption
 /**
  * Object for containing library configurations.
  */
-object MvvmBase {
-    var defaultStateSaveOption: StateSaveOption = StateSaveOption.Automatic
+public object MvvmBase {
+    public var defaultStateSaveOption: StateSaveOption = StateSaveOption.Automatic
         private set
 
-    var enforceViewModelLifecycleMainThread = true
+    public var enforceViewModelLifecycleMainThread: Boolean = true
         private set
 
     /**
      * Sets the default [StateSaveOption] that will be used for bindable properties in [de.trbnb.mvvmbase.savedstate.StateSavingViewModel].
      */
-    fun defaultStateSaveOption(stateSaveOption: StateSaveOption) = apply {
+    public fun defaultStateSaveOption(stateSaveOption: StateSaveOption): MvvmBase = apply {
         defaultStateSaveOption = stateSaveOption
     }
 
@@ -23,7 +23,7 @@ object MvvmBase {
      * Starting with Androidx Lifecycle version 2.3.0 all Lifecycles are thread-safe (only usable from main-thread).
      * This can be deactivated for [ViewModel.getLifecycle] to allow for initialization of ViewModels on other threads.
      */
-    fun disableViewModelLifecycleThreadConstraints(): MvvmBase = apply {
+    public fun disableViewModelLifecycleThreadConstraints(): MvvmBase = apply {
         enforceViewModelLifecycleMainThread = false
     }
 }

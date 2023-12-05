@@ -23,7 +23,7 @@ import kotlin.reflect.KProperty
  * @param validate [BindablePropertyBase.validate]
  * @param beforeSet [BindablePropertyBase.beforeSet]
  */
-class BindableULongProperty private constructor(
+public class BindableULongProperty private constructor(
     viewModel: ViewModel,
     private val fieldId: Int,
     defaultValue: ULong,
@@ -43,12 +43,12 @@ class BindableULongProperty private constructor(
     /**
      * @see [kotlin.properties.ReadWriteProperty.getValue]
      */
-    operator fun getValue(thisRef: ViewModel, property: KProperty<*>): ULong = value
+    public operator fun getValue(thisRef: ViewModel, property: KProperty<*>): ULong = value
 
     /**
      * @see [kotlin.properties.ReadWriteProperty.setValue]
      */
-    operator fun setValue(thisRef: ViewModel, property: KProperty<*>, value: ULong) {
+    public operator fun setValue(thisRef: ViewModel, property: KProperty<*>, value: ULong) {
         if (distinct && this.value == value) {
             return
         }
@@ -73,12 +73,12 @@ class BindableULongProperty private constructor(
      *
      * @see BindableULongProperty
      */
-    class Provider internal constructor(
+    public class Provider internal constructor(
         private val fieldId: Int? = null,
         private val defaultValue: ULong,
         private val stateSaveOption: StateSaveOption
     ) : BindablePropertyBase.Provider<ViewModel, ULong>() {
-        override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>) = BindableULongProperty(
+        override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>): BindableULongProperty = BindableULongProperty(
             viewModel = thisRef,
             fieldId = fieldId ?: property.resolveFieldId(),
             defaultValue = defaultValue,
@@ -98,11 +98,11 @@ class BindableULongProperty private constructor(
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  * @param stateSaveOption Specifies if the state of the property should be saved and with which key.
  */
-fun ViewModel.bindableULong(
+public fun ViewModel.bindableULong(
     defaultValue: ULong = 0UL,
     fieldId: Int? = null,
     stateSaveOption: StateSaveOption = (this as? StateSavingViewModel)?.defaultStateSaveOption ?: StateSaveOption.None
-) = BindableULongProperty.Provider(fieldId, defaultValue, when (this) {
+): BindableULongProperty.Provider = BindableULongProperty.Provider(fieldId, defaultValue, when (this) {
     is StateSavingViewModel -> stateSaveOption
     else -> StateSaveOption.None
 })

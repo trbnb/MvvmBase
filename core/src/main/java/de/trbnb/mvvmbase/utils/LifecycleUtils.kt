@@ -6,5 +6,5 @@ import androidx.lifecycle.LifecycleOwner
 /**
  * Returns `true` if [LifecycleOwner.getLifecycle] is in a destroyed state.
  */
-val LifecycleOwner.isDestroyed: Boolean
+public val LifecycleOwner.isDestroyed: Boolean
     get() = lifecycle.currentState == Lifecycle.State.DESTROYED

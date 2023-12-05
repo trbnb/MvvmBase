@@ -7,9 +7,9 @@ import kotlin.properties.PropertyDelegateProvider
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
-typealias BeforeSet<T> = (old: T, new: T) -> Unit
-typealias Validate<T> = (old: T, new: T) -> T
-typealias AfterSet<T> = (old: T, new: T) -> Unit
+public typealias BeforeSet<T> = (old: T, new: T) -> Unit
+public typealias Validate<T> = (old: T, new: T) -> T
+public typealias AfterSet<T> = (old: T, new: T) -> Unit
 
 /**
  * Delegate property that invokes [de.trbnb.mvvmbase.observable.ObservableContainer.notifyPropertyChanged]
@@ -35,7 +35,7 @@ typealias AfterSet<T> = (old: T, new: T) -> Unit
  * The first parameter is the old value and the second parameter is the new value.
  * This function will not be invoked if [ObservableProperty.distinct] is true and the new value is equal to the old value.
  */
-class ObservableProperty<T> internal constructor(
+public class ObservableProperty<T> internal constructor(
     viewModel: ViewModel,
     defaultValue: T,
     private val distinct: Boolean,
@@ -79,7 +79,7 @@ class ObservableProperty<T> internal constructor(
      *
      * @see ObservableProperty
      */
-    class Provider<T>(
+    public class Provider<T>(
         private val defaultValue: T,
         private val stateSaveOption: StateSaveOption
     ) : PropertyDelegateProvider<ViewModel, ObservableProperty<T>> {
@@ -91,24 +91,24 @@ class ObservableProperty<T> internal constructor(
         /**
          * Sets [ObservableProperty.distinct] to `true` and returns that instance.
          */
-        fun distinct() = apply { distinct = true }
+        public fun distinct(): Provider<T> = apply { distinct = true }
 
         /**
          * Sets [ObservableProperty.beforeSet] to a given function and returns that instance.
          */
-        fun beforeSet(action: BeforeSet<T>) = apply { beforeSet = action }
+        public fun beforeSet(action: BeforeSet<T>): Provider<T> = apply { beforeSet = action }
 
         /**
          * Sets [ObservableProperty.validate] to a given function and returns that instance.
          */
-        fun validate(action: Validate<T>) = apply { validate = action }
+        public fun validate(action: Validate<T>): Provider<T> = apply { validate = action }
 
         /**
          * Sets [ObservableProperty.afterSet] to a given function and returns that instance.
          */
-        fun afterSet(action: AfterSet<T>) = apply { afterSet = action }
+        public fun afterSet(action: AfterSet<T>): Provider<T> = apply { afterSet = action }
 
-        override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>) = ObservableProperty(
+        override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>): ObservableProperty<T> = ObservableProperty(
             viewModel = thisRef,
             defaultValue = defaultValue,
             stateSavingKey = stateSaveOption.resolveKey(property),
@@ -126,7 +126,7 @@ class ObservableProperty<T> internal constructor(
  * @param defaultValue Value of the property from the start.
  * @param stateSaveOption Specifies if the state of the property should be saved and with which key.
  */
-inline fun <reified T> ViewModel.observable(
+public inline fun <reified T> ViewModel.observable(
     defaultValue: T,
     stateSaveOption: StateSaveOption? = null
 ): ObservableProperty.Provider<T> = ObservableProperty.Provider(defaultValue, when (this) {
@@ -145,6 +145,6 @@ inline fun <reified T> ViewModel.observable(
  *
  * @param stateSaveOption Specifies if the state of the property should be saved and with which key.
  */
-inline fun <reified T> ViewModel.observable(
+public inline fun <reified T> ViewModel.observable(
     stateSaveOption: StateSaveOption? = null
 ): ObservableProperty.Provider<T?> = observable(null, stateSaveOption)

@@ -9,7 +9,7 @@ private const val COMPOSITE_DISPOSABLE_KEY = "de.trbnb.mvvmbase.rxjava3.Composit
 /**
  * Gets [CompositeDisposable] that will immediately be disposed if the ViewModel is destroyed.
  */
-val ViewModel.compositeDisposable: CompositeDisposable
+public val ViewModel.compositeDisposable: CompositeDisposable
     get() = (get(COMPOSITE_DISPOSABLE_KEY) ?: initTag(COMPOSITE_DISPOSABLE_KEY, ViewModelDisposableContainer())).disposable
 
 internal class ViewModelDisposableContainer : Closeable {

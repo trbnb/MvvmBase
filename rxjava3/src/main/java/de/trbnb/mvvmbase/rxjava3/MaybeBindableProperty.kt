@@ -13,7 +13,7 @@ import kotlin.reflect.KProperty
 /**
  * Read-only bindable property delegate that has last emitted value from a [Maybe] or `defaultValue` if no value has been emitted.
  */
-class MaybeBindableProperty<T> private constructor(
+public class MaybeBindableProperty<T> private constructor(
     viewModel: ViewModel,
     defaultValue: T,
     fieldId: Int,
@@ -35,13 +35,13 @@ class MaybeBindableProperty<T> private constructor(
      *
      * @see MaybeBindableProperty
      */
-    class Provider<T> internal constructor(
+    public class Provider<T> internal constructor(
         private val defaultValue: T,
         private val maybe: Maybe<out T>,
         private val onError: (Throwable) -> Unit,
         private val onComplete: () -> Unit
     ) : BindablePropertyBase.Provider<ViewModel, T>() {
-        override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>) = MaybeBindableProperty(
+        override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>): MaybeBindableProperty<T> = MaybeBindableProperty(
             viewModel = thisRef,
             fieldId = property.resolveFieldId(),
             defaultValue = defaultValue,

@@ -5,4 +5,4 @@ package de.trbnb.mvvmbase.events
  *
  * @see EventChannel
  */
-interface Event
+public interface Event

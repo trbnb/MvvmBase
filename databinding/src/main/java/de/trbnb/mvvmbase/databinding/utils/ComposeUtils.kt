@@ -23,7 +23,7 @@ import kotlin.reflect.KProperty0
  * Observes an observable property as Compose state.
  */
 @Composable
-fun <T> KProperty0<T>.observeBindableAsState(): State<T> {
+public fun <T> KProperty0<T>.observeBindableAsState(): State<T> {
     val state = remember { mutableStateOf(get()) }
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(key1 = this, key2 = lifecycleOwner) {
@@ -37,7 +37,7 @@ fun <T> KProperty0<T>.observeBindableAsState(): State<T> {
  * Observes an observable property as mutable Compose state.
  */
 @Composable
-fun <T> KMutableProperty0<T>.observeBindableAsMutableState(): MutableState<T> {
+public fun <T> KMutableProperty0<T>.observeBindableAsMutableState(): MutableState<T> {
     return PropertyMutableState(observeBindableAsState(), this)
 }
 
@@ -47,7 +47,7 @@ fun <T> KMutableProperty0<T>.observeBindableAsMutableState(): MutableState<T> {
  * @see AndroidViewBinding
  */
 @Composable
-fun <VM, B> AndroidViewDataBinding(
+public fun <VM, B> AndroidViewDataBinding(
     viewModel: VM,
     factory: (inflater: LayoutInflater, parent: ViewGroup, attachToParent: Boolean) -> B,
     modifier: Modifier = Modifier,

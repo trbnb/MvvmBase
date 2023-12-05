@@ -27,7 +27,7 @@ internal object MvvmBaseDataBinding {
 /**
  * Initializes the library with the BR class from itself (which will be expanded by the databinding compiler and so will contain every field id).
  */
-fun MvvmBase.initDataBinding() = apply {
+public fun MvvmBase.initDataBinding(): MvvmBase = apply {
     MvvmBaseDataBinding.retrieveFieldIds(BR::class.java)
 }
 

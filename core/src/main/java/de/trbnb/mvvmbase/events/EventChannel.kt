@@ -4,34 +4,34 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 
-typealias EventListener = (event: Event) -> Unit
+public typealias EventListener = (event: Event) -> Unit
 
 /**
  * Base interface that defines interaction for not-state information between [de.trbnb.mvvmbase.ViewModel]
  * and MVVM view components.
  */
-interface EventChannel {
+public interface EventChannel {
     /**
      * Invokes all listeners with given [event].
      */
-    operator fun invoke(event: Event)
+    public operator fun invoke(event: Event)
 
     /**
      * Registers a new listener.
      */
-    fun addListener(eventListener: EventListener): EventListener
+    public fun addListener(eventListener: EventListener): EventListener
 
     /**
      * Removes a listener.
      */
-    fun removeListener(eventListener: EventListener)
+    public fun removeListener(eventListener: EventListener)
 
     /**
      * Registers a new listener.
      *
      * @see [addListener]
      */
-    operator fun plusAssign(eventListener: EventListener) {
+    public operator fun plusAssign(eventListener: EventListener) {
         addListener(eventListener)
     }
 
@@ -40,13 +40,13 @@ interface EventChannel {
      *
      * @see [removeListener]
      */
-    operator fun minusAssign(eventListener: EventListener) = removeListener(eventListener)
+    public operator fun minusAssign(eventListener: EventListener): Unit = removeListener(eventListener)
 }
 
 /**
  * Adds a listener and will remove it when the [Lifecycle] of [lifecycleOwner] is [Lifecycle.State.DESTROYED].
  */
-fun EventChannel.addListener(lifecycleOwner: LifecycleOwner, eventListener: EventListener) {
+public fun EventChannel.addListener(lifecycleOwner: LifecycleOwner, eventListener: EventListener) {
     addListener(eventListener)
 
     lifecycleOwner.lifecycle.addObserver(object : LifecycleEventObserver {

@@ -13,7 +13,7 @@ import kotlin.reflect.KProperty
 /**
  * Read-only bindable property delegate that has last emitted value from a [Flowable] or `defaultValue` if no value has been emitted.
  */
-class FlowableBindableProperty<T> private constructor(
+public class FlowableBindableProperty<T> private constructor(
     viewModel: ViewModel,
     defaultValue: T,
     fieldId: Int,
@@ -35,13 +35,13 @@ class FlowableBindableProperty<T> private constructor(
      *
      * @see FlowableBindableProperty
      */
-    class Provider<T> internal constructor(
+    public class Provider<T> internal constructor(
         private val defaultValue: T,
         private val flowable: Flowable<out T>,
         private val onError: (Throwable) -> Unit,
         private val onComplete: () -> Unit
     ) : BindablePropertyBase.Provider<ViewModel, T>() {
-        override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>) = FlowableBindableProperty(
+        override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>): FlowableBindableProperty<T> = FlowableBindableProperty(
             viewModel = thisRef,
             fieldId = property.resolveFieldId(),
             defaultValue = defaultValue,

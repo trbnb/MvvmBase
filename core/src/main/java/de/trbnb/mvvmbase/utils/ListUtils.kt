@@ -5,4 +5,4 @@ import de.trbnb.mvvmbase.ViewModel
 /**
  * Calls [ViewModel.destroy] on every element in the receiver collection.
  */
-fun <VM : ViewModel> Collection<VM>.destroyAll() = forEach { it.destroy() }
+public fun <VM : ViewModel> Collection<VM>.destroyAll(): Unit = forEach { it.destroy() }

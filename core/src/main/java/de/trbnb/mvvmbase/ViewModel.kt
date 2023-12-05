@@ -16,7 +16,7 @@ import de.trbnb.mvvmbase.utils.destroyAll
  * It extends the [ObservableContainer] interface provided by the Android data binding library. This means
  * that implementations have to handle [OnPropertyChangedCallback]s..
  */
-interface ViewModel : ObservableContainer, LifecycleOwner, EventChannelOwner {
+public interface ViewModel : ObservableContainer, LifecycleOwner, EventChannelOwner {
     /**
      * Is called when this instance is about to be removed from memory.
      * This means that this object is no longer bound to a view and will never be. It is about to
@@ -25,27 +25,27 @@ interface ViewModel : ObservableContainer, LifecycleOwner, EventChannelOwner {
      *
      * @see [BaseViewModel.onDestroy]
      */
-    fun destroy()
+    public fun destroy()
 
     /**
      * @see [androidx.lifecycle.ViewModel.getTag]
      */
-    operator fun <T : Any> get(key: String): T?
+    public operator fun <T : Any> get(key: String): T?
 
     /**
      * @see [androidx.lifecycle.ViewModel.setTagIfAbsent]
      */
-    fun <T : Any> initTag(key: String, newValue: T): T
+    public fun <T : Any> initTag(key: String, newValue: T): T
 
     /**
      * Destroys all ViewModels in that list when the containing ViewModel is destroyed.
      */
-    fun <VM : ViewModel, C : Collection<VM>> C.autoDestroy(): C = onEach { it.autoDestroy() }
+    public fun <VM : ViewModel, C : Collection<VM>> C.autoDestroy(): C = onEach { it.autoDestroy() }
 
     /**
      * Destroys the receiver ViewModel when the containing ViewModel is destroyed.
      */
-    fun <VM : ViewModel> VM.autoDestroy(): VM = also { child ->
+    public fun <VM : ViewModel> VM.autoDestroy(): VM = also { child ->
         val parentLifecycleObserver = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_DESTROY) {
                 child.destroy()
@@ -63,23 +63,24 @@ interface ViewModel : ObservableContainer, LifecycleOwner, EventChannelOwner {
     /**
      * Sends all the events of a given list of (receiver type) ViewModels through the event channel of the ViewModel where this function is called in.
      */
-    fun <VM : ViewModel, C : Collection<VM>> C.bindEvents(): C = onEach { it.bindEvents() }
+    public fun <VM : ViewModel, C : Collection<VM>> C.bindEvents(): C = onEach { it.bindEvents() }
 
     /**
      * Sends all the events of a given (receiver type) ViewModel through the event channel of the ViewModel where this function is called in.
      */
-    fun <VM : ViewModel> VM.bindEvents(): VM = also { child ->
+    public fun <VM : ViewModel> VM.bindEvents(): VM = also { child ->
         child.eventChannel.addListener(this@ViewModel) { event -> this@ViewModel.eventChannel.invoke(event) }
     }
 
     /**
      * Sets [ObservableProperty.beforeSet] to a given function and returns that instance.
      */
-    fun <T : Collection<ViewModel>> ObservableProperty.Provider<T>.asChildren(beforeSet: BeforeSet<T>? = null) = apply {
-        beforeSet { old, new ->
-            old.destroyAll()
-            new.autoDestroy().bindEvents()
-            beforeSet?.invoke(old, new)
+    public fun <T : Collection<ViewModel>> ObservableProperty.Provider<T>.asChildren(beforeSet: BeforeSet<T>? = null): ObservableProperty.Provider<T> =
+        apply {
+            beforeSet { old, new ->
+                old.destroyAll()
+                new.autoDestroy().bindEvents()
+                beforeSet?.invoke(old, new)
+            }
         }
-    }
 }

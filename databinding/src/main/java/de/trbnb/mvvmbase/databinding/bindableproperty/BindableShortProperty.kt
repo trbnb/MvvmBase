@@ -23,7 +23,7 @@ import kotlin.reflect.KProperty
  * @param validate [BindablePropertyBase.validate]
  * @param beforeSet [BindablePropertyBase.beforeSet]
  */
-class BindableShortProperty private constructor(
+public class BindableShortProperty private constructor(
     viewModel: ViewModel,
     private val fieldId: Int,
     defaultValue: Short,
@@ -43,12 +43,12 @@ class BindableShortProperty private constructor(
     /**
      * @see [kotlin.properties.ReadWriteProperty.getValue]
      */
-    operator fun getValue(thisRef: ViewModel, property: KProperty<*>): Short = value
+    public operator fun getValue(thisRef: ViewModel, property: KProperty<*>): Short = value
 
     /**
      * @see [kotlin.properties.ReadWriteProperty.setValue]
      */
-    operator fun setValue(thisRef: ViewModel, property: KProperty<*>, value: Short) {
+    public operator fun setValue(thisRef: ViewModel, property: KProperty<*>, value: Short) {
         if (distinct && this.value == value) {
             return
         }
@@ -73,12 +73,12 @@ class BindableShortProperty private constructor(
      *
      * @see BindableShortProperty
      */
-    class Provider internal constructor(
+    public class Provider internal constructor(
         private val fieldId: Int? = null,
         private val defaultValue: Short,
         private val stateSaveOption: StateSaveOption
     ) : BindablePropertyBase.Provider<ViewModel, Short>() {
-        override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>) = BindableShortProperty(
+        override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>): BindableShortProperty = BindableShortProperty(
             viewModel = thisRef,
             fieldId = fieldId ?: property.resolveFieldId(),
             defaultValue = defaultValue,
@@ -98,11 +98,11 @@ class BindableShortProperty private constructor(
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  * @param stateSaveOption Specifies if the state of the property should be saved and with which key.
  */
-fun ViewModel.bindableShort(
+public fun ViewModel.bindableShort(
     defaultValue: Short = 0,
     fieldId: Int? = null,
     stateSaveOption: StateSaveOption = (this as? StateSavingViewModel)?.defaultStateSaveOption ?: StateSaveOption.None
-) = BindableShortProperty.Provider(fieldId, defaultValue, when (this) {
+): BindableShortProperty.Provider = BindableShortProperty.Provider(fieldId, defaultValue, when (this) {
     is StateSavingViewModel -> stateSaveOption
     else -> StateSaveOption.None
 })

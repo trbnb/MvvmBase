@@ -14,7 +14,7 @@ import kotlin.reflect.KProperty
  * @param action The initial action that will be run when the Command is executed.
  * @param enabledRule The initial rule that determines if this Command is enabled.
  */
-class RuleCommand<in P, out R> internal constructor(
+public class RuleCommand<in P, out R> internal constructor(
     action: (P) -> R,
     private val enabledRule: () -> Boolean
 ) : BaseCommandImpl<P, R>(action) {
@@ -30,7 +30,7 @@ class RuleCommand<in P, out R> internal constructor(
     /**
      * This method has to be called when the result of the rule might have changed.
      */
-    fun onEnabledChanged() {
+    public fun onEnabledChanged() {
         isEnabled = enabledRule()
     }
 }
@@ -40,7 +40,7 @@ class RuleCommand<in P, out R> internal constructor(
  * [ViewModel.onUnbind] is called.
  */
 @JvmName("parameterizedRuleCommand")
-fun <P, R> ViewModel.ruleCommand(
+public fun <P, R> ViewModel.ruleCommand(
     action: (P) -> R,
     enabledRule: () -> Boolean,
     dependentFieldIds: IntArray? = null
@@ -54,7 +54,7 @@ fun <P, R> ViewModel.ruleCommand(
  * [ViewModel.onUnbind] is called.
  */
 @JvmName("parameterizedRuleCommand")
-fun <P, R> ViewModel.ruleCommand(
+public fun <P, R> ViewModel.ruleCommand(
     action: (P) -> R,
     enabledRule: () -> Boolean,
     dependentFields: List<KProperty<*>>
@@ -64,7 +64,7 @@ fun <P, R> ViewModel.ruleCommand(
  * Helper function to create a parameter-less [RuleCommand] that clears all it's listeners automatically when
  * [ViewModel.onUnbind] is called.
  */
-fun <R> ViewModel.ruleCommand(
+public fun <R> ViewModel.ruleCommand(
     action: (Unit) -> R,
     enabledRule: () -> Boolean,
     dependentFieldIds: IntArray? = null
@@ -74,7 +74,7 @@ fun <R> ViewModel.ruleCommand(
  * Helper function to create a parameter-less [RuleCommand] that clears all it's listeners automatically when
  * [ViewModel.onUnbind] is called.
  */
-fun <R> ViewModel.ruleCommand(
+public fun <R> ViewModel.ruleCommand(
     action: (Unit) -> R,
     enabledRule: () -> Boolean,
     dependentFields: List<KProperty<*>>

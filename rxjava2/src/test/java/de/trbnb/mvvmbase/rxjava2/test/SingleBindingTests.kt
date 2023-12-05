@@ -2,7 +2,7 @@
 
 package de.trbnb.mvvmbase.rxjava2.test
 
-import de.trbnb.mvvmbase.Bindable
+import androidx.databinding.Bindable
 import de.trbnb.mvvmbase.MvvmBase
 import de.trbnb.mvvmbase.databinding.BaseViewModel
 import de.trbnb.mvvmbase.databinding.initDataBinding

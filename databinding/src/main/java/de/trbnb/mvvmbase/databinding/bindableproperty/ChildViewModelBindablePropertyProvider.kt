@@ -9,7 +9,7 @@ import de.trbnb.mvvmbase.observableproperty.StateSaveOption
  * @see ViewModel.asChildren
  */
 @Deprecated("Use asChildren() instead.", ReplaceWith("bindable(defaultValue, fieldId, stateSaveOption).asChildren()"))
-inline fun <reified C : Collection<ViewModel>> ViewModel.childrenBindable(
+public inline fun <reified C : Collection<ViewModel>> ViewModel.childrenBindable(
     defaultValue: C,
     fieldId: Int? = null,
     stateSaveOption: StateSaveOption? = null

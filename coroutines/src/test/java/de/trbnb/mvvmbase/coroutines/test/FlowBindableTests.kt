@@ -8,6 +8,7 @@ import de.trbnb.mvvmbase.coroutines.CoroutineViewModel
 import de.trbnb.mvvmbase.databinding.BaseViewModel
 import de.trbnb.mvvmbase.databinding.initDataBinding
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flow
@@ -21,7 +22,9 @@ import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class FlowBindableTests {
+
     @BeforeEach
     fun setup() {
         Dispatchers.setMain(TestCoroutineDispatcher())

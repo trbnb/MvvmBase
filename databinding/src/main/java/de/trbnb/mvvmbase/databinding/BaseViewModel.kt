@@ -20,7 +20,7 @@ import androidx.lifecycle.ViewModel as ArchitectureViewModel
 /**
  * Simple base implementation of the [ViewModel] interface based on [BaseObservable].
  */
-abstract class BaseViewModel : ArchitectureViewModel(), ViewModel, LifecycleOwner {
+public abstract class BaseViewModel : ArchitectureViewModel(), ViewModel, LifecycleOwner {
     /**
      * Callback registry for [Observable].
      */
@@ -33,6 +33,9 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel, LifecycleOwne
      * [EventChannel] implementation that can be used to send non-state information to a view component.
      */
     override val eventChannel: EventChannel by lazy { EventChannelImpl(memorizeNotReceivedEvents) }
+
+    override val lifecycle: Lifecycle
+        get() = lifecycleOwner.lifecycle
 
     /**
      * Gets if events that are raised when no listeners are registered are raised later when a listener is registered.
@@ -103,6 +106,4 @@ abstract class BaseViewModel : ArchitectureViewModel(), ViewModel, LifecycleOwne
         super.onCleared()
         lifecycleOwner.onEvent(DataBindingViewModelLifecycleOwner.Event.DESTROYED)
     }
-
-    override fun getLifecycle(): Lifecycle = lifecycleOwner.lifecycle
 }

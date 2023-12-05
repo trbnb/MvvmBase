@@ -10,7 +10,7 @@ import java.io.Serializable
 /**
  * Function that specifies which types allow for saving state in [de.trbnb.mvvmbase.observableproperty.BindableProperty].
  */
-inline fun <reified T> savingStateInBindableSupports(): Boolean {
+public inline fun <reified T> savingStateInBindableSupports(): Boolean {
     val clazz = T::class.java
     return when {
         BooleanArray::class.java.isAssignableFrom(clazz) ||

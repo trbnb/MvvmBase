@@ -23,7 +23,7 @@ import kotlin.reflect.KProperty
  * @param validate [BindablePropertyBase.validate]
  * @param beforeSet [BindablePropertyBase.beforeSet]
  */
-class BindableIntProperty private constructor(
+public class BindableIntProperty private constructor(
     viewModel: ViewModel,
     private val fieldId: Int,
     defaultValue: Int,
@@ -43,12 +43,12 @@ class BindableIntProperty private constructor(
     /**
      * @see [kotlin.properties.ReadWriteProperty.getValue]
      */
-    operator fun getValue(thisRef: ViewModel, property: KProperty<*>): Int = value
+    public operator fun getValue(thisRef: ViewModel, property: KProperty<*>): Int = value
 
     /**
      * @see [kotlin.properties.ReadWriteProperty.setValue]
      */
-    operator fun setValue(thisRef: ViewModel, property: KProperty<*>, value: Int) {
+    public operator fun setValue(thisRef: ViewModel, property: KProperty<*>, value: Int) {
         if (distinct && this.value == value) {
             return
         }
@@ -73,12 +73,12 @@ class BindableIntProperty private constructor(
      *
      * @see BindableIntProperty
      */
-    class Provider internal constructor(
+    public class Provider internal constructor(
         private val fieldId: Int? = null,
         private val defaultValue: Int,
         private val stateSaveOption: StateSaveOption
     ) : BindablePropertyBase.Provider<ViewModel, Int>() {
-        override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>) = BindableIntProperty(
+        override operator fun provideDelegate(thisRef: ViewModel, property: KProperty<*>): BindableIntProperty = BindableIntProperty(
             viewModel = thisRef,
             fieldId = fieldId ?: property.resolveFieldId(),
             defaultValue = defaultValue,
@@ -98,11 +98,11 @@ class BindableIntProperty private constructor(
  * @param fieldId ID of the field as in the BR.java file. A `null` value will cause automatic detection of that field ID.
  * @param stateSaveOption Specifies if the state of the property should be saved and with which key.
  */
-fun ViewModel.bindableInt(
+public fun ViewModel.bindableInt(
     defaultValue: Int = 0,
     fieldId: Int? = null,
     stateSaveOption: StateSaveOption = (this as? StateSavingViewModel)?.defaultStateSaveOption ?: StateSaveOption.None
-) = BindableIntProperty.Provider(fieldId, defaultValue, when (this) {
+): BindableIntProperty.Provider = BindableIntProperty.Provider(fieldId, defaultValue, when (this) {
     is StateSavingViewModel -> stateSaveOption
     else -> StateSaveOption.None
 })

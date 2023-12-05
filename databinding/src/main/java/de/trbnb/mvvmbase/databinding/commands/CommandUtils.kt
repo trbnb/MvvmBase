@@ -29,7 +29,7 @@ internal fun RuleCommand<*, *>.dependsOn(observable: Observable, dependentFieldI
 /**
  * Calls [Command.addEnabledListener] and removes the listener if the lifecycle of [lifecycleOwner] is destroyed.
  */
-fun Command<*, *>.addEnabledListener(lifecycleOwner: LifecycleOwner, listener: (enabled: Boolean) -> Unit) {
+public fun Command<*, *>.addEnabledListener(lifecycleOwner: LifecycleOwner, listener: (enabled: Boolean) -> Unit) {
     addEnabledListener(listener)
     lifecycleOwner.lifecycle.addObserver(object : LifecycleEventObserver {
         override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
@@ -43,9 +43,9 @@ fun Command<*, *>.addEnabledListener(lifecycleOwner: LifecycleOwner, listener: (
 /**
  * Invokes the command with the parameter [Unit].
  */
-operator fun <R> Command<Unit, R>.invoke() = invoke(Unit)
+public operator fun <R> Command<Unit, R>.invoke(): R = invoke(Unit)
 
 /**
  * Invokes the command safely with the parameter [Unit].
  */
-fun <R> Command<Unit, R>.invokeSafely() = invokeSafely(Unit)
+public fun <R> Command<Unit, R>.invokeSafely(): R? = invokeSafely(Unit)

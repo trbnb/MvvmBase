@@ -14,9 +14,9 @@ internal fun RuleCommand<*, *>.dependsOn(observable: ObservableContainer, depend
 /**
  * Invokes the command with the parameter [Unit].
  */
-operator fun <R> Command<Unit, R>.invoke() = invoke(Unit)
+public operator fun <R> Command<Unit, R>.invoke(): R = invoke(Unit)
 
 /**
  * Invokes the command safely with the parameter [Unit].
  */
-fun <R> Command<Unit, R>.invokeSafely() = invokeSafely(Unit)
+public fun <R> Command<Unit, R>.invokeSafely(): R? = invokeSafely(Unit)

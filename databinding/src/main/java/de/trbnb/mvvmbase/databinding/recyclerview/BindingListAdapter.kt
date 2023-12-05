@@ -19,8 +19,8 @@ import de.trbnb.mvvmbase.databinding.ViewModel
  *
  * @param layoutId Layout resource ID of the item layout.
  */
-open class BindingListAdapter<VM : ViewModel, B : ViewDataBinding>(
-    val layoutId: Int,
+public open class BindingListAdapter<VM : ViewModel, B : ViewDataBinding>(
+    public val layoutId: Int,
     diffItemCallback: DiffUtil.ItemCallback<VM> = object : DiffUtil.ItemCallback<VM>() {
         @SuppressLint("DiffUtilEquals")
         override fun areContentsTheSame(oldItem: VM, newItem: VM) = oldItem == newItem
@@ -31,7 +31,7 @@ open class BindingListAdapter<VM : ViewModel, B : ViewDataBinding>(
         holder.bind(getItem(position))
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = BindingViewHolder<B>(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BindingViewHolder<B> = BindingViewHolder<B>(
         DataBindingUtil.inflate(LayoutInflater.from(parent.context), layoutId, parent, false)
     )
 }
@@ -40,7 +40,7 @@ open class BindingListAdapter<VM : ViewModel, B : ViewDataBinding>(
  * Binding adapter function to make use of [BindingListAdapter].
  */
 @BindingAdapter("items", "itemLayout")
-fun RecyclerView.setItems(items: List<ViewModel>, itemLayout: Int) {
+public fun RecyclerView.setItems(items: List<ViewModel>, itemLayout: Int) {
     @Suppress("UNCHECKED_CAST")
     (adapter as? BindingListAdapter<ViewModel, ViewDataBinding>
         ?: BindingListAdapter<ViewModel, ViewDataBinding>(itemLayout).also { this.adapter = it }).submitList(items)
